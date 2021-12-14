@@ -1,0 +1,22 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Lieu {{ place.name }}{% endblock %}
+
+{% block body %}
+    <table border="1">
+        <tr>
+            <td>Nom</td>
+            <td>Ville</td>
+            <td>Categories</td>
+        </tr>
+        <tr>
+            <td>{{ place.name }}</td>
+            <td>{{ place.city }}</td>
+            <td>
+                {% for category in place.categories %}
+                    {{ category.name }}
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+{% endblock %}

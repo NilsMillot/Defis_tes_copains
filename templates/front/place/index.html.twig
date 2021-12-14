@@ -1,0 +1,22 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Liste des lieux{% endblock %}
+
+{% block body %}
+    <table border="1">
+        <tr>
+            <td>Nom</td>
+            <td>Ville</td>
+            <td></td>
+        </tr>
+        {% for place in places %}
+            <tr>
+                <td>{{ place.name }}</td>
+                <td>{{ place.city }}</td>
+                <td>
+                    <a href="{{ path('front_place_show', {'id': place.id}) }}">Voir</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
