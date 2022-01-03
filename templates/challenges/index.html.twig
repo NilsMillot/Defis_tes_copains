@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Challenges index{% endblock %}
+
+{% block body %}
+    <h1>Challenges index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Creation_date</th>
+                <th>Deadline</th>
+                <th>Qr_code</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for challenge in challenges %}
+            <tr>
+                <td>{{ challenge.id }}</td>
+                <td>{{ challenge.name }}</td>
+                <td>{{ challenge.creationDate ? challenge.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ challenge.deadline ? challenge.deadline|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ challenge.qrCode }}</td>
+                <td>
+                    <a href="{{ path('challenges_show', {'id': challenge.id}) }}">show</a>
+                    <a href="{{ path('challenges_edit', {'id': challenge.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('challenges_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Remark{% endblock %}
+
+{% block body %}
+    <h1>Create new Remark</h1>
+
+    {{ include('remark/_form.html.twig') }}
+
+    <a href="{{ path('remark_index') }}">back to list</a>
+{% endblock %}
