@@ -226,7 +226,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Challenges[]
+     * @return Collection
      */
     public function getChallenge(): Collection
     {
