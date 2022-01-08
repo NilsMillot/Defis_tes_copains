@@ -3,17 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
-    {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/text.css') }}">
+
+    {# Run `composer require symfony/webpack-encore-bundle`and uncomment the following Encore helpers to start using Symfony UX #}
     {% block stylesheets %}
         {#{{ encore_entry_link_tags('app') }}#}
     {% endblock %}
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
 
+        main {
+            flex: 1 0 auto;
+        }
+
+    </style>
     {% block javascripts %}
         {#{{ encore_entry_script_tags('app') }}#}
     {% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
+<nav class="teal blue-grey darken-2">
+    <div class="nav-wrapper container">
+        <a href="#" ><img src="{{ asset('images/DTC.png') }}" class="brand-logo" width="150px"/></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {%  if(app.user) %}
+            <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
+            <li><a href="{{ path('front_group_index') }}">Group</a></li>
+            <li><a href="{{ path('front_user_index') }}">Mon compte [{{username}}]</a></li>
+            <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<main>
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
+</main>
+<footer class="page-footer blue-grey darken-2">
+    <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+                <h5 class="white-text">En savoir plus </h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Liens Utiles</h5>
+                <ul>
+                    <li><a class="text-lien-social facebook" href="#!"><i class="fab fa-facebook-square"></i> Facebook</a></li>
+                    <li><a  class="text-lien-social instagram" href="#!"><i  class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a class="text-lien-social twitter" href="#!"><i  class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a class="text-lien-social twitch" href="#!"><i  class="fab fa-twitch"></i> Twitch</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+            © 2014 Copyright Eliwena - NilsM - Sidox
+            <a class="grey-text text-lighten-4 right" href="#!"><i class="fab fa-github"></i> Github</a>
+        </div>
+    </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    {% for label, messages in app.flashes() %}
+    {% for message in messages %}
+    M.toast({html: '{{ message }}', classes: '{{ label }}'})
+    {{ label }}
+    {% endfor %}
+    {% endfor %}
+</script>
 </body>
 </html>
