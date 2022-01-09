@@ -18,6 +18,8 @@ class ChallengesController extends AbstractController
     {
         return $this->render('challenges/index.html.twig', [
             'challenges' => $challengesRepository->findAll(),
+            'username' => $this->getUser()->getUsername(),
+
         ]);
     }
 

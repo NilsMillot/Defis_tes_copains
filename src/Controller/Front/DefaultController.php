@@ -13,6 +13,7 @@ class DefaultController extends AbstractController
     {
         return $this->render('front/default/index.html.twig', [
             'controller_name' => 'DefaultController',
+            'username' => $this->getUser()->getUsername(),
         ]);
     }
 }

@@ -18,6 +18,7 @@ class UserController extends AbstractController
     {
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
+            'username' => $this->getUser()->getUsername(),
         ]);
     }
 
