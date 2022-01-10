@@ -48,8 +48,22 @@ class ChallengesController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $challenge->setCreationDate(new \DateTime());
             $challenge->addUser($this->security->getUser());
+
+            $uploadedFile = $form['picture']->getData();
+            $destination = $this->getParameter('kernel.project_dir').'/public/images';
+            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = $originalFilename.'-'.uniqid("" ,false).'.'.$uploadedFile->guessExtension();
+            $uploadedFile->move(
+                $destination,
+                $newFilename
+            );
+
+            $challenge->setPicture($newFilename);
+
+
             $entityManager->persist($challenge);
             $entityManager->flush();
+
 
             return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
         }
