@@ -58,3 +58,7 @@ https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
 ## Gestion des messages flash
 https://symfony.com/doc/current/controller.html#flash-messages
 
+## Autres outils utils
+# Messages de validation
+https://symfony.com/doc/current/validation.html
+
