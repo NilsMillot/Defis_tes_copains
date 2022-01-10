@@ -18,6 +18,7 @@ class CompanyController extends AbstractController
     {
         return $this->render('company/index.html.twig', [
             'companies' => $companyRepository->findAll(),
+            'username' => $this->getUser()->getUsername(),
         ]);
     }
 
@@ -39,6 +40,7 @@ class CompanyController extends AbstractController
         return $this->renderForm('company/new.html.twig', [
             'company' => $company,
             'form' => $form,
+            'username' => $this->getUser()->getUsername(),
         ]);
     }
 
@@ -47,6 +49,7 @@ class CompanyController extends AbstractController
     {
         return $this->render('company/show.html.twig', [
             'company' => $company,
+            'username' => $this->getUser()->getUsername(),
         ]);
     }
 
@@ -65,6 +68,7 @@ class CompanyController extends AbstractController
         return $this->renderForm('company/edit.html.twig', [
             'company' => $company,
             'form' => $form,
+            'username' => $this->getUser()->getUsername(),
         ]);
     }
 
