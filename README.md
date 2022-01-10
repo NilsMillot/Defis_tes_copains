@@ -60,7 +60,10 @@ https://symfony.com/doc/current/controller.html#flash-messages
 
 ## Autres outils utils
 Messages de validation
+
 https://symfony.com/doc/current/validation.html
+
 Systeme de verification d'accès
+
 https://symfony.com/doc/current/security/voters.html
 
