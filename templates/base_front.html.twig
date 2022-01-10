@@ -37,7 +37,7 @@
             {%  if(app.user) %}
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
-            <li><a href="{{ path('front_user_index') }}">Mon compte [{{username}}]</a></li>
+            <li><a href="{{ path('front_user_index') }}">Mon compte [{{app.user.username}}]</a></li>
             <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
             {% endif %}
         </ul>
