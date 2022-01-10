@@ -51,6 +51,8 @@ docker-compose exec php bin/console doctrine:schema:update --force
 ```
 docker-compose exec php bin/console doctrine:fixtures:load
 ```
+https://github.com/fzaninotto/Faker
+https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
 
 ## Gestion des messages flash
 https://symfony.com/doc/current/controller.html#flash-messages
