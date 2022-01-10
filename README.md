@@ -47,6 +47,11 @@ docker-compose exec php bin/console doctrine:schema:update --dump-sql
 docker-compose exec php bin/console doctrine:schema:update --force
 ```
 
+#### Fixtures
+```
+docker-compose exec php bin/console doctrine:fixtures:load
+```
+
 ## Gestion des messages flash
 https://symfony.com/doc/current/controller.html#flash-messages
 
