@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/text.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/btn.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/card.css') }}">
 
     {# Run `composer require symfony/webpack-encore-bundle`and uncomment the following Encore helpers to start using Symfony UX #}
     {% block stylesheets %}
@@ -35,7 +37,7 @@
             {%  if(app.user) %}
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
-            <li><a href="{{ path('front_user_index') }}">Mon compte [{{username}}]</a></li>
+            <li><a href="{{ path('front_user_index') }}">Mon compte [{{app.user.username}}]</a></li>
             <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
             {% endif %}
         </ul>
