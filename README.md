@@ -47,6 +47,18 @@ docker-compose exec php bin/console doctrine:schema:update --dump-sql
 docker-compose exec php bin/console doctrine:schema:update --force
 ```
 
+#### Fixtures
+```
+docker-compose exec php bin/console doctrine:fixtures:load
+```
+https://github.com/fzaninotto/Faker
+
+https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
+
 ## Gestion des messages flash
 https://symfony.com/doc/current/controller.html#flash-messages
+
+## Autres outils utils
+Messages de validation
+https://symfony.com/doc/current/validation.html
 
