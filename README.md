@@ -45,6 +45,12 @@ docker-compose exec php bin/console doctrine:schema:update --dump-sql
 
 # Executer les requètes en DB
 docker-compose exec php bin/console doctrine:schema:update --force
+
+# Supprimer la DB
+docker-compose exec php bin/console d:d:d --force
+
+# Creer la DB
+docker-compose exec php bin/console d:d:c
 ```
 
 #### Fixtures
