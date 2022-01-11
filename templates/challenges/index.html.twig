@@ -6,18 +6,22 @@
     <h1>Les challenges</h1>
     <div class="row">
     {% for challenge in challenges %}
-
         <div class="card small col s6">
             <div class="card-image waves-effect waves-block waves-light">
-                <img class="activator" src="https://www.publicdomainpictures.net/pictures/320000/velka/background-image.png">
+                <img class="activator" src={{ asset('images/' ~ challenge.picture) }}>
             </div>
             <div class="card-content">
                 <span class="card-title activator grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">Voir plus</i></span>
-                <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
+
             </div>
             <div class="card-reveal">
                 <span class="card-title grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">Fermer</i></span>
-                <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                <p>{{ challenge.description }}</p>
+                <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
+                {% for challenge in challenge.users %}
+                    <p>Par : {{ challenge.username }} </p>
+                {% endfor %}
+                <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
             </div>
         </div>
 

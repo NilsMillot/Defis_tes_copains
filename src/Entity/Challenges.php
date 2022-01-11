@@ -6,6 +6,8 @@ use App\Repository\ChallengesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=ChallengesRepository::class)
@@ -23,6 +25,20 @@ class Challenges
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column (type="string", nullable=true)
+     * @Assert\Image(
+     *     minWidth = 200,
+     *     minHeight = 200,
+     * )
+     */
+    private $picture;
 
     /**
      * @ORM\Column(type="datetime")
@@ -75,6 +91,31 @@ class Challenges
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $file )
+    {
+        $this->picture = $file;
+
+        return $this;
+
     }
 
     public function getCreationDate(): ?\DateTimeInterface
@@ -181,4 +222,26 @@ class Challenges
 
         return $this;
     }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->picture
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->picture
+            // see section on salt below
+            // $this->salt
+            ) = unserialize();
+    }
+
+
 }

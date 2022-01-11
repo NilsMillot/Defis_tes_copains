@@ -1,0 +1,9 @@
+.card.small .card-image, .card.medium .card-image, .card.large .card-image {
+    max-height: 80%;
+
+
+}
+
+.card.small .card-image + .card-content, .card.medium .card-image + .card-content, .card.large .card-image + .card-conten {
+    padding: 10px;
+}
