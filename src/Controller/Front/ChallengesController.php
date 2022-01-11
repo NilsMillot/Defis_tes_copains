@@ -3,37 +3,61 @@
 namespace App\Controller\Front;
 
 use App\Entity\Challenges;
+use App\Entity\User;
 use App\Form\ChallengesType;
 use App\Repository\ChallengesRepository;
+use App\Repository\UserRepository;
+use App\Service\UploadManager;
+use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security as security;
 
 #[Route('/challenges')]
 class ChallengesController extends AbstractController
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        // Avoid calling getUser() in the constructor: auth may not
+        // be complete yet. Instead, store the entire Security object.
+        $this->security = $security;
+    }
+
     #[Route('/', name: 'challenges_index', methods: ['GET'])]
     public function index(ChallengesRepository $challengesRepository): Response
     {
+
         return $this->render('challenges/index.html.twig', [
             'challenges' => $challengesRepository->findAll(),
-            'username' => $this->getUser()->getUsername(),
 
         ]);
     }
 
     #[Route('/new', name: 'challenges_new', methods: ['GET','POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request , UploadManager $uploadManager): Response
     {
         $challenge = new Challenges();
         $form = $this->createForm(ChallengesType::class, $challenge);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $challenge->setCreationDate(new \DateTime());
+            $challenge->addUser($this->security->getUser());
+
+            $file = $form->get('picture')->getData();
+            $filename = $uploadManager->upload($file);
+            $challenge->setPicture($filename);
+
+
             $entityManager->persist($challenge);
             $entityManager->flush();
+
 
             return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
         }

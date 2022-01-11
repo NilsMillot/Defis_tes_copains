@@ -12,7 +12,6 @@
                 <th>Name</th>
                 <th>Number_user</th>
                 <th>Picture</th>
-                <th>Groupcol</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,8 +21,7 @@
                 <td>{{ group.id }}</td>
                 <td>{{ group.name }}</td>
                 <td>{{ group.numberUser }}</td>
-                <td>{{ group.picture }}</td>
-                <td>{{ group.groupcol }}</td>
+                <td><img src="{{ group.picture }}" width="40px" /></td>
                 <td>
                     <a href="{{ path('group_show', {'id': group.id}) }}">show</a>
                     <a href="{{ path('group_edit', {'id': group.id}) }}">edit</a>
