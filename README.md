@@ -25,7 +25,7 @@ docker-compose exec php bin/console cache:clear
 docker-compose exec php bin/console make:controller
 docker-compose exec php bin/console make:form
 
-# Crétion d'un CRUD complet
+# Création d'un CRUD complet
 docker-compose exec php bin/console make:crud
 ```
 
