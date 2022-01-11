@@ -21,6 +21,7 @@ class ChallengeFixtures extends Fixture
                 ->setDeadline($this->faker->dateTimeBetween('+1 month', '+2 years'))
                 ->setQrCode($this->faker->ipv4);
 
+
             $manager->persist($object);
         }
 
