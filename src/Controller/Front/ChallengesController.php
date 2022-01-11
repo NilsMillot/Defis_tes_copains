@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\ChallengesType;
 use App\Repository\ChallengesRepository;
 use App\Repository\UserRepository;
+use App\Service\UploadManager;
 use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +38,7 @@ class ChallengesController extends AbstractController
     }
 
     #[Route('/new', name: 'challenges_new', methods: ['GET','POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request , UploadManager $uploadManager): Response
     {
         $challenge = new Challenges();
         $form = $this->createForm(ChallengesType::class, $challenge);
@@ -49,16 +50,9 @@ class ChallengesController extends AbstractController
             $challenge->setCreationDate(new \DateTime());
             $challenge->addUser($this->security->getUser());
 
-            $uploadedFile = $form['picture']->getData();
-            $destination = $this->getParameter('kernel.project_dir').'/public/images';
-            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $newFilename = $originalFilename.'-'.uniqid("" ,false).'.'.$uploadedFile->guessExtension();
-            $uploadedFile->move(
-                $destination,
-                $newFilename
-            );
-
-            $challenge->setPicture($newFilename);
+            $file = $form->get('picture')->getData();
+            $filename = $uploadManager->upload($file);
+            $challenge->setPicture($filename);
 
 
             $entityManager->persist($challenge);
