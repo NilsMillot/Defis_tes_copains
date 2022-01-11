@@ -57,5 +57,13 @@
         </tbody>
     </table>
 
-    <a href="{{ path('challenges_new') }}">Create new</a>
+    <div style="padding: 30px">
+        <button class="btn" href="{{ path('challenges_new') }}">Create new</button>
+    </div>
+    <style>
+        button.btn{
+            display: block;
+            margin: auto;
+        }
+    </style>
 {% endblock %}
