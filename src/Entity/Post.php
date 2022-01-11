@@ -54,11 +54,17 @@ class Post
      */
     private $usersWhoLiked;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikePost::class, mappedBy="postLiked")
+     */
+    private $userLikePosts;
+
     public function __construct()
     {
         $this->author = new ArrayCollection();
         $this->challenge = new ArrayCollection();
         $this->usersWhoLiked = new ArrayCollection();
+        $this->userLikePosts = new ArrayCollection();
     }
 
 
@@ -195,6 +201,36 @@ class Post
     public function removeUsersWhoLiked(User $usersWhoLiked): self
     {
         $this->usersWhoLiked->removeElement($usersWhoLiked);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserLikePost[]
+     */
+    public function getUserLikePosts(): Collection
+    {
+        return $this->userLikePosts;
+    }
+
+    public function addUserLikePost(UserLikePost $userLikePost): self
+    {
+        if (!$this->userLikePosts->contains($userLikePost)) {
+            $this->userLikePosts[] = $userLikePost;
+            $userLikePost->setPostLiked($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikePost(UserLikePost $userLikePost): self
+    {
+        if ($this->userLikePosts->removeElement($userLikePost)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikePost->getPostLiked() === $this) {
+                $userLikePost->setPostLiked(null);
+            }
+        }
 
         return $this;
     }

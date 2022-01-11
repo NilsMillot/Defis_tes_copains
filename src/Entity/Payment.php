@@ -22,6 +22,12 @@ class Payment
      */
     private $colStripe;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="payments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $company;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +41,18 @@ class Payment
     public function setColStripe(string $colStripe): self
     {
         $this->colStripe = $colStripe;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }
