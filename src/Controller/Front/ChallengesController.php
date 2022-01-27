@@ -10,6 +10,7 @@ use App\Repository\UserRepository;
 use App\Service\UploadManager;
 use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,7 +39,7 @@ class ChallengesController extends AbstractController
     }
 
     #[Route('/new', name: 'challenges_new', methods: ['GET','POST'])]
-    public function new(Request $request , UploadManager $uploadManager): Response
+    public function new(Request $request): Response
     {
         $challenge = new Challenges();
         $form = $this->createForm(ChallengesType::class, $challenge);
@@ -49,10 +50,6 @@ class ChallengesController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $challenge->setCreationDate(new \DateTime());
             $challenge->addUser($this->security->getUser());
-
-            $file = $form->get('picture')->getData();
-            $filename = $uploadManager->upload($file);
-            $challenge->setPicture($filename);
 
 
             $entityManager->persist($challenge);
@@ -84,7 +81,6 @@ class ChallengesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
             return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
         }
 
