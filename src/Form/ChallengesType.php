@@ -5,9 +5,9 @@ namespace App\Form;
 use App\Entity\Challenges;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ChallengesType extends AbstractType
 {
@@ -19,8 +19,12 @@ class ChallengesType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('description')
-            ->add('picture', FileType::class, [
-
+            ->add('imageFile', VichImageType::class, [
+                'required' => true,
+                'allow_delete' => true,
+                'download_uri' => false,
+                'image_uri' => true,
+                'asset_helper' => true,
             ])
         ;
     }
