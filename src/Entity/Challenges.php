@@ -5,15 +5,19 @@ namespace App\Entity;
 use App\Repository\ChallengesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\VichUploadTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ChallengesRepository::class)
+ * @Vich\Uploadable()
  */
-class Challenges
+class Challenges implements \Serializable
 {
+
+    use VichUploadTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -30,15 +34,6 @@ class Challenges
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
-
-    /**
-     * @ORM\Column (type="string", nullable=true)
-     * @Assert\Image(
-     *     minWidth = 200,
-     *     minHeight = 200,
-     * )
-     */
-    private $picture;
 
     /**
      * @ORM\Column(type="datetime")
@@ -227,9 +222,7 @@ class Challenges
     {
         return serialize(array(
             $this->id,
-            $this->picture
-            // see section on salt below
-            // $this->salt,
+            $this->imageName,
         ));
     }
 
@@ -237,10 +230,8 @@ class Challenges
     {
         list (
             $this->id,
-            $this->picture
-            // see section on salt below
-            // $this->salt
-            ) = unserialize();
+            $this->imageName,
+            ) = unserialize($serialized, array('allowed_classes' => false));
     }
 
 
