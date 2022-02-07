@@ -3,6 +3,12 @@
 ```bash
 docker-compose build --pull --no-cache
 docker-compose up -d
+
+yarn
+yarn build
+yarn dev
+
+this previous commands could be wrapped in a makefile
 ```
 
 ```
