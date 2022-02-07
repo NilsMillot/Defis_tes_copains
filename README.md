@@ -64,6 +64,9 @@ https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
 ## Gestion des messages flash
 https://symfony.com/doc/current/controller.html#flash-messages
 
+## Vitejs configuration
+https://vitejs.dev/guide/api-plugin.html#configureserver
+
 ## Autres outils utils
 Messages de validation
 
