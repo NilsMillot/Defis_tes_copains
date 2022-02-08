@@ -26,3 +26,8 @@ services:
     App\Service\UploadManager:
         arguments:
             $targetDirectory: '%image%'
+
+    App\Twig\ViteAssetExtension:
+        arguments:
+            $isDev: '%env(VITE_DEV)%'
+            $manifest: '%kernel.project_dir%/public/assets/manifest.json'

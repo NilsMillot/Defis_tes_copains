@@ -13,6 +13,10 @@
     {% block stylesheets %}
         {#{{ encore_entry_link_tags('app') }}#}
     {% endblock %}
+    {% block javascripts %}
+        {#// simple example of using react when you need to do dynamic rendering#}
+        {{ vite_asset('main.jsx', ['react']) }}
+    {% endblock %}
     <style>
         body {
             display: flex;
@@ -25,19 +29,16 @@
         }
 
     </style>
-    {% block javascripts %}
-        {#{{ encore_entry_script_tags('app') }}#}
-    {% endblock %}
 </head>
 <body>
 <nav class="teal blue-grey darken-2">
     <div class="nav-wrapper container">
-        <a href="#" ><img src="{{ asset('images/logo/DTC.png') }}" class="brand-logo" width="150px"/></a>
+        <a href="#" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="150px"/></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {%  if(app.user) %}
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
-            <li><a href="{{ path('front_user_index') }}">Mon compte [{{app.user.username}}]</a></li>
+            <li><a href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
             <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
             {% endif %}
         </ul>
