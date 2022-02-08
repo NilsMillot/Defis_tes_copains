@@ -27,6 +27,10 @@
                 <th>Qr_code</th>
                 <td>{{ challenge.qrCode }}</td>
             </tr>
+            <tr>
+                <th>Picture</th>
+                <td><img  src={{ vich_uploader_asset(challenge, 'imageFile') }} width="300px"/></td>
+            </tr>
         </tbody>
     </table>
 
