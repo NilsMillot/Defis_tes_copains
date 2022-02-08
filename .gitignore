@@ -24,6 +24,6 @@
 ###< phpunit/phpunit ###
 
 ###> IDE/OS ###
-/.idea/
+.idea/
 **/.DS_Store
 ###< IDE/OS ###
