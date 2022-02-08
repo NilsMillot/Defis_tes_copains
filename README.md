@@ -7,7 +7,7 @@ docker-compose up -d
 
 ```
 # URL
-http://127.0.0.1
+http://127.0.0.1 ou http://localhost/
 
 # Env DB (à mettre dans .env, si pas déjà présent)
 DATABASE_URL="postgresql://postgres:password@db:5432/db?serverVersion=13&charset=utf8"
@@ -40,6 +40,9 @@ https://symfony.com/doc/current/doctrine/associations.html
 
 #### Mise à jour de la base de données
 ```
+# Ouvrir adminer
+127.0.0.1:8080
+
 # Voir les requètes qui seront jouer avec force
 docker-compose exec php bin/console doctrine:schema:update --dump-sql
 
