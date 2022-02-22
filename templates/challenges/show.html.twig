@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="row">
-        <h1 class="col s6">{{ challenge.name }}</h1>
+        <h1 class="col">{{ challenge.name }}</h1>
     </div>
 
     <div class="col s12 m7">
@@ -27,7 +27,7 @@
                         <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
                         </div>
                         <div class="col s6">
-                           <p>Le Qrcode ici {{ challenge.qrCode }}</p>
+                           <img src="{{ challenge.qrCode }}" />
                         </div>
                     </div>
                 </div>
