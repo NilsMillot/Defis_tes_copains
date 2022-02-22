@@ -36,11 +36,6 @@ class Group
     private $picture;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $groupcol;
-
-    /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="idGroup")
      */
     private $users;
@@ -87,18 +82,6 @@ class Group
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getGroupcol(): ?string
-    {
-        return $this->groupcol;
-    }
-
-    public function setGroupcol(?string $groupcol): self
-    {
-        $this->groupcol = $groupcol;
 
         return $this;
     }

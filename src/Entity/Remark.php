@@ -39,11 +39,17 @@ class Remark
      */
     private $userRemark;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikeRemark::class, mappedBy="remarkId")
+     */
+    private $userLikeRemarks;
+
     public function __construct()
     {
         $this->userId = new ArrayCollection();
         $this->post = new ArrayCollection();
         $this->userRemark = new ArrayCollection();
+        $this->userLikeRemarks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +149,36 @@ class Remark
     public function removeUserRemark(User $userRemark): self
     {
         $this->userRemark->removeElement($userRemark);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserLikeRemark[]
+     */
+    public function getUserLikeRemarks(): Collection
+    {
+        return $this->userLikeRemarks;
+    }
+
+    public function addUserLikeRemark(UserLikeRemark $userLikeRemark): self
+    {
+        if (!$this->userLikeRemarks->contains($userLikeRemark)) {
+            $this->userLikeRemarks[] = $userLikeRemark;
+            $userLikeRemark->setRemarkId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikeRemark(UserLikeRemark $userLikeRemark): self
+    {
+        if ($this->userLikeRemarks->removeElement($userLikeRemark)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikeRemark->getRemarkId() === $this) {
+                $userLikeRemark->setRemarkId(null);
+            }
+        }
 
         return $this;
     }

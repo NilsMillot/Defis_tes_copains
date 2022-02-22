@@ -8,6 +8,9 @@
 /public/bundles/
 /var/
 /vendor/
+/node_modules/
+/public/assets/
+/public/images/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
@@ -21,6 +24,6 @@
 ###< phpunit/phpunit ###
 
 ###> IDE/OS ###
-.idea
+/.idea/
 **/.DS_Store
 ###< IDE/OS ###

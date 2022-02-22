@@ -7,13 +7,22 @@ use App\Entity\User;
 use App\Form\ChallengesType;
 use App\Repository\ChallengesRepository;
 use App\Repository\UserRepository;
-use App\Service\UploadManager;
+use App\Services\QrCodeService;
 use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security as security;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 
 #[Route('/challenges')]
 class ChallengesController extends AbstractController
@@ -38,22 +47,25 @@ class ChallengesController extends AbstractController
     }
 
     #[Route('/new', name: 'challenges_new', methods: ['GET','POST'])]
-    public function new(Request $request , UploadManager $uploadManager): Response
+    public function new(Request $request, QrCodeService $qrCodeService, ChallengesRepository $challengesRepository): Response
     {
+
+        $qrCode = null;
         $challenge = new Challenges();
         $form = $this->createForm(ChallengesType::class, $challenge);
         $form->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $challenge->setCreationDate(new \DateTime());
             $challenge->addUser($this->security->getUser());
 
-            $file = $form->get('picture')->getData();
-            $filename = $uploadManager->upload($file);
-            $challenge->setPicture($filename);
+            $lastChallenge = $challengesRepository->findOneBy([], ['id' => 'desc']);
+            $lastId = $lastChallenge->getId();
+            $futurId = $lastId + 1;
+            $qrCode = $qrCodeService->qrcode($futurId);
 
+            $challenge->setQrCode($qrCode);
 
             $entityManager->persist($challenge);
             $entityManager->flush();
@@ -84,7 +96,6 @@ class ChallengesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
             return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
         }
 

@@ -15,7 +15,6 @@ class GroupType extends AbstractType
             ->add('name')
             ->add('number_user')
             ->add('picture')
-            ->add('groupcol')
             ->add('users')
         ;
     }

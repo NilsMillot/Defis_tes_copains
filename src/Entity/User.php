@@ -88,6 +88,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $idGroup;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikeRemark::class, mappedBy="userId")
+     */
+    private $userLikeRemarks;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikePost::class, mappedBy="userWhoLiked")
+     */
+    private $userLikePosts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
+     */
+    private $send_message;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
+     */
+    private $received_message;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="users")
+     */
+    private $company;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -97,6 +122,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->role = new ArrayCollection();
         $this->statisticals = new ArrayCollection();
         $this->idGroup = new ArrayCollection();
+        $this->userLikeRemarks = new ArrayCollection();
+        $this->userLikePosts = new ArrayCollection();
+        $this->send_message = new ArrayCollection();
+        $this->received_message = new ArrayCollection();
     }
 
     public function __toString()
@@ -399,6 +428,138 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeIdGroup(Group $idGroup): self
     {
         $this->idGroup->removeElement($idGroup);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserLikeRemark[]
+     */
+    public function getUserLikeRemarks(): Collection
+    {
+        return $this->userLikeRemarks;
+    }
+
+    public function addUserLikeRemark(UserLikeRemark $userLikeRemark): self
+    {
+        if (!$this->userLikeRemarks->contains($userLikeRemark)) {
+            $this->userLikeRemarks[] = $userLikeRemark;
+            $userLikeRemark->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikeRemark(UserLikeRemark $userLikeRemark): self
+    {
+        if ($this->userLikeRemarks->removeElement($userLikeRemark)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikeRemark->getUserId() === $this) {
+                $userLikeRemark->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserLikePost[]
+     */
+    public function getUserLikePosts(): Collection
+    {
+        return $this->userLikePosts;
+    }
+
+    public function addUserLikePost(UserLikePost $userLikePost): self
+    {
+        if (!$this->userLikePosts->contains($userLikePost)) {
+            $this->userLikePosts[] = $userLikePost;
+            $userLikePost->setUserWhoLiked($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikePost(UserLikePost $userLikePost): self
+    {
+        if ($this->userLikePosts->removeElement($userLikePost)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikePost->getUserWhoLiked() === $this) {
+                $userLikePost->setUserWhoLiked(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getSendMessage(): Collection
+    {
+        return $this->send_message;
+    }
+
+    public function addSendMessage(Message $sendMessage): self
+    {
+        if (!$this->send_message->contains($sendMessage)) {
+            $this->send_message[] = $sendMessage;
+            $sendMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSendMessage(Message $sendMessage): self
+    {
+        if ($this->send_message->removeElement($sendMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sendMessage->getSender() === $this) {
+                $sendMessage->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getReceivedMessage(): Collection
+    {
+        return $this->received_message;
+    }
+
+    public function addReceivedMessage(Message $receivedMessage): self
+    {
+        if (!$this->received_message->contains($receivedMessage)) {
+            $this->received_message[] = $receivedMessage;
+            $receivedMessage->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceivedMessage(Message $receivedMessage): self
+    {
+        if ($this->received_message->removeElement($receivedMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($receivedMessage->getReceiver() === $this) {
+                $receivedMessage->setReceiver(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }
