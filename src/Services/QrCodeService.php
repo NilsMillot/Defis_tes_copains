@@ -5,6 +5,7 @@ namespace App\Services;
 use Endroid\QrCode\Builder\BuilderInterface;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Color\Color;
 class QrCodeService
 {
     /**
@@ -26,6 +27,7 @@ class QrCodeService
             ->size(200)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->ForegroundColor(new Color(random_int(0,255), random_int(0,255), random_int(0,255)))
             ->build()
         ;
 
