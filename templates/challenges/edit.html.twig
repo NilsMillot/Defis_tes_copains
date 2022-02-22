@@ -5,9 +5,7 @@
 {% block body %}
     <h1>Edit Challenges</h1>
 
-    {{ include('challenges/_form.html.twig', {'button_label': 'Update'}) }}
-
+    {{ include('challenges/_form.html.twig', {'button_label': 'Créer'}) }}
     <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">back to list</a>
 
-    {{ include('challenges/_delete_form.html.twig') }}
 {% endblock %}

@@ -1,42 +1,55 @@
 {% extends 'base_front.html.twig' %}
 
 {% block title %}Challenges{% endblock %}
+{%  set username = "" %}
 
 {% block body %}
-    <h1>Challenges</h1>
+    <div class="row">
+        <h1 class="col">{{ challenge.name }}     <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
+        </h1>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ challenge.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ challenge.name }}</td>
-            </tr>
-            <tr>
-                <th>Creation_date</th>
-                <td>{{ challenge.creationDate ? challenge.creationDate|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Deadline</th>
-                <td>{{ challenge.deadline ? challenge.deadline|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Qr_code</th>
-                <td>{{ challenge.qrCode }}</td>
-            </tr>
-            <tr>
-                <th>Picture</th>
-                <td><img  src={{ vich_uploader_asset(challenge, 'imageFile') }} width="300px"/></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="col s12 m7">
+        <div class="card horizontal">
+            <div class="card-image">
+                <img  src={{ vich_uploader_asset(challenge, 'imageFile') }} height="400px"/>
+            </div>
+            <div class="card-stacked">
+                <div class="card-content">
+                    <p>{{ challenge.description }}</p>
+                </div>
+                <div class="card-action">
+                    <div class="row">
+                        <div class="col s6">
+                        <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
+                        {% for challenge in challenge.users %}
+                            <p>Par : {{ challenge.username }} </p>
+                            {%  set username = challenge.username %}
+                        {% endfor %}
+                        <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
+                        </div>
+                        <div class="col s6">
+                           <img src="{{ challenge.qrCode }}" />
+                        </div>
+                    </div>
+                    {% if app.user.username == username %}
+                    <div class="row">
+                        <div class="col s2 offset-s7">
+                            <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
+                        </div>
+                        <div class="col s2">
+                            {{ include('challenges/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('challenges_index') }}">back to list</a>
 
-    <a href="{{ path('challenges_edit', {'id': challenge.id}) }}">edit</a>
 
-    {{ include('challenges/_delete_form.html.twig') }}
+
+
+
 {% endblock %}
