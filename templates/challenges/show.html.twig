@@ -1,16 +1,18 @@
 {% extends 'base_front.html.twig' %}
 
 {% block title %}Challenges{% endblock %}
+{%  set username = "" %}
 
 {% block body %}
     <div class="row">
-        <h1 class="col">{{ challenge.name }}</h1>
+        <h1 class="col">{{ challenge.name }}     <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
+        </h1>
     </div>
 
     <div class="col s12 m7">
         <div class="card horizontal">
             <div class="card-image">
-                <img  src={{ vich_uploader_asset(challenge, 'imageFile') }} width="300px"/>
+                <img  src={{ vich_uploader_asset(challenge, 'imageFile') }} height="400px"/>
             </div>
             <div class="card-stacked">
                 <div class="card-content">
@@ -30,6 +32,16 @@
                            <img src="{{ challenge.qrCode }}" />
                         </div>
                     </div>
+                    {% if app.user.username == username %}
+                    <div class="row">
+                        <div class="col s2 offset-s7">
+                            <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
+                        </div>
+                        <div class="col s2">
+                            {{ include('challenges/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -38,8 +50,6 @@
 
 
 
-    <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
-    <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
 
-    {{ include('challenges/_delete_form.html.twig') }}
+
 {% endblock %}

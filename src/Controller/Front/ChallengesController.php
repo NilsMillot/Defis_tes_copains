@@ -96,7 +96,7 @@ class ChallengesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('challenges_show', ['id'=>$challenge->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('challenges/edit.html.twig', [
