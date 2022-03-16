@@ -41,13 +41,48 @@
                             {{ include('challenges/_delete_form.html.twig') }}
                         </div>
                     </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col s2 offset-s7">
+                            <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">S'inscrire</a>
+                        </div>
+                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
+    {{ include('post/_form.html.twig') }}
+{#    <div class="row">#}
+{#        <form class="col s12">#}
+{#            <div class="row">#}
+{#                <div class="input-field col s6">#}
+{#                    <i class="material-icons prefix">mode_edit</i>#}
+{#                    <textarea id="icon_prefix2" class="materialize-textarea"></textarea>#}
+{#                    <label for="icon_prefix2">Ajouter un commentaire</label>#}
+{#                </div>#}
+{#            </div>#}
+{#        </form>#}
+{#    </div>#}
 
+    <div class="col s12 m7">
+            <div class="divider"></div>
+            <div class="section">
+                <h5>Commentaire 1</h5>
+                <p>balbala</p>
+            </div>
+            <div class="divider"></div>
+            <div class="section">
+                <h5>Commentaire 2</h5>
+                <p>Stuff</p>
+            </div>
+            <div class="divider"></div>
+            <div class="section">
+                <h5>Commentaire 3</h5>
+                <p>Stuff</p>
+            </div>
+    </div>
 
 
 

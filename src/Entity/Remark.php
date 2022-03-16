@@ -30,14 +30,9 @@ class Remark
     private $userId;
 
     /**
-     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="remark")
+     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="remark")
      */
     private $post;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="likedRemarks")
-     */
-    private $userRemark;
 
     /**
      * @ORM\OneToMany(targetEntity=UserLikeRemark::class, mappedBy="remarkId")

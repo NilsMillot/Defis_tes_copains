@@ -49,11 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $ranks;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="author")
-     */
-    private $idPost;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="users")
      */
     private $challenge;
@@ -64,14 +59,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $remark;
 
     /**
+     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="userRegister")
+     * @ORM\JoinTable(name="challenge_register_user")
+     */
+    private $challengeRegister;
+
+    /**
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="usersWhoLiked")
      */
     private $likedPosts;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Remark::class, mappedBy="userRemark")
-     */
-    private $likedRemarks;
 
     /**
      * @ORM\OneToMany(targetEntity=Role::class, mappedBy="userId")
@@ -113,6 +110,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $company;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="userId")
+     */
+    private $postsId;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -126,6 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userLikePosts = new ArrayCollection();
         $this->send_message = new ArrayCollection();
         $this->received_message = new ArrayCollection();
+        $this->postsId = new ArrayCollection();
     }
 
     public function __toString()
@@ -560,6 +563,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPostsId(): Collection
+    {
+        return $this->postsId;
+    }
+
+    public function addPostsId(Post $postsId): self
+    {
+        if (!$this->postsId->contains($postsId)) {
+            $this->postsId[] = $postsId;
+            $postsId->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostsId(Post $postsId): self
+    {
+        if ($this->postsId->removeElement($postsId)) {
+            $postsId->removeUserId($this);
+        }
 
         return $this;
     }

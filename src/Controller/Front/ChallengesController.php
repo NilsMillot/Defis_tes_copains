@@ -3,8 +3,10 @@
 namespace App\Controller\Front;
 
 use App\Entity\Challenges;
+use App\Entity\Post;
 use App\Entity\User;
 use App\Form\ChallengesType;
+use App\Form\PostType;
 use App\Repository\ChallengesRepository;
 use App\Repository\UserRepository;
 use App\Services\QrCodeService;
@@ -42,7 +44,6 @@ class ChallengesController extends AbstractController
 
         return $this->render('challenges/index.html.twig', [
             'challenges' => $challengesRepository->findAll(),
-
         ]);
     }
 
@@ -61,8 +62,12 @@ class ChallengesController extends AbstractController
             $challenge->addUser($this->security->getUser());
 
             $lastChallenge = $challengesRepository->findOneBy([], ['id' => 'desc']);
-            $lastId = $lastChallenge->getId();
-            $futurId = $lastId + 1;
+            if ($lastChallenge === null) {
+                $futurId = 1;
+            } else {
+                $lastId = $lastChallenge->getId();
+                $futurId = $lastId + 1;
+            }
             $qrCode = $qrCodeService->qrcode($futurId);
 
             $challenge->setQrCode($qrCode);
@@ -80,11 +85,24 @@ class ChallengesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'challenges_show', methods: ['GET'])]
-    public function show(Challenges $challenge): Response
+    #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
+    public function show(Request $request, Challenges $challenge): Response
     {
+        $post = new Post();
+        $formPost = $this->createForm(PostType::class, $post);
+        $formPost->handleRequest($request);
+        if ($formPost->isSubmitted() && $formPost->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $post->addUserId($this->security->getUser());
+            $post->addChallenge($challenge);
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('challenges_show', ['id' => $challenge->getId()], Response::HTTP_SEE_OTHER);
+        }
         return $this->render('challenges/show.html.twig', [
             'challenge' => $challenge,
+            'form' => $formPost->createView()
         ]);
     }
 

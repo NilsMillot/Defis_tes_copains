@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,10 +14,12 @@ class PostType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('picture')
-            ->add('content')
-            ->add('remark')
-            ->add('usersWhoLiked')
+            ->add('content',TextareaType::class, [
+                'attr'   =>  array(
+                    'class'   => 'materialize-textarea',
+                    'id'=> 'icon_prefix2'
+                )
+            ])
         ;
     }
 

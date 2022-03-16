@@ -6,12 +6,17 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\TimesTampableTrait;
+
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
 class Post
 {
+
+    use TimesTampableTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -35,17 +40,12 @@ class Post
     private $content;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="idPost")
-     */
-    private $author;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="idPost")
+     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="idPost")
      */
     private $challenge;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Remark::class, inversedBy="post")
+     * @ORM\OneToMany(targetEntity=Remark::class, mappedBy="post")
      */
     private $remark;
 
@@ -59,12 +59,18 @@ class Post
      */
     private $userLikePosts;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="postsId")
+     * @ORM\JoinTable(name="post_by_user")
+     */
+    private $userId;
+
     public function __construct()
     {
-        $this->author = new ArrayCollection();
         $this->challenge = new ArrayCollection();
         $this->usersWhoLiked = new ArrayCollection();
         $this->userLikePosts = new ArrayCollection();
+        $this->userId = new ArrayCollection();
     }
 
 
@@ -110,37 +116,7 @@ class Post
     }
 
     /**
-     * @return Collection|User[]
-     */
-    public function getAuthor(): Collection
-    {
-        return $this->author;
-    }
-
-    public function addAuthor(User $author): self
-    {
-        if (!$this->author->contains($author)) {
-            $this->author[] = $author;
-            $author->setIdPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(User $author): self
-    {
-        if ($this->author->removeElement($author)) {
-            // set the owning side to null (unless already changed)
-            if ($author->getIdPost() === $this) {
-                $author->setIdPost(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Challenges[]
+     * @return Collection
      */
     public function getChallenge(): Collection
     {
@@ -151,7 +127,6 @@ class Post
     {
         if (!$this->challenge->contains($challenge)) {
             $this->challenge[] = $challenge;
-            $challenge->setIdPost($this);
         }
 
         return $this;
@@ -159,12 +134,7 @@ class Post
 
     public function removeChallenge(Challenges $challenge): self
     {
-        if ($this->challenge->removeElement($challenge)) {
-            // set the owning side to null (unless already changed)
-            if ($challenge->getIdPost() === $this) {
-                $challenge->setIdPost(null);
-            }
-        }
+        $this->challenge->removeElement($challenge);
 
         return $this;
     }
@@ -231,6 +201,30 @@ class Post
                 $userLikePost->setPostLiked(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUserId(): Collection
+    {
+        return $this->userId;
+    }
+
+    public function addUserId(User $userId): self
+    {
+        if (!$this->userId->contains($userId)) {
+            $this->userId[] = $userId;
+        }
+
+        return $this;
+    }
+
+    public function removeUserId(User $userId): self
+    {
+        $this->userId->removeElement($userId);
 
         return $this;
     }

@@ -56,7 +56,7 @@ class Challenges implements \Serializable
     private $categoryChallenges;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="challenge")
+     * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="challenge")
      */
     private $idPost;
 
@@ -64,6 +64,11 @@ class Challenges implements \Serializable
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="challenge")
      */
     private $users;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="challengeRegister")
+     */
+    private $userRegister;
 
     public function __construct()
     {
@@ -218,6 +223,32 @@ class Challenges implements \Serializable
         return $this;
     }
 
+    /**
+     * @return Collection|User[]
+     */
+    public function getUserRegister(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUserRegister(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addUserRegister($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRegister(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeRemark($this);
+        }
+
+        return $this;
+    }
     public function serialize()
     {
         return serialize(array(
