@@ -54,37 +54,22 @@
     </div>
 
     {{ include('post/_form.html.twig') }}
-{#    <div class="row">#}
-{#        <form class="col s12">#}
-{#            <div class="row">#}
-{#                <div class="input-field col s6">#}
-{#                    <i class="material-icons prefix">mode_edit</i>#}
-{#                    <textarea id="icon_prefix2" class="materialize-textarea"></textarea>#}
-{#                    <label for="icon_prefix2">Ajouter un commentaire</label>#}
-{#                </div>#}
-{#            </div>#}
-{#        </form>#}
-{#    </div>#}
 
+{% for post in posts %}
     <div class="col s12 m7">
             <div class="divider"></div>
             <div class="section">
-                <h5>Commentaire 1</h5>
-                <p>balbala</p>
+                <h5>{{ post.name }}</h5>
+                <p>{{ post.content }} </p>
             </div>
-            <div class="divider"></div>
-            <div class="section">
-                <h5>Commentaire 2</h5>
-                <p>Stuff</p>
-            </div>
-            <div class="divider"></div>
-            <div class="section">
-                <h5>Commentaire 3</h5>
-                <p>Stuff</p>
-            </div>
+        {% if(post.imageName) %}
+        <div>
+            <img height="200px" src={{ vich_uploader_asset(post, 'imageFile') }} />
+        </div>
+        {% endif %}
     </div>
 
-
+{% endfor %}
 
 
 {% endblock %}

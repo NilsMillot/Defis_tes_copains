@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\ChallengesType;
 use App\Form\PostType;
 use App\Repository\ChallengesRepository;
+use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Services\QrCodeService;
 use Doctrine\DBAL\Types\DateType;
@@ -86,22 +87,24 @@ class ChallengesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Challenges $challenge): Response
+    public function show(Request $request, Challenges $challenge, PostRepository $postRepository): Response
     {
+        $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
         $post = new Post();
         $formPost = $this->createForm(PostType::class, $post);
         $formPost->handleRequest($request);
         if ($formPost->isSubmitted() && $formPost->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $post->addUserId($this->security->getUser());
-            $post->addChallenge($challenge);
+            $post->setChallengeId($challenge);
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('challenges_show', ['id' => $challenge->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('challenges_show', ['id' => $challenge->getId(),'posts'=>$allPosts], Response::HTTP_SEE_OTHER);
         }
         return $this->render('challenges/show.html.twig', [
             'challenge' => $challenge,
+            'posts'=>$allPosts,
             'form' => $formPost->createView()
         ]);
     }

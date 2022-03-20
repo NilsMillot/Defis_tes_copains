@@ -7,15 +7,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\TimesTampableTrait;
+use App\Entity\Traits\VichUploadTrait;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
+ * @Vich\Uploadable()
  */
 class Post
 {
 
     use TimesTampableTrait;
+    use VichUploadTrait;
+
 
     /**
      * @ORM\Id
@@ -29,20 +35,12 @@ class Post
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $picture;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $content;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="idPost")
-     */
-    private $challenge;
 
     /**
      * @ORM\OneToMany(targetEntity=Remark::class, mappedBy="post")
@@ -65,9 +63,13 @@ class Post
      */
     private $userId;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Challenges::class, inversedBy="postId")
+     */
+    private $challengeId;
+
     public function __construct()
     {
-        $this->challenge = new ArrayCollection();
         $this->usersWhoLiked = new ArrayCollection();
         $this->userLikePosts = new ArrayCollection();
         $this->userId = new ArrayCollection();
@@ -91,17 +93,6 @@ class Post
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): self
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
 
     public function getContent(): ?string
     {
@@ -115,29 +106,6 @@ class Post
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getChallenge(): Collection
-    {
-        return $this->challenge;
-    }
-
-    public function addChallenge(Challenges $challenge): self
-    {
-        if (!$this->challenge->contains($challenge)) {
-            $this->challenge[] = $challenge;
-        }
-
-        return $this;
-    }
-
-    public function removeChallenge(Challenges $challenge): self
-    {
-        $this->challenge->removeElement($challenge);
-
-        return $this;
-    }
 
     public function getRemark(): ?Remark
     {
@@ -225,6 +193,18 @@ class Post
     public function removeUserId(User $userId): self
     {
         $this->userId->removeElement($userId);
+
+        return $this;
+    }
+
+    public function getChallengeId(): ?Challenges
+    {
+        return $this->challengeId;
+    }
+
+    public function setChallengeId(?Challenges $challengeId): self
+    {
+        $this->challengeId = $challengeId;
 
         return $this;
     }
