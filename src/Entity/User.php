@@ -49,29 +49,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $ranks;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="author")
-     */
-    private $idPost;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="users")
      */
     private $challenge;
 
+
     /**
-     * @ORM\ManyToOne(targetEntity=Remark::class, inversedBy="userId")
+     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="userRegister")
+     * @ORM\JoinTable(name="challenge_register_user")
      */
-    private $remark;
+    private $challengeRegister;
 
     /**
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="usersWhoLiked")
      */
     private $likedPosts;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Remark::class, mappedBy="userRemark")
-     */
-    private $likedRemarks;
 
     /**
      * @ORM\OneToMany(targetEntity=Role::class, mappedBy="userId")
@@ -113,6 +106,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $company;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="userId")
+     */
+    private $postsId;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Remark::class, mappedBy="userId")
+     */
+    private $remarks;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -126,6 +129,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userLikePosts = new ArrayCollection();
         $this->send_message = new ArrayCollection();
         $this->received_message = new ArrayCollection();
+        $this->postsId = new ArrayCollection();
+        $this->remarks = new ArrayCollection();
     }
 
     public function __toString()
@@ -282,17 +287,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRemark(): ?Remark
-    {
-        return $this->remark;
-    }
-
-    public function setRemark(?Remark $remark): self
-    {
-        $this->remark = $remark;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Post[]
@@ -560,6 +554,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPostsId(): Collection
+    {
+        return $this->postsId;
+    }
+
+    public function addPostsId(Post $postsId): self
+    {
+        if (!$this->postsId->contains($postsId)) {
+            $this->postsId[] = $postsId;
+            $postsId->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostsId(Post $postsId): self
+    {
+        if ($this->postsId->removeElement($postsId)) {
+            $postsId->removeUserId($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Remark[]
+     */
+    public function getRemarks(): Collection
+    {
+        return $this->remarks;
+    }
+
+    public function addRemark(Remark $remark): self
+    {
+        if (!$this->remarks->contains($remark)) {
+            $this->remarks[] = $remark;
+            $remark->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemark(Remark $remark): self
+    {
+        if ($this->remarks->removeElement($remark)) {
+            $remark->removeUserId($this);
+        }
 
         return $this;
     }

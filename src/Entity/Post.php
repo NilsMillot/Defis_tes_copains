@@ -6,12 +6,23 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\TimesTampableTrait;
+use App\Entity\Traits\VichUploadTrait;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
+
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
+ * @Vich\Uploadable()
  */
 class Post
 {
+
+    use TimesTampableTrait;
+    use VichUploadTrait;
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -24,10 +35,6 @@ class Post
      */
     private $name;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $picture;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -35,36 +42,32 @@ class Post
     private $content;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="idPost")
-     */
-    private $author;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="idPost")
-     */
-    private $challenge;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Remark::class, inversedBy="post")
-     */
-    private $remark;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="likedPosts")
-     */
-    private $usersWhoLiked;
-
-    /**
      * @ORM\OneToMany(targetEntity=UserLikePost::class, mappedBy="postLiked")
      */
     private $userLikePosts;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="postsId")
+     * @ORM\JoinTable(name="post_by_user")
+     */
+    private $userId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Challenges::class, inversedBy="postId")
+     */
+    private $challengeId;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Remark::class, mappedBy="post")
+     */
+    private $remark;
+
     public function __construct()
     {
-        $this->author = new ArrayCollection();
-        $this->challenge = new ArrayCollection();
         $this->usersWhoLiked = new ArrayCollection();
         $this->userLikePosts = new ArrayCollection();
+        $this->userId = new ArrayCollection();
+        $this->remark = new ArrayCollection();
     }
 
 
@@ -85,17 +88,6 @@ class Post
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): self
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
 
     public function getContent(): ?string
     {
@@ -105,78 +97,6 @@ class Post
     public function setContent(?string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getAuthor(): Collection
-    {
-        return $this->author;
-    }
-
-    public function addAuthor(User $author): self
-    {
-        if (!$this->author->contains($author)) {
-            $this->author[] = $author;
-            $author->setIdPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(User $author): self
-    {
-        if ($this->author->removeElement($author)) {
-            // set the owning side to null (unless already changed)
-            if ($author->getIdPost() === $this) {
-                $author->setIdPost(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Challenges[]
-     */
-    public function getChallenge(): Collection
-    {
-        return $this->challenge;
-    }
-
-    public function addChallenge(Challenges $challenge): self
-    {
-        if (!$this->challenge->contains($challenge)) {
-            $this->challenge[] = $challenge;
-            $challenge->setIdPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChallenge(Challenges $challenge): self
-    {
-        if ($this->challenge->removeElement($challenge)) {
-            // set the owning side to null (unless already changed)
-            if ($challenge->getIdPost() === $this) {
-                $challenge->setIdPost(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getRemark(): ?Remark
-    {
-        return $this->remark;
-    }
-
-    public function setRemark(?Remark $remark): self
-    {
-        $this->remark = $remark;
 
         return $this;
     }
@@ -229,6 +149,72 @@ class Post
             // set the owning side to null (unless already changed)
             if ($userLikePost->getPostLiked() === $this) {
                 $userLikePost->setPostLiked(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUserId(): Collection
+    {
+        return $this->userId;
+    }
+
+    public function addUserId(User $userId): self
+    {
+        if (!$this->userId->contains($userId)) {
+            $this->userId[] = $userId;
+        }
+
+        return $this;
+    }
+
+    public function removeUserId(User $userId): self
+    {
+        $this->userId->removeElement($userId);
+
+        return $this;
+    }
+
+    public function getChallengeId(): ?Challenges
+    {
+        return $this->challengeId;
+    }
+
+    public function setChallengeId(?Challenges $challengeId): self
+    {
+        $this->challengeId = $challengeId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Remark[]
+     */
+    public function getRemark(): Collection
+    {
+        return $this->remark;
+    }
+
+    public function addRemark(Remark $remark): self
+    {
+        if (!$this->remark->contains($remark)) {
+            $this->remark[] = $remark;
+            $remark->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemark(Remark $remark): self
+    {
+        if ($this->remark->removeElement($remark)) {
+            // set the owning side to null (unless already changed)
+            if ($remark->getPost() === $this) {
+                $remark->setPost(null);
             }
         }
 

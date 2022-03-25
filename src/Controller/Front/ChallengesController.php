@@ -3,9 +3,14 @@
 namespace App\Controller\Front;
 
 use App\Entity\Challenges;
+use App\Entity\Post;
+use App\Entity\Remark;
 use App\Entity\User;
 use App\Form\ChallengesType;
+use App\Form\PostType;
+use App\Form\RemarkType;
 use App\Repository\ChallengesRepository;
+use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Services\QrCodeService;
 use Doctrine\DBAL\Types\DateType;
@@ -42,7 +47,6 @@ class ChallengesController extends AbstractController
 
         return $this->render('challenges/index.html.twig', [
             'challenges' => $challengesRepository->findAll(),
-
         ]);
     }
 
@@ -61,8 +65,12 @@ class ChallengesController extends AbstractController
             $challenge->addUser($this->security->getUser());
 
             $lastChallenge = $challengesRepository->findOneBy([], ['id' => 'desc']);
-            $lastId = $lastChallenge->getId();
-            $futurId = $lastId + 1;
+            if ($lastChallenge === null) {
+                $futurId = 1;
+            } else {
+                $lastId = $lastChallenge->getId();
+                $futurId = $lastId + 1;
+            }
             $qrCode = $qrCodeService->qrcode($futurId);
 
             $challenge->setQrCode($qrCode);
@@ -80,11 +88,44 @@ class ChallengesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'challenges_show', methods: ['GET'])]
-    public function show(Challenges $challenge): Response
+    #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
+    public function show(Request $request, Challenges $challenge, PostRepository $postRepository): Response
     {
+        $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
+
+        $post = new Post();
+        $formPost = $this->createForm(PostType::class, $post);
+        $remark = new Remark();
+        $formRemark = $this->createForm(RemarkType::class, $remark);
+
+        $formPost->handleRequest($request);
+        if($formPost->isSubmitted() && $formPost->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $post->addUserId($this->security->getUser());
+            $post->setChallengeId($challenge);
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+           // return $this->redirectToRoute('challenges_show', ['id' => $challenge->getId(),'posts'=>$allPosts], Response::HTTP_SEE_OTHER);
+        }
+
+        $formRemark->handleRequest($request);
+        if($formRemark->isSubmitted() && $formRemark->isValid()){
+            $post = $postRepository->findOneBy(['id'=>$_POST['post-id']]);
+            $entityManager = $this->getDoctrine()->getManager();
+            $remark->addUserId($this->security->getUser());
+            $remark->setPost($post);
+            $entityManager->persist($remark);
+            $entityManager->flush();
+
+            //return $this->redirect($request->getUri());
+        }
+        
         return $this->render('challenges/show.html.twig', [
             'challenge' => $challenge,
+            'posts'=>$allPosts,
+            'formPost' => $formPost->createView(),
+            'formRemark' => $formRemark->createView(),
         ]);
     }
 

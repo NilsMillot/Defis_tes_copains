@@ -56,19 +56,25 @@ class Challenges implements \Serializable
     private $categoryChallenges;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="challenge")
-     */
-    private $idPost;
-
-    /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="challenge")
      */
     private $users;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="challengeRegister")
+     */
+    private $userRegister;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="challengeId")
+     */
+    private $postId;
 
     public function __construct()
     {
         $this->categoryChallenges = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->postId = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,18 +185,6 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    public function getIdPost(): ?Post
-    {
-        return $this->idPost;
-    }
-
-    public function setIdPost(?Post $idPost): self
-    {
-        $this->idPost = $idPost;
-
-        return $this;
-    }
-
     /**
      * @return Collection|User[]
      */
@@ -218,6 +212,32 @@ class Challenges implements \Serializable
         return $this;
     }
 
+    /**
+     * @return Collection|User[]
+     */
+    public function getUserRegister(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUserRegister(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addUserRegister($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRegister(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeRemark($this);
+        }
+
+        return $this;
+    }
     public function serialize()
     {
         return serialize(array(
@@ -232,6 +252,36 @@ class Challenges implements \Serializable
             $this->id,
             $this->imageName,
             ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPostId(): Collection
+    {
+        return $this->postId;
+    }
+
+    public function addPostId(Post $postId): self
+    {
+        if (!$this->postId->contains($postId)) {
+            $this->postId[] = $postId;
+            $postId->setChallengeId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostId(Post $postId): self
+    {
+        if ($this->postId->removeElement($postId)) {
+            // set the owning side to null (unless already changed)
+            if ($postId->getChallengeId() === $this) {
+                $postId->setChallengeId(null);
+            }
+        }
+
+        return $this;
     }
 
 
