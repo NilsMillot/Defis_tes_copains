@@ -22,12 +22,13 @@ class Remark
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $content;
+    private $contentRemark;
+
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="remark")
+     * @ORM\OneToMany(targetEntity=UserLikeRemark::class, mappedBy="remarkId")
      */
-    private $userId;
+    private $userLikeRemarks;
 
     /**
      * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="remark")
@@ -35,16 +36,14 @@ class Remark
     private $post;
 
     /**
-     * @ORM\OneToMany(targetEntity=UserLikeRemark::class, mappedBy="remarkId")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="remarks")
      */
-    private $userLikeRemarks;
+    private $userId;
 
     public function __construct()
     {
-        $this->userId = new ArrayCollection();
-        $this->post = new ArrayCollection();
-        $this->userRemark = new ArrayCollection();
         $this->userLikeRemarks = new ArrayCollection();
+        $this->userId = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,98 +51,14 @@ class Remark
         return $this->id;
     }
 
-    public function getContent(): ?string
+    public function getContentRemark(): ?string
     {
-        return $this->content;
+        return $this->contentRemark;
     }
 
-    public function setContent(string $content): self
+    public function setContentRemark(string $contentRemark): self
     {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getUserId(): Collection
-    {
-        return $this->userId;
-    }
-
-    public function addUserId(User $userId): self
-    {
-        if (!$this->userId->contains($userId)) {
-            $this->userId[] = $userId;
-            $userId->setRemark($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserId(User $userId): self
-    {
-        if ($this->userId->removeElement($userId)) {
-            // set the owning side to null (unless already changed)
-            if ($userId->getRemark() === $this) {
-                $userId->setRemark(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Post[]
-     */
-    public function getPost(): Collection
-    {
-        return $this->post;
-    }
-
-    public function addPost(Post $post): self
-    {
-        if (!$this->post->contains($post)) {
-            $this->post[] = $post;
-            $post->setRemark($this);
-        }
-
-        return $this;
-    }
-
-    public function removePost(Post $post): self
-    {
-        if ($this->post->removeElement($post)) {
-            // set the owning side to null (unless already changed)
-            if ($post->getRemark() === $this) {
-                $post->setRemark(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getUserRemark(): Collection
-    {
-        return $this->userRemark;
-    }
-
-    public function addUserRemark(User $userRemark): self
-    {
-        if (!$this->userRemark->contains($userRemark)) {
-            $this->userRemark[] = $userRemark;
-        }
-
-        return $this;
-    }
-
-    public function removeUserRemark(User $userRemark): self
-    {
-        $this->userRemark->removeElement($userRemark);
+        $this->contentRemark = $contentRemark;
 
         return $this;
     }
@@ -174,6 +89,42 @@ class Remark
                 $userLikeRemark->setRemarkId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): self
+    {
+        $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUserId(): Collection
+    {
+        return $this->userId;
+    }
+
+    public function addUserId(User $userId): self
+    {
+        if (!$this->userId->contains($userId)) {
+            $this->userId[] = $userId;
+        }
+
+        return $this;
+    }
+
+    public function removeUserId(User $userId): self
+    {
+        $this->userId->removeElement($userId);
 
         return $this;
     }

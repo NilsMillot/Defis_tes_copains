@@ -1,16 +1,16 @@
 <div class="row">
-    {{ form_start(form) }}
+    {{ form_start(formPost) }}
     <div class="row">
-        {{ form_label(form.name,'Nom du post') }}
-        {{ form_widget(form.name) }}
+        {{ form_label(formPost.name,'Nom du post') }}
+        {{ form_widget(formPost.name) }}
         <div class="input-field col s6">
             <i class="material-icons prefix">mode_edit</i>
-            {{ form_widget(form.content) }}
-            <label for="icon_prefix2">Ajouter un commentaire</label>
+            {{ form_widget(formPost.content) }}
+            <label for="icon_prefix2">Contenue du post</label>
             <div class="file-field input-field">
                 <div class="btn">
                     <span>File</span>
-                    {{ form_widget(form.imageFile) }}
+                    {{ form_widget(formPost.imageFile) }}
                 </div>
                 <div class="file-path-wrapper">
                     <input class="file-path validate" type="text">
@@ -19,5 +19,5 @@
         </div>
     </div>
     <button class="btn">{{ button_label|default('Save') }}</button>
-    {{ form_end(form) }}
+    {{ form_end(formPost) }}
 </div>

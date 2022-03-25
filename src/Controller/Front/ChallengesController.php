@@ -4,9 +4,11 @@ namespace App\Controller\Front;
 
 use App\Entity\Challenges;
 use App\Entity\Post;
+use App\Entity\Remark;
 use App\Entity\User;
 use App\Form\ChallengesType;
 use App\Form\PostType;
+use App\Form\RemarkType;
 use App\Repository\ChallengesRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
@@ -90,22 +92,40 @@ class ChallengesController extends AbstractController
     public function show(Request $request, Challenges $challenge, PostRepository $postRepository): Response
     {
         $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
+
         $post = new Post();
         $formPost = $this->createForm(PostType::class, $post);
+        $remark = new Remark();
+        $formRemark = $this->createForm(RemarkType::class, $remark);
+
         $formPost->handleRequest($request);
-        if ($formPost->isSubmitted() && $formPost->isValid()) {
+        if($formPost->isSubmitted() && $formPost->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $post->addUserId($this->security->getUser());
             $post->setChallengeId($challenge);
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('challenges_show', ['id' => $challenge->getId(),'posts'=>$allPosts], Response::HTTP_SEE_OTHER);
+           // return $this->redirectToRoute('challenges_show', ['id' => $challenge->getId(),'posts'=>$allPosts], Response::HTTP_SEE_OTHER);
         }
+
+        $formRemark->handleRequest($request);
+        if($formRemark->isSubmitted() && $formRemark->isValid()){
+            $post = $postRepository->findOneBy(['id'=>$_POST['post-id']]);
+            $entityManager = $this->getDoctrine()->getManager();
+            $remark->addUserId($this->security->getUser());
+            $remark->setPost($post);
+            $entityManager->persist($remark);
+            $entityManager->flush();
+
+            //return $this->redirect($request->getUri());
+        }
+        
         return $this->render('challenges/show.html.twig', [
             'challenge' => $challenge,
             'posts'=>$allPosts,
-            'form' => $formPost->createView()
+            'formPost' => $formPost->createView(),
+            'formRemark' => $formRemark->createView(),
         ]);
     }
 

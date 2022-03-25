@@ -1,13 +1,14 @@
 
 <div class="row">
-    {{ form_start(form) }}
+    {{ form_start(formRemark) }}
         <div class="row">
             <div class="input-field col s6">
                 <i class="material-icons prefix">mode_edit</i>
-                {{ form_widget(form.content) }}
+                <input id="post-id" name="post-id" hidden>
+                {{ form_widget(formRemark.contentRemark) }}
                 <label for="icon_prefix2">Ajouter un commentaire</label>
             </div>
         </div>
     <button class="btn">{{ button_label|default('Save') }}</button>
-    {{ form_end(form) }}
+    {{ form_end(formRemark) }}
 </div>

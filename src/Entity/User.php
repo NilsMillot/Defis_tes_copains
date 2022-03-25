@@ -53,10 +53,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $challenge;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Remark::class, inversedBy="userId")
-     */
-    private $remark;
 
     /**
      * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="userRegister")
@@ -115,6 +111,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $postsId;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Remark::class, mappedBy="userId")
+     */
+    private $remarks;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -129,6 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->send_message = new ArrayCollection();
         $this->received_message = new ArrayCollection();
         $this->postsId = new ArrayCollection();
+        $this->remarks = new ArrayCollection();
     }
 
     public function __toString()
@@ -285,17 +287,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRemark(): ?Remark
-    {
-        return $this->remark;
-    }
-
-    public function setRemark(?Remark $remark): self
-    {
-        $this->remark = $remark;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Post[]
@@ -589,6 +580,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->postsId->removeElement($postsId)) {
             $postsId->removeUserId($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Remark[]
+     */
+    public function getRemarks(): Collection
+    {
+        return $this->remarks;
+    }
+
+    public function addRemark(Remark $remark): self
+    {
+        if (!$this->remarks->contains($remark)) {
+            $this->remarks[] = $remark;
+            $remark->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemark(Remark $remark): self
+    {
+        if ($this->remarks->removeElement($remark)) {
+            $remark->removeUserId($this);
         }
 
         return $this;

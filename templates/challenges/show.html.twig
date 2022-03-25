@@ -57,7 +57,10 @@
 
 {% for post in posts %}
     <div class="col s12 m7">
-            <div class="divider"></div>
+        <div class="divider"></div>
+        {% for user in post.userId %}
+            {{ user.username }}
+            {% endfor %}
             <div class="section">
                 <h5>{{ post.name }}</h5>
                 <p>{{ post.content }} </p>
@@ -67,9 +70,32 @@
             <img height="200px" src={{ vich_uploader_asset(post, 'imageFile') }} />
         </div>
         {% endif %}
+        <ul class="collapsible popout">
+            <li>
+                <div class="collapsible-header"> <i class="material-icons prefix">mode_edit</i>Commentaires </div>
+                <div class="collapsible-body">
+                <a class="waves-effect waves-light btn modal-trigger modal_href" data-id="{{post.id}}" href="#modal1">Répondre</a>
+                    {% for remark in post.remark %}
+                        <div>
+                            <h6>{{ remark.contentRemark }}</h6>
+                            {% for user in remark.userId %}
+                                <span> By {{ user.username }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="divider"></div>
+                    {% endfor %}
+                </div>
+            </li>
+        </ul>
     </div>
 
 {% endfor %}
+
+
+<div id="modal1" class="modal">
+    <div class="modal-content">
+     {{include('remark/_form.html.twig')}}
+  </div>
 
 
 {% endblock %}

@@ -41,17 +41,6 @@ class Post
      */
     private $content;
 
-
-    /**
-     * @ORM\OneToMany(targetEntity=Remark::class, mappedBy="post")
-     */
-    private $remark;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="likedPosts")
-     */
-    private $usersWhoLiked;
-
     /**
      * @ORM\OneToMany(targetEntity=UserLikePost::class, mappedBy="postLiked")
      */
@@ -68,11 +57,17 @@ class Post
      */
     private $challengeId;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Remark::class, mappedBy="post")
+     */
+    private $remark;
+
     public function __construct()
     {
         $this->usersWhoLiked = new ArrayCollection();
         $this->userLikePosts = new ArrayCollection();
         $this->userId = new ArrayCollection();
+        $this->remark = new ArrayCollection();
     }
 
 
@@ -102,19 +97,6 @@ class Post
     public function setContent(?string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-
-    public function getRemark(): ?Remark
-    {
-        return $this->remark;
-    }
-
-    public function setRemark(?Remark $remark): self
-    {
-        $this->remark = $remark;
 
         return $this;
     }
@@ -205,6 +187,36 @@ class Post
     public function setChallengeId(?Challenges $challengeId): self
     {
         $this->challengeId = $challengeId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Remark[]
+     */
+    public function getRemark(): Collection
+    {
+        return $this->remark;
+    }
+
+    public function addRemark(Remark $remark): self
+    {
+        if (!$this->remark->contains($remark)) {
+            $this->remark[] = $remark;
+            $remark->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemark(Remark $remark): self
+    {
+        if ($this->remark->removeElement($remark)) {
+            // set the owning side to null (unless already changed)
+            if ($remark->getPost() === $this) {
+                $remark->setPost(null);
+            }
+        }
 
         return $this;
     }
