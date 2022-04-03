@@ -44,7 +44,23 @@
                     {% else %}
                     <div class="row">
                         <div class="col s2 offset-s7">
-                            <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">S'inscrire</a>
+                        {% for register in challenge.challengesUserRegisters %}
+                            {% if register is not empty  %}
+                                <a class="waves-effect waves-light btn orange accent-3 " href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>
+                            {% else %}
+                                <p>Bla</p>
+                            {% endif %}
+{#                           TODO: Reussie a afficher seuelemtn le bouton qu'il faut #}
+{#                            {% if register is null %}#}
+{#                                <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
+{#                            {% endif %}#}
+{#                            {% if register.userRegister == app.user and register.challengeRegister == challenge %}#}
+{#                                <a class="waves-effect waves-light btn orange accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>#}
+{#                            {% elseif register.userRegister == app.user and register.challengeRegister != challenge %}#}
+{#                            <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
+{#                            {% endif %}#}
+                        {% endfor %}
+                            <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
                         </div>
                     </div>
                     {% endif %}
