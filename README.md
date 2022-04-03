@@ -16,7 +16,7 @@ DATABASE_URL="postgresql://postgres:password@db:5432/db?serverVersion=13&charset
 ## DEV Mode for FAST RELOAD (HMR) WITH VITEJS
 
 ```bash
-yarn dev
+yarn && yarn dev
 ```
 
 ## Commandes utiles
