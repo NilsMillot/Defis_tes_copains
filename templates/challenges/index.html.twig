@@ -16,7 +16,7 @@
 
             </div>
             <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">Fermer</i></span>
+                <span class="card-title grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">close</i></span>
                 <p id="date">Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
                 <p>Description : {{ challenge.description }}</p>
                 {% for challenge in challenge.users %}
