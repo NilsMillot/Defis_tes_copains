@@ -29,8 +29,15 @@ class FriendsController extends AbstractController
         $friendsReceivedByCurrentUser = $friendsRepository->findBy(['receiverUser' => $this->getUser()]);
         $friendsOfCurrentUser = array_merge($friendsSendedByCurrentUser, $friendsReceivedByCurrentUser);
         $uniqueFriendsOfCurrentUser = array_unique($friendsOfCurrentUser);
+
+        $arrUserFriendsReceived = [];
+        for ($i=0; $i<sizeof($friendsReceivedByCurrentUser); $i++){
+            array_push($arrUserFriendsReceived, $this->getDoctrine()->getRepository(User::class)->findBy(['id' => $friendsReceivedByCurrentUser[$i]->getSenderUser()->getId()]));
+        }
+
         return $this->render('friends/index.html.twig', [
             'friends' => $uniqueFriendsOfCurrentUser,
+            'friendsRequestReceived' => $arrUserFriendsReceived[0] ?? null,
         ]);
     }
 
