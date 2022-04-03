@@ -1,0 +1,36 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Friends{% endblock %}
+
+{% block body %}
+    <h1>Friends</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ friend.id }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ friend.status }}</td>
+            </tr>
+            <tr>
+                <th>UserIDReceiver</th>
+                <td>{{ friend.receiverUser.id }}</td>
+            </tr>
+            <tr>
+                <th>UserIDSender</th>
+                <td>{{ friend.senderUser.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('friends_index') }}">back to list</a>
+
+    <a href="{{ path('friends_edit', {'id': friend.id}) }}">edit</a>
+
+    {{ include('friends/_delete_form.html.twig') }}
+
+    <h3>Check dump icon (here is user you want to show here)</h3>
+{% endblock %}
