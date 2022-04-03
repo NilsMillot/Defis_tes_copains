@@ -1,7 +1,6 @@
 {% extends 'base_front.html.twig' %}
-
 {% block title %}Challenges index{% endblock %}
-
+{%  set username = "" %}
 {% block body %}
     <h1>Les challenges     <a class="waves-effect waves-light btn green accent-3" href="{{ path('challenges_new') }}">Create new</a>
     </h1>
@@ -13,19 +12,24 @@
                 <img class="activator" src="{{ vich_uploader_asset(challenge, 'imageFile') }}">
             </div>
             <div class="card-content">
-                <span class="card-title activator grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">Voir plus</i></span>
+                <span class="card-title activator grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">more_vert</i></span>
 
             </div>
             <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">Fermer</i></span>
+                <span class="card-title grey-text text-darken-4">{{ challenge.name }}<i class="material-icons right">close</i></span>
                 <p>{{ challenge.description }}</p>
                 <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
                 {% for challenge in challenge.users %}
                     <p>Par : {{ challenge.username }} </p>
+                    {%  set username = challenge.username %}
                 {% endfor %}
                 <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
-                <a href="{{ path('challenges_show', {'id': challenge.id}) }}">show</a>
-                <a href="{{ path('challenges_edit', {'id': challenge.id}) }}">edit</a>
+                    {% if app.user.username == username %}
+                            <a href="{{ path('challenges_show', {'id': challenge.id}) }}">show</a>
+                            <a href="{{ path('challenges_edit', {'id': challenge.id}) }}">edit</a>
+                    {% else %}
+                        <a href="{{ path('challenges_show', {'id': challenge.id}) }}">show</a>
+                    {% endif %}
             </div>
         </div>
 

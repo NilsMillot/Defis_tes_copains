@@ -4,8 +4,10 @@ namespace App\Form;
 
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class PostType extends AbstractType
 {
@@ -13,10 +15,19 @@ class PostType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('picture')
-            ->add('content')
-            ->add('remark')
-            ->add('usersWhoLiked')
+            ->add('content',TextareaType::class, [
+                'attr'   =>  array(
+                    'class'   => 'materialize-textarea',
+                    'id'=> 'icon_prefix2'
+                )
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'download_uri' => false,
+                'image_uri' => true,
+                'asset_helper' => true,
+            ])
         ;
     }
 

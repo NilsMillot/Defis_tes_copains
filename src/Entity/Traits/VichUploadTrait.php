@@ -57,6 +57,7 @@ trait VichUploadTrait
 
     public function setImageName(?string $imageName): self
     {
+
         $this->imageName = $imageName;
         return $this;
     }

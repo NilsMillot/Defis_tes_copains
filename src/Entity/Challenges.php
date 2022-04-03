@@ -46,7 +46,7 @@ class Challenges implements \Serializable
     private $deadline;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $qr_code;
 
@@ -56,19 +56,26 @@ class Challenges implements \Serializable
     private $categoryChallenges;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="challenge")
-     */
-    private $idPost;
-
-    /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="challenge")
      */
     private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="challengeId")
+     */
+    private $postId;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ChallengesUserRegister::class, mappedBy="challengeRegister")
+     */
+    private $challengesUserRegisters;
 
     public function __construct()
     {
         $this->categoryChallenges = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->postId = new ArrayCollection();
+        $this->challengesUserRegisters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,18 +186,6 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    public function getIdPost(): ?Post
-    {
-        return $this->idPost;
-    }
-
-    public function setIdPost(?Post $idPost): self
-    {
-        $this->idPost = $idPost;
-
-        return $this;
-    }
-
     /**
      * @return Collection|User[]
      */
@@ -218,6 +213,7 @@ class Challenges implements \Serializable
         return $this;
     }
 
+   
     public function serialize()
     {
         return serialize(array(
@@ -232,6 +228,66 @@ class Challenges implements \Serializable
             $this->id,
             $this->imageName,
             ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPostId(): Collection
+    {
+        return $this->postId;
+    }
+
+    public function addPostId(Post $postId): self
+    {
+        if (!$this->postId->contains($postId)) {
+            $this->postId[] = $postId;
+            $postId->setChallengeId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostId(Post $postId): self
+    {
+        if ($this->postId->removeElement($postId)) {
+            // set the owning side to null (unless already changed)
+            if ($postId->getChallengeId() === $this) {
+                $postId->setChallengeId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ChallengesUserRegister[]
+     */
+    public function getChallengesUserRegisters(): Collection
+    {
+        return $this->challengesUserRegisters;
+    }
+
+    public function addChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if (!$this->challengesUserRegisters->contains($challengesUserRegister)) {
+            $this->challengesUserRegisters[] = $challengesUserRegister;
+            $challengesUserRegister->setChallengeRegister($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if ($this->challengesUserRegisters->removeElement($challengesUserRegister)) {
+            // set the owning side to null (unless already changed)
+            if ($challengesUserRegister->getChallengeRegister() === $this) {
+                $challengesUserRegister->setChallengeRegister(null);
+            }
+        }
+
+        return $this;
     }
 
 
