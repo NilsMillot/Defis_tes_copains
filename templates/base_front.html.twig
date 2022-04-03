@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://kit.fontawesome.com/af8bf20642.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/text.css') }}">
@@ -49,7 +50,7 @@
             {%  if(app.user) %}
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
-            <li><a href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
+            <li><a id='compte' class="{{ app.user.id}}" href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
             <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
             {% endif %}
         </ul>
@@ -89,6 +90,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script  src="{{ asset('js/collapse.js') }}"></script>
 <script  src="{{ asset('js/modal.js') }}"></script>
+<script  src="{{ asset('js/like.js') }}"></script>
+
 
 
 <script>
