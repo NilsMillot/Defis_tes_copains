@@ -61,20 +61,21 @@ class Challenges implements \Serializable
     private $users;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="challengeRegister")
-     */
-    private $userRegister;
-
-    /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="challengeId")
      */
     private $postId;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ChallengesUserRegister::class, mappedBy="challengeRegister")
+     */
+    private $challengesUserRegisters;
 
     public function __construct()
     {
         $this->categoryChallenges = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->postId = new ArrayCollection();
+        $this->challengesUserRegisters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -212,32 +213,7 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getUserRegister(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUserRegister(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addUserRegister($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserRegister(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeRemark($this);
-        }
-
-        return $this;
-    }
+   
     public function serialize()
     {
         return serialize(array(
@@ -278,6 +254,36 @@ class Challenges implements \Serializable
             // set the owning side to null (unless already changed)
             if ($postId->getChallengeId() === $this) {
                 $postId->setChallengeId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ChallengesUserRegister[]
+     */
+    public function getChallengesUserRegisters(): Collection
+    {
+        return $this->challengesUserRegisters;
+    }
+
+    public function addChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if (!$this->challengesUserRegisters->contains($challengesUserRegister)) {
+            $this->challengesUserRegisters[] = $challengesUserRegister;
+            $challengesUserRegister->setChallengeRegister($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if ($this->challengesUserRegisters->removeElement($challengesUserRegister)) {
+            // set the owning side to null (unless already changed)
+            if ($challengesUserRegister->getChallengeRegister() === $this) {
+                $challengesUserRegister->setChallengeRegister(null);
             }
         }
 

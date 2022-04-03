@@ -54,11 +54,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $challenge;
 
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="userRegister")
-     * @ORM\JoinTable(name="challenge_register_user")
-     */
-    private $challengeRegister;
 
     /**
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="usersWhoLiked")
@@ -116,6 +111,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $remarks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ChallengesUserRegister::class, mappedBy="userRegister")
+     */
+    private $challengesUserRegister;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -131,6 +131,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->received_message = new ArrayCollection();
         $this->postsId = new ArrayCollection();
         $this->remarks = new ArrayCollection();
+        $this->challengesUserRegister = new ArrayCollection();
     }
 
     public function __toString()
@@ -310,33 +311,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->likedPosts->removeElement($likedPost)) {
             $likedPost->removeUsersWhoLiked($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Remark[]
-     */
-    public function getLikedRemarks(): Collection
-    {
-        return $this->likedRemarks;
-    }
-
-    public function addLikedRemark(Remark $likedRemark): self
-    {
-        if (!$this->likedRemarks->contains($likedRemark)) {
-            $this->likedRemarks[] = $likedRemark;
-            $likedRemark->addUserRemark($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLikedRemark(Remark $likedRemark): self
-    {
-        if ($this->likedRemarks->removeElement($likedRemark)) {
-            $likedRemark->removeUserRemark($this);
         }
 
         return $this;
@@ -607,6 +581,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->remarks->removeElement($remark)) {
             $remark->removeUserId($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ChallengesUserRegister[]
+     */
+    public function getChallengesUserRegister(): Collection
+    {
+        return $this->challengesUserRegister;
+    }
+
+    public function addChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if (!$this->challengesUserRegister->contains($challengesUserRegister)) {
+            $this->challengesUserRegister[] = $challengesUserRegister;
+            $challengesUserRegister->setUserRegister($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if ($this->challengesUserRegister->removeElement($challengesUserRegister)) {
+            // set the owning side to null (unless already changed)
+            if ($challengesUserRegister->getUserRegister() === $this) {
+                $challengesUserRegister->setUserRegister(null);
+            }
         }
 
         return $this;
