@@ -26,5 +26,7 @@
 ###> IDE/OS ###
 .idea/
 **/.DS_Store
+.DS_Store/
 var/
+.var/
 ###< IDE/OS ###

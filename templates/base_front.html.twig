@@ -44,10 +44,10 @@
 <body>
 <nav class="teal blue-grey darken-2">
     <div class="nav-wrapper container">
-        <a href="#" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="150px"/></a>
+        <a href="/" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="150px" height="100%"/></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {%  if(app.user) %}
-{#            <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>#}
+            <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
             <li><a href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>

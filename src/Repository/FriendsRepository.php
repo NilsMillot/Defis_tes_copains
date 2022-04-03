@@ -22,7 +22,7 @@ class FriendsRepository extends ServiceEntityRepository
     // /**
     //  * @return Friends[] Returns an array of Friends objects
     //  */
-    /*
+
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('f')
@@ -34,9 +34,9 @@ class FriendsRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
 
-    /*
+
+
     public function findOneBySomeField($value): ?Friends
     {
         return $this->createQueryBuilder('f')
@@ -46,5 +46,5 @@ class FriendsRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    */
+
 }
