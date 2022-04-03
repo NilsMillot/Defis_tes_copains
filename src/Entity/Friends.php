@@ -34,6 +34,10 @@ class Friends
      */
     private $status;
 
+    public function __toString() {
+        return $this->id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

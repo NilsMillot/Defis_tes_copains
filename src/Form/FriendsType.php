@@ -12,8 +12,6 @@ class FriendsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('status')
-            ->add('senderUser')
             ->add('receiverUser')
         ;
     }

@@ -6,7 +6,7 @@
     <h1>Friends index</h1>
 
 
-    <h2>Trouvez de nouveaux amis</h2>
+    <h2>Vos amis / Demandes d'amis</h2>
 
 
     <table class="table">
@@ -24,7 +24,8 @@
                 <td>{{ friend.status }}</td>
                 <td>
                     <a href="{{ path('friends_show', {'id': friend.id}) }}">show</a>
-                    <a href="{{ path('friends_edit', {'id': friend.id}) }}">edit</a>
+                    {% if friend.status is same as('accepted') %}><a href="{{ path('friends_edit', {'id': friend.id}) }}"> edit</a>{% endif %}
+                    {% if friend.status is same as('sent') %}><span> en attente...</span>{% endif %}
                 </td>
             </tr>
         {% else %}
