@@ -13,6 +13,7 @@ use App\Form\RemarkType;
 use App\Repository\ChallengesRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserLikePostRepository;
 use App\Repository\ChallengesUserRegisterRepository;
 use App\Services\QrCodeService;
 use Doctrine\DBAL\Types\DateType;
@@ -113,10 +114,14 @@ class ChallengesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Challenges $challenge, PostRepository $postRepository): Response
+    public function show(Request $request, Challenges $challenge, PostRepository $postRepository, UserLikePostRepository $userLikePostRepository): Response
     {
         $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
-
+//        foreach ($allPosts as $post) {
+//            dd($post);
+//            $allLikePost = $userLikePostRepository->findBy(['postLiked'=>$post->getId()]);
+//        }
+//        dd($allLikePost);
         $post = new Post();
         $formPost = $this->createForm(PostType::class, $post);
         $remark = new Remark();

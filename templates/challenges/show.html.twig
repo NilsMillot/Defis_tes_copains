@@ -2,10 +2,11 @@
 
 {% block title %}Challenges{% endblock %}
 {%  set username = "" %}
+{%  set likes = "" %}
 
 {% block body %}
     <div class="row">
-        <h1 class="col">{{ challenge.name }}     <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
+        <h1 id='{{ challenge.id }}' class="col">{{ challenge.name }}     <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
         </h1>
     </div>
 
@@ -44,13 +45,17 @@
                     {% else %}
                     <div class="row">
                         <div class="col s2 offset-s7">
-                        {% for register in challenge.challengesUserRegisters %}
-                            {% if register is not empty  %}
-                                <a class="waves-effect waves-light btn orange accent-3 " href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>
+{#                        {% for register in challenge.challengesUserRegisters %}#}
+{#                            {% if register is not empty  %}#}
+{#                            {% else %}#}
+{#                                <p>Bla</p>#}
+{#                            {% endif %}#}
+                            {% if challenge.challengesUserRegisters is defined and challenge.challengesUserRegisters is empty %}
+                            <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
                             {% else %}
-                                <p>Bla</p>
+                                <a class="waves-effect waves-light btn orange accent-3 " href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>
                             {% endif %}
-{#                           TODO: Reussie a afficher seuelemtn le bouton qu'il faut #}
+                            {#                           TODO: Reussie a afficher seuelemtn le bouton qu'il faut #}
 {#                            {% if register is null %}#}
 {#                                <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
 {#                            {% endif %}#}
@@ -59,8 +64,8 @@
 {#                            {% elseif register.userRegister == app.user and register.challengeRegister != challenge %}#}
 {#                            <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
 {#                            {% endif %}#}
-                        {% endfor %}
-                            <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
+{#                        {% endfor %}#}
+{#                            <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
                         </div>
                     </div>
                     {% endif %}
@@ -78,7 +83,19 @@
             {{ user.username }}
             {% endfor %}
             <div class="section">
-                <h5>{{ post.name }}</h5>
+                <h5 id="{{ post.id }}">{{ post.name }}</h5>
+                <span>Like :
+                    {% set count = 0 %}
+                    {% for like in post.userLikePosts %}
+                            {% set count = count + 1 %}
+                    {% endfor %}
+                    {{ count }}
+                        {% if post.userLikePosts is defined and post.userLikePosts is empty %}
+                            <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like_post red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+                        {% else %}
+                            <i data-url="{{ path('unlike_post', {'id': post.id }) }}" class=" unlike_post red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+                        {% endif %}
+                </span>
                 <p>{{ post.content }} </p>
             </div>
         {% if(post.imageName) %}
@@ -94,6 +111,18 @@
                     {% for remark in post.remark %}
                         <div>
                             <h6>{{ remark.contentRemark }}</h6>
+                            <span>Like :
+                                {% set count = 0 %}
+                                {% for like in post.userLikePosts %}
+                                    {% set count = count + 1 %}
+                                {% endfor %}
+                                {{ count }}
+                                {% if post.userLikePosts is defined and post.userLikePosts is empty %}
+                                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like_post red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+                                {% else %}
+                                    <i data-url="{{ path('unlike_post', {'id': post.id }) }}" class=" unlike_post red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+                                {% endif %}
+                            </span>
                             {% for user in remark.userId %}
                                 <span> By {{ user.username }}</span>
                             {% endfor %}
