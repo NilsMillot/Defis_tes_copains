@@ -36,11 +36,9 @@ class FriendsController extends AbstractController
         for ($i=0; $i<sizeof($friendsReceivedByCurrentUser); $i++){
             array_push($arrUserFriendsReceived, $this->getDoctrine()->getRepository(User::class)->findBy(['id' => $friendsReceivedByCurrentUser[$i]->getSenderUser()->getId()]));
         }
-
-        dd($uniqueFriendsOfCurrentUser);
         return $this->render('friends/index.html.twig', [
-            'friends' => $uniqueFriendsOfCurrentUser,
-            'friendsRequestReceived' => $arrUserFriendsReceived[0] ?? null,
+            'friendsRequestsOfCurrentUser' => $uniqueFriendsOfCurrentUser,
+//            'friendsRequestReceived' => $arrUserFriendsReceived[0] ?? null,
         ]);
     }
 
@@ -94,10 +92,16 @@ class FriendsController extends AbstractController
     /*
      * @ParamConverter("id", class="Friends", options={"id": "id"})
      */
-    #[Route('/{id}/accept', name: 'friend_accept', methods: ['GET', 'POST'])]
-    public function friendAccept(Friends $friends)
+    #[Route('/{id}/accept', name: 'friends_accept', methods: ['GET', 'POST'])]
+    public function friendsAccept(Friends $friends, FriendsRepository $friendsRepository)
     {
-        dd($friends);
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $friendRequest = $friendsRepository->findOneBy(['id' => $friends->getId()]);
+        $friendRequest->setStatus('accepted');
+        $entityManager->persist($friendRequest);
+        $entityManager->flush();
+
         return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 
