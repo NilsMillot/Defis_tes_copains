@@ -54,13 +54,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $challenge;
 
 
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="usersWhoLiked")
-     */
-    private $likedPosts;
-
-
     /**
      * @ORM\OneToMany(targetEntity=Role::class, mappedBy="userId")
      */
@@ -130,8 +123,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->ranks = new ArrayCollection();
         $this->challenge = new ArrayCollection();
-        $this->likedPosts = new ArrayCollection();
-        $this->likedRemarks = new ArrayCollection();
         $this->role = new ArrayCollection();
         $this->statisticals = new ArrayCollection();
         $this->idGroup = new ArrayCollection();
@@ -296,34 +287,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeChallenge(Challenges $challenge): self
     {
         $this->challenge->removeElement($challenge);
-
-        return $this;
-    }
-
-
-    /**
-     * @return Collection|Post[]
-     */
-    public function getLikedPosts(): Collection
-    {
-        return $this->likedPosts;
-    }
-
-    public function addLikedPost(Post $likedPost): self
-    {
-        if (!$this->likedPosts->contains($likedPost)) {
-            $this->likedPosts[] = $likedPost;
-            $likedPost->addUsersWhoLiked($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLikedPost(Post $likedPost): self
-    {
-        if ($this->likedPosts->removeElement($likedPost)) {
-            $likedPost->removeUsersWhoLiked($this);
-        }
 
         return $this;
     }

@@ -13,6 +13,7 @@ use App\Form\RemarkType;
 use App\Repository\ChallengesRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserLikePostRepository;
 use App\Repository\ChallengesUserRegisterRepository;
 use App\Services\QrCodeService;
 use Doctrine\DBAL\Types\DateType;
@@ -113,10 +114,9 @@ class ChallengesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Challenges $challenge, PostRepository $postRepository): Response
+    public function show(Request $request, Challenges $challenge, PostRepository $postRepository, UserLikePostRepository $userLikePostRepository): Response
     {
         $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
-
         $post = new Post();
         $formPost = $this->createForm(PostType::class, $post);
         $remark = new Remark();
@@ -129,6 +129,11 @@ class ChallengesController extends AbstractController
             $post->setChallengeId($challenge);
             $entityManager->persist($post);
             $entityManager->flush();
+            return $this->redirectToRoute('challenges_show', [
+                'id'=>$challenge->getId(),
+                'posts'=>$allPosts,
+                ],
+                Response::HTTP_SEE_OTHER);
         }
 
         $formRemark->handleRequest($request);
@@ -139,6 +144,12 @@ class ChallengesController extends AbstractController
             $remark->setPost($post);
             $entityManager->persist($remark);
             $entityManager->flush();
+            return $this->redirectToRoute('challenges_show', [
+                'id'=>$challenge->getId(),
+                'posts'=>$allPosts,
+            ],
+                Response::HTTP_SEE_OTHER);
+
         }
         
         return $this->render('challenges/show.html.twig', [
