@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\FriendsType;
 use App\Form\FriendsAcceptRequestType;
 use App\Repository\FriendsRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,27 +36,11 @@ class FriendsController extends AbstractController
         for ($i=0; $i<sizeof($friendsReceivedByCurrentUser); $i++){
             array_push($arrUserFriendsReceived, $this->getDoctrine()->getRepository(User::class)->findBy(['id' => $friendsReceivedByCurrentUser[$i]->getSenderUser()->getId()]));
         }
-        $form = $this->createForm(FriendsAcceptRequestType::class);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            // get current Friend relashionShip
-            $friend->setStatus('accepted');
-
-            $entityManager->persist($friend);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
-        }
-//        dd($formAccept);
-//        if($formAccept->get('accept')->isClicked()){
-//        //DO stgh
-//        }
+        dd($uniqueFriendsOfCurrentUser);
         return $this->render('friends/index.html.twig', [
             'friends' => $uniqueFriendsOfCurrentUser,
             'friendsRequestReceived' => $arrUserFriendsReceived[0] ?? null,
-            '$form' => $form,
         ]);
     }
 
@@ -104,6 +89,16 @@ class FriendsController extends AbstractController
         return $this->render('friends/show.html.twig', [
             'friend' => $friend,
         ]);
+    }
+
+    /*
+     * @ParamConverter("id", class="Friends", options={"id": "id"})
+     */
+    #[Route('/{id}/accept', name: 'friend_accept', methods: ['GET', 'POST'])]
+    public function friendAccept(Friends $friends)
+    {
+        dd($friends);
+        return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/edit', name: 'friends_edit', methods: ['GET','POST'])]

@@ -47,18 +47,14 @@
         </tr>
         </thead>
         <tbody>
-        {% for friend in friendsRequestReceived %}
+        {% for friendReceived in friendsRequestReceived %}
             <tr>
-                <td>{{ friend.id }}</td>
-                <td>{{ friend.email }}</td>
-                <td>{{ friend.username }}</td>
+                <td>{{ friendReceived.id }}</td>
+                <td>{{ friendReceived.email }}</td>
+                <td>{{ friendReceived.username }}</td>
                 <td>
-{#                    <button>accept</button>#}
-                    {{ form_start(form) }}
-                    {{ form_widget(form) }}
-                    <button class="btn">{{ button_label|default('Save') }}</button>
-                    {{ form_end(form) }}
-
+{#                    <a href="{{ path('friend_accept', {'id':friend.id}) }}">accept</a>#}
+{#                    href="{{ path('challenges_register', {'id': challenge.id}) }}"#}
                 </td>
             </tr>
         {% else %}
