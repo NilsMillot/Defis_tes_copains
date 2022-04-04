@@ -7,14 +7,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FriendsType extends AbstractType
+class FriendsAcceptRequestType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-//            ->add('status')
-//            ->add('senderUser')
-            ->add('receiverUser')
+            ->add('status')
         ;
     }
 

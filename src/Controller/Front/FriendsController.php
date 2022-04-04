@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Friends;
 use App\Entity\User;
 use App\Form\FriendsType;
+use App\Form\FriendsAcceptRequestType;
 use App\Repository\FriendsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,8 +23,8 @@ class FriendsController extends AbstractController
         $this->security = $security;
     }
 
-    #[Route('/', name: 'friends_index', methods: ['GET'])]
-    public function index(FriendsRepository $friendsRepository): Response
+    #[Route('/', name: 'friends_index', methods: ['GET', 'POST'])]
+    public function index(Request $request, FriendsRepository $friendsRepository): Response
     {
         $friendsSendedByCurrentUser = $friendsRepository->findBy(['senderUser' => $this->getUser()]);
         $friendsReceivedByCurrentUser = $friendsRepository->findBy(['receiverUser' => $this->getUser()]);
@@ -34,10 +35,27 @@ class FriendsController extends AbstractController
         for ($i=0; $i<sizeof($friendsReceivedByCurrentUser); $i++){
             array_push($arrUserFriendsReceived, $this->getDoctrine()->getRepository(User::class)->findBy(['id' => $friendsReceivedByCurrentUser[$i]->getSenderUser()->getId()]));
         }
+        $form = $this->createForm(FriendsAcceptRequestType::class);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            // get current Friend relashionShip
+            $friend->setStatus('accepted');
+
+            $entityManager->persist($friend);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
+        }
+//        dd($formAccept);
+//        if($formAccept->get('accept')->isClicked()){
+//        //DO stgh
+//        }
         return $this->render('friends/index.html.twig', [
             'friends' => $uniqueFriendsOfCurrentUser,
             'friendsRequestReceived' => $arrUserFriendsReceived[0] ?? null,
+            '$form' => $form,
         ]);
     }
 
