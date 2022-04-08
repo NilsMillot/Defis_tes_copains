@@ -5,7 +5,7 @@ COPY wait-for-it.sh /usr/bin/wait-for-it
 RUN chmod +x /usr/bin/wait-for-it
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libssl-dev zlib1g-dev curl git unzip netcat libxml2-dev libpq-dev libzip-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
+    apt-get install -y --no-install-recommends libssl-dev zlib1g-dev curl git unzip netcat libxml2-dev libpq-dev libzip-dev libfreetype6-dev wget libjpeg62-turbo-dev libpng-dev && \
     pecl install apcu && \
     docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && \
     docker-php-ext-install -j$(nproc) zip opcache intl pdo_pgsql pgsql && \
@@ -14,16 +14,14 @@ RUN apt-get update && \
     docker-php-ext-install -j$(nproc) gd && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Copy elastic agent deb
-COPY apm-agent-php_1.5_all.deb .
+RUN wget https://github.com/elastic/apm-agent-php/releases/download/v1.5/apm-agent-php_1.5_all.deb && \
+    apt install -y ./apm-agent-php_1.5_all.deb
 
-# Install elastic agent
-RUN dpkg -i ./apm-agent-php_1.5_all.deb
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo "elastic_apm.server_url=\"http://localhost:8200\"\nelastic.apm.secret_token=\"\"\nelastic_apm.service_name=\"My service\"" >> /usr/local/etc/php/php.ini-development
-RUN echo "elastic_apm.server_url=\"http://localhost:8200\"\nelastic.apm.secret_token=\"\"\nelastic_apm.service_name=\"My service\"" >> /usr/local/etc/php/php.ini-production
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
