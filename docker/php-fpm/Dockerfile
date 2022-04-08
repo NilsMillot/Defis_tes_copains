@@ -16,6 +16,15 @@ RUN apt-get update && \
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+# Copy elastic agent deb
+COPY apm-agent-php_1.5_all.deb .
+
+# Install elastic agent
+RUN dpkg -i ./apm-agent-php_1.5_all.deb
+
+RUN echo "elastic_apm.server_url=\"http://localhost:8200\"\nelastic.apm.secret_token=\"\"\nelastic_apm.service_name=\"My service\"" >> /usr/local/etc/php/php.ini-development
+RUN echo "elastic_apm.server_url=\"http://localhost:8200\"\nelastic.apm.secret_token=\"\"\nelastic_apm.service_name=\"My service\"" >> /usr/local/etc/php/php.ini-production
+
 WORKDIR /var/www
 
 CMD composer i -o ; wait-for-it db:5432 -- bin/console doctrine:migrations:migrate ;  php-fpm
