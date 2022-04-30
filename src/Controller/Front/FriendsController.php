@@ -5,9 +5,8 @@ namespace App\Controller\Front;
 use App\Entity\Friends;
 use App\Entity\User;
 use App\Form\FriendsType;
-use App\Form\FriendsAcceptRequestType;
 use App\Repository\FriendsRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,32 +24,34 @@ class FriendsController extends AbstractController
     }
 
     #[Route('/', name: 'friends_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, FriendsRepository $friendsRepository): Response
+    public function index(Request $request, FriendsRepository $friendsRepository, UserRepository $userRepository): Response
     {
         $friendsSendedByCurrentUser = $friendsRepository->findBy(['senderUser' => $this->getUser()]);
         $friendsReceivedByCurrentUser = $friendsRepository->findBy(['receiverUser' => $this->getUser()]);
+        $friendsReceivedByCurrentUserStatusSent = $friendsRepository->findBy(['receiverUser' => $this->getUser(), 'status' => 'sent']);
         $friendsOfCurrentUser = array_merge($friendsSendedByCurrentUser, $friendsReceivedByCurrentUser);
         $uniqueFriendsOfCurrentUser = array_unique($friendsOfCurrentUser);
 
-        $arrUserFriendsReceived = [];
-        for ($i=0; $i<sizeof($friendsReceivedByCurrentUser); $i++){
-            array_push($arrUserFriendsReceived, $this->getDoctrine()->getRepository(User::class)->findBy(['id' => $friendsReceivedByCurrentUser[$i]->getSenderUser()->getId()]));
+        $arrUserFriendsReceivedStatusSent = [];
+        for ($i = 0; $i < sizeof($friendsReceivedByCurrentUserStatusSent); $i++) {
+            array_push($arrUserFriendsReceivedStatusSent, $userRepository->findOneBy(['id' => $friendsReceivedByCurrentUserStatusSent[$i]->getSenderUser()->getId()]));
         }
         return $this->render('friends/index.html.twig', [
             'friendsRequestsOfCurrentUser' => $uniqueFriendsOfCurrentUser,
-//            'friendsRequestReceived' => $arrUserFriendsReceived[0] ?? null,
+            'friendsRequestReceived' => $arrUserFriendsReceivedStatusSent ?? null,
+            'currentUser' => $this->getUser(),
         ]);
     }
 
-    #[Route('/new', name: 'friends_new', methods: ['GET','POST'])]
+    #[Route('/new', name: 'friends_new', methods: ['GET', 'POST'])]
     public function new(Request $request, FriendsRepository $friendsRepository): Response
     {
         $friend = new Friends();
         $form = $this->createForm(FriendsType::class, $friend);
         $form->handleRequest($request);
 
-        $friendsAcceptedSendedByCurrentUser = $friendsRepository->findBy(['status' => 'accepted', 'senderUser' => $this->getUser() ]);
-        $friendsAcceptedReceivedByCurrentUser = $friendsRepository->findBy(['status' => 'accepted', 'receiverUser' => $this->getUser() ]);
+        $friendsAcceptedSendedByCurrentUser = $friendsRepository->findBy(['status' => 'accepted', 'senderUser' => $this->getUser()]);
+        $friendsAcceptedReceivedByCurrentUser = $friendsRepository->findBy(['status' => 'accepted', 'receiverUser' => $this->getUser()]);
         $friendsAcceptedByCurrentUser = array_merge($friendsAcceptedReceivedByCurrentUser, $friendsAcceptedSendedByCurrentUser);
 
         $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
@@ -74,21 +75,6 @@ class FriendsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'friends_show', methods: ['GET'])]
-    public function show(Friends $friend): Response
-    {
-        $friendSendToVue = null;
-         if ($friend->getSenderUser() === $this->security->getUser()) {
-             $friendSendToVue = $this->getDoctrine()->getRepository(User::class)->findBy(['id' => $friend->getReceiverUser()->getId()]);
-         } else {
-             $friendSendToVue = $this->getDoctrine()->getRepository(User::class)->findBy(['id' => $friend->getSenderUser()->getId()]);
-         };
-        dump($friendSendToVue);
-        return $this->render('friends/show.html.twig', [
-            'friend' => $friend,
-        ]);
-    }
-
     /*
      * @ParamConverter("id", class="Friends", options={"id": "id"})
      */
@@ -105,28 +91,11 @@ class FriendsController extends AbstractController
         return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/edit', name: 'friends_edit', methods: ['GET','POST'])]
-    public function edit(Request $request, Friends $friend): Response
-    {
-        $form = $this->createForm(FriendsType::class, $friend);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('friends/edit.html.twig', [
-            'friend' => $friend,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/{id}', name: 'friends_delete', methods: ['POST'])]
     public function delete(Request $request, Friends $friend): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$friend->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $friend->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($friend);
             $entityManager->flush();

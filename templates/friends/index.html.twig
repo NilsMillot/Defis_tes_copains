@@ -16,16 +16,15 @@
             </tr>
         </thead>
         <tbody>
-        {% set currentUser = app.user.id %}
+        {% set currentUser = app.user %}
         {% for friend in friendsRequestsOfCurrentUser %}
             <tr>
                 <td>{{ friend.id }}</td>
                 <td>{{ friend.status }}</td>
                 <td>
-                    <a href="{{ path('friends_show', {'id': friend.id}) }}">show</a>
-                    {% if friend.status is same as('accepted') %}>{{ include('friends/_delete_form.html.twig') }}{% endif %}
-                    {% if friend.status is same as('sent') %}><span> en attente...</span>{% endif %}
-                    {% if friend.status is same as('sent') %}><a href="{{ path('friends_accept', {'id': friend.id}) }}"> Accepter la demande</a>{% endif %}
+                    {% if friend.status is same as('accepted') %}{{ include('friends/_delete_form.html.twig') }}{% endif %}
+                    {% if friend.status is same as('sent') %}<span> en attente...</span>{% endif %}
+                    {% if friend.status is same as('sent') and friend.receiverUser.id is not same as currentUser.id %}><a href="{{ path('friends_accept', {'id': friend.id}) }}"> Accepter la demande</a>{% endif %}
                 </td>
             </tr>
         {% else %}
@@ -37,34 +36,4 @@
     </table>
 
     <a href="{{ path('friends_new') }}">Create new</a>
-{#    {% if friendsRequestReceived is not same as(null) %}#}
-{#    <h2>Ils attendent une réponse...</h2>#}
-{#    <table class="table">#}
-{#        <thead>#}
-{#        <tr>#}
-{#            <th>Id</th>#}
-{#            <th>Email</th>#}
-{#            <th>Username</th>#}
-{#            <th>actions</th>#}
-{#        </tr>#}
-{#        </thead>#}
-{#        <tbody>#}
-{#        {% for friend in friendsRequestReceived %}#}
-{#            <tr>#}
-{#                <td>{{ friendReceived.id }}</td>#}
-{#                <td>{{ friendReceived.email }}</td>#}
-{#                <td>{{ friendReceived.username }}</td>#}
-{#                <td>#}
-{#                    <a href="{{ path('friend_accept', {'id':friend.id}) }}">accept</a>#}
-{#                    href="{{ path('challenges_register', {'id': challenge.id}) }}"#}
-{#                </td>#}
-{#            </tr>#}
-{#        {% else %}#}
-{#            <tr>#}
-{#                <td colspan="3">no friend request found</td>#}
-{#            </tr>#}
-{#        {% endfor %}#}
-{#        </tbody>#}
-{#    </table>#}
-{#    {% endif %}#}
 {% endblock %}
