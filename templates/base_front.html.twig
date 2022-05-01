@@ -24,6 +24,8 @@
             box-sizing: border-box;
         }
 
+        select { display: flex }
+
         *, *:before, *:after {
             box-sizing: inherit;
             border: 0;
@@ -45,9 +47,10 @@
 <body>
 <nav class="teal blue-grey darken-2">
     <div class="nav-wrapper container">
-        <a href="#" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="150px"/></a>
+        <a href="/" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="auto" height="100%"/></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {%  if(app.user) %}
+            <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
             <li><a id='compte' class="{{ app.user.id}}" href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
@@ -65,7 +68,7 @@
     <div class="container">
         <div class="row">
             <div class="col l6 s12">
-                <h5 class="white-text">En savoir plus </h5>
+                <h5 class="white-text">En savoir plus</h5>
                 <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
             </div>
             <div class="col l4 offset-l2 s12">

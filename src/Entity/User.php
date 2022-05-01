@@ -95,6 +95,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $company;
 
     /**
+     * @ORM\OneToMany(targetEntity=Friends::class, mappedBy="senderUser", orphanRemoval=true)
+     */
+    private $friendRequestSent;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Friends::class, mappedBy="receiverUser", orphanRemoval=true)
+     */
+    private $friendRequestReceived;
+
+    /**
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="userId")
      */
     private $postsId;
@@ -120,6 +130,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userLikePosts = new ArrayCollection();
         $this->send_message = new ArrayCollection();
         $this->received_message = new ArrayCollection();
+        $this->friendRequestSent = new ArrayCollection();
+        $this->friendRequestReceived = new ArrayCollection();
         $this->postsId = new ArrayCollection();
         $this->remarks = new ArrayCollection();
         $this->challengesUserRegister = new ArrayCollection();
@@ -491,6 +503,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Friends[]
+     */
+    public function getFriendRequestSent(): Collection
+    {
+        return $this->friendRequestSent;
+    }
+
+    public function addFriendRequestSent(Friends $friendRequestSent): self
+    {
+        if (!$this->friendRequestSent->contains($friendRequestSent)) {
+            $this->friendRequestSent[] = $friendRequestSent;
+            $friendRequestSent->setSenderUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendRequestSent(Friends $friendRequestSent): self
+    {
+        if ($this->friendRequestSent->removeElement($friendRequestSent)) {
+            // set the owning side to null (unless already changed)
+            if ($friendRequestSent->getSenderUser() === $this) {
+                $friendRequestSent->setSenderUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Friends[]
+     */
+    public function getFriendRequestReceived(): Collection
+    {
+        return $this->friendRequestReceived;
+    }
+
+    public function addFriendRequestReceived(Friends $friendRequestReceived): self
+    {
+        if (!$this->friendRequestReceived->contains($friendRequestReceived)) {
+            $this->friendRequestReceived[] = $friendRequestReceived;
+            $friendRequestReceived->setReceiverUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendRequestReceived(Friends $friendRequestReceived): self
+    {
+        if ($this->friendRequestReceived->removeElement($friendRequestReceived)) {
+            // set the owning side to null (unless already changed)
+            if ($friendRequestReceived->getReceiverUser() === $this) {
+                $friendRequestReceived->setReceiverUser(null);
+            }
+        }
 
         return $this;
     }

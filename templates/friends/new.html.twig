@@ -1,0 +1,39 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}New Friends{% endblock %}
+
+{% block body %}
+    <h1>Create new Friends</h1>
+    <h2>Liste de tous les utilisateurs du site</h2>
+
+    {{ include('friends/_form.html.twig') }}
+{#    <table class="table">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th>Email</th>#}
+{#            <th>Username</th>#}
+{#            <th>actions</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% for user in usersList %}#}
+{#            <tr>#}
+{#                <td>{{ user.email }}</td>#}
+{#                <td>{{ user.username }}</td>#}
+{#                <td>#}
+{#                    <a href="{{ path('friends_show', {'id': user.id}) }}">show</a>#}
+{#                    <a href="{{ path('friends_show', {'id': user.id}) }}">send request</a>#}
+{#                    {% if user.status is same as('accepted') %}><a href="{{ path('friends_edit', {'id': user.id}) }}"> edit</a>{% endif %}#}
+{#                    {% if user.status is same as('sent') %}><span> en attente...</span>{% endif %}#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% else %}#}
+{#            <tr>#}
+{#                <td colspan="3">no records found</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+
+    <a href="{{ path('friends_index') }}">back to list</a>
+{% endblock %}

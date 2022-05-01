@@ -1,0 +1,67 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Friends index{% endblock %}
+
+{% block body %}
+    <h1>Friends index</h1>
+
+    <h2>Vos amis / Demandes d'amis</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for friend in friends %}
+            <tr>
+                <td>{{ friend.id }}</td>
+                <td>{{ friend.status }}</td>
+                <td>
+                    <a href="{{ path('friends_show', {'id': friend.id}) }}">show</a>
+                    {% if friend.status is same as('accepted') %}><a href="{{ path('friends_edit', {'id': friend.id}) }}"> edit</a>{% endif %}
+                    {% if friend.status is same as('sent') %}><span> en attente...</span>{% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no friend found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('friends_new') }}">Create new</a>
+    {% if friendsRequestReceived is not same as(null) %}
+    <h2>Ils attendent une réponse...</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for friend in friendsRequestReceived %}
+            <tr>
+                <td>{{ friend.id }}</td>
+                <td>{{ friend.email }}</td>
+                <td>{{ friend.username }}</td>
+                <td>
+                    <span>accept</span>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no friend request found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}
