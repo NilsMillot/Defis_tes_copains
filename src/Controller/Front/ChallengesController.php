@@ -163,6 +163,14 @@ class ChallengesController extends AbstractController
     #[Route('/{id}/edit', name: 'challenges_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Challenges $challenge): Response
     {
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+
         $form = $this->createForm(ChallengesType::class, $challenge);
         $form->handleRequest($request);
 
