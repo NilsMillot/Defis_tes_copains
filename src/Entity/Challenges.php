@@ -56,7 +56,7 @@ class Challenges implements \Serializable
     private $categoryChallenges;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="challenge")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="challenge")
      */
     private $users;
 

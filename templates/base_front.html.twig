@@ -55,6 +55,9 @@
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
             <li><a id='compte' class="{{ app.user.id}}" href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
             <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
+            {% if is_granted('ROLE_ADMIN') %}
+               <li> <a href="{{ path('admin_home') }}">Admin</a></li>
+            {% endif %}
             {% endif %}
         </ul>
     </div>
