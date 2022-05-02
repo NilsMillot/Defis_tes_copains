@@ -84,10 +84,13 @@ class FriendsController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $friendRequest = $friendsRepository->findOneBy(['id' => $friends->getId()]);
+
+        if ($friendRequest->getReceiverUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
         $friendRequest->setStatus('accepted');
         $entityManager->persist($friendRequest);
         $entityManager->flush();
-
         return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 
