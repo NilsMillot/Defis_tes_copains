@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $ranks;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Challenges::class, mappedBy="users")
      */
     private $challenge;
 
@@ -268,7 +268,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection|Challenges[]
      */
     public function getChallenge(): Collection
     {
@@ -279,6 +279,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->challenge->contains($challenge)) {
             $this->challenge[] = $challenge;
+            $challenge->addUser($this);
         }
 
         return $this;
@@ -286,7 +287,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeChallenge(Challenges $challenge): self
     {
-        $this->challenge->removeElement($challenge);
+        if($this->challenge->removeElement($challenge)){
+            $challenge->removeUser($this);
+        }
 
         return $this;
     }
