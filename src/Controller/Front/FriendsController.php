@@ -69,9 +69,7 @@ class FriendsController extends AbstractController
         }
 
         return $this->renderForm('friends/new.html.twig', [
-            'friend' => $friend,
             'form' => $form,
-            'usersList' => $allUsers,
         ]);
     }
 
