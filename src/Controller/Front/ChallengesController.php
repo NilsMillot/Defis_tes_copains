@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Entity\Challenges;
+use App\Entity\ChallengesUserRegister;
 use App\Entity\Post;
 use App\Entity\Remark;
 use App\Entity\User;
@@ -12,6 +13,8 @@ use App\Form\RemarkType;
 use App\Repository\ChallengesRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserLikePostRepository;
+use App\Repository\ChallengesUserRegisterRepository;
 use App\Services\QrCodeService;
 use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -88,11 +91,32 @@ class ChallengesController extends AbstractController
         ]);
     }
 
+    #[Route('/register/{id}', name: 'challenges_register', methods: ['GET','POST'])]
+    public function register(Challenges $challenge){
+        $challengeRegister = new ChallengesUserRegister();
+        $entityManager = $this->getDoctrine()->getManager();
+        $challengeRegister->setUserRegister($this->security->getUser());
+        $challengeRegister->setChallengeRegister($challenge);
+        $entityManager->persist($challengeRegister);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('challenges_show', ['id'=>$challenge->getId()], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/register/delete/{id}', name: 'challenges_delete_register', methods: ['GET','POST'])]
+    public function registerDelete(Challenges $challenge,ChallengesUserRegisterRepository $challengesUserRegisterRepository){
+        $challengeRegister = $challengesUserRegisterRepository->findBy(['userRegister'=>$this->security->getUser(),'challengeRegister'=>$challenge->getId()]);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($challengeRegister[0]);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('challenges_show', ['id'=>$challenge->getId()], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Challenges $challenge, PostRepository $postRepository): Response
+    public function show(Request $request, Challenges $challenge, PostRepository $postRepository, UserLikePostRepository $userLikePostRepository): Response
     {
         $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
-
         $post = new Post();
         $formPost = $this->createForm(PostType::class, $post);
         $remark = new Remark();
@@ -105,8 +129,11 @@ class ChallengesController extends AbstractController
             $post->setChallengeId($challenge);
             $entityManager->persist($post);
             $entityManager->flush();
-
-           // return $this->redirectToRoute('challenges_show', ['id' => $challenge->getId(),'posts'=>$allPosts], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('challenges_show', [
+                'id'=>$challenge->getId(),
+                'posts'=>$allPosts,
+                ],
+                Response::HTTP_SEE_OTHER);
         }
 
         $formRemark->handleRequest($request);
@@ -117,8 +144,12 @@ class ChallengesController extends AbstractController
             $remark->setPost($post);
             $entityManager->persist($remark);
             $entityManager->flush();
+            return $this->redirectToRoute('challenges_show', [
+                'id'=>$challenge->getId(),
+                'posts'=>$allPosts,
+            ],
+                Response::HTTP_SEE_OTHER);
 
-            //return $this->redirect($request->getUri());
         }
         
         return $this->render('challenges/show.html.twig', [
@@ -132,6 +163,14 @@ class ChallengesController extends AbstractController
     #[Route('/{id}/edit', name: 'challenges_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Challenges $challenge): Response
     {
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+
         $form = $this->createForm(ChallengesType::class, $challenge);
         $form->handleRequest($request);
 

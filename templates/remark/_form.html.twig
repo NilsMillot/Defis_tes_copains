@@ -5,7 +5,7 @@
             <div class="input-field col s6">
                 <i class="material-icons prefix">mode_edit</i>
                 <input id="post-id" name="post-id" hidden>
-                {{ form_widget(formRemark.contentRemark) }}
+                {{ form_widget(formRemark.contentRemark, { 'value': '' }) }}
                 <label for="icon_prefix2">Ajouter un commentaire</label>
             </div>
         </div>

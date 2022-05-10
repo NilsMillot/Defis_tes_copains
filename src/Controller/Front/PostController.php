@@ -3,16 +3,30 @@
 namespace App\Controller\Front;
 
 use App\Entity\Post;
+use App\Entity\UserLikePost;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Repository\UserLikePostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security as security;
+
 
 #[Route('/post')]
 class PostController extends AbstractController
 {
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        // Avoid calling getUser() in the constructor: auth may not
+        // be complete yet. Instead, store the entire Security object.
+        $this->security = $security;
+    }
+
     #[Route('/', name: 'post_index', methods: ['GET'])]
     public function index(PostRepository $postRepository): Response
     {
@@ -79,4 +93,25 @@ class PostController extends AbstractController
 
         return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/like/{id}', name:'like_post', methods: ['POST','GET'])]
+    public function likePost(Request $request, Post $post, UserLikePostRepository $userLikePostRepository): Response
+    {
+        $exist = $userLikePostRepository->findBy(['postLiked'=>$post->getId(),'userWhoLiked'=>$this->security->getUser()]);
+        if($exist){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($exist[0]);
+            $entityManager->flush();
+        }else{
+            $userLikePost = new UserLikePost();
+            $entityManager = $this->getDoctrine()->getManager();
+            $userLikePost->setUserWhoLiked($this->security->getUser());
+            $userLikePost->setPostLiked($post);
+            $entityManager->persist($userLikePost);
+            $entityManager->flush();
+        }
+        $id = $post->getId();
+        return new Response($id, 200, array('Content-Type' => 'text/html'));
+    }
+
 }

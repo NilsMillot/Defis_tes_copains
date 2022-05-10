@@ -18,12 +18,10 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
-
 ###> IDE/OS ###
 .idea/
 **/.DS_Store
+.DS_Store/
+var/
+.var/
 ###< IDE/OS ###

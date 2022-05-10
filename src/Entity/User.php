@@ -49,21 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $ranks;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Challenges::class, mappedBy="users")
      */
     private $challenge;
-
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Challenges::class, inversedBy="userRegister")
-     * @ORM\JoinTable(name="challenge_register_user")
-     */
-    private $challengeRegister;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="usersWhoLiked")
-     */
-    private $likedPosts;
 
 
     /**
@@ -107,6 +95,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $company;
 
     /**
+     * @ORM\OneToMany(targetEntity=Friends::class, mappedBy="senderUser", orphanRemoval=true)
+     */
+    private $friendRequestSent;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Friends::class, mappedBy="receiverUser", orphanRemoval=true)
+     */
+    private $friendRequestReceived;
+
+    /**
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="userId")
      */
     private $postsId;
@@ -116,12 +114,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $remarks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ChallengesUserRegister::class, mappedBy="userRegister")
+     */
+    private $challengesUserRegister;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
         $this->challenge = new ArrayCollection();
-        $this->likedPosts = new ArrayCollection();
-        $this->likedRemarks = new ArrayCollection();
         $this->role = new ArrayCollection();
         $this->statisticals = new ArrayCollection();
         $this->idGroup = new ArrayCollection();
@@ -129,8 +130,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userLikePosts = new ArrayCollection();
         $this->send_message = new ArrayCollection();
         $this->received_message = new ArrayCollection();
+        $this->friendRequestSent = new ArrayCollection();
+        $this->friendRequestReceived = new ArrayCollection();
         $this->postsId = new ArrayCollection();
         $this->remarks = new ArrayCollection();
+        $this->challengesUserRegister = new ArrayCollection();
     }
 
     public function __toString()
@@ -264,7 +268,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection|Challenges[]
      */
     public function getChallenge(): Collection
     {
@@ -275,6 +279,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->challenge->contains($challenge)) {
             $this->challenge[] = $challenge;
+            $challenge->addUser($this);
         }
 
         return $this;
@@ -282,61 +287,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeChallenge(Challenges $challenge): self
     {
-        $this->challenge->removeElement($challenge);
-
-        return $this;
-    }
-
-
-    /**
-     * @return Collection|Post[]
-     */
-    public function getLikedPosts(): Collection
-    {
-        return $this->likedPosts;
-    }
-
-    public function addLikedPost(Post $likedPost): self
-    {
-        if (!$this->likedPosts->contains($likedPost)) {
-            $this->likedPosts[] = $likedPost;
-            $likedPost->addUsersWhoLiked($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLikedPost(Post $likedPost): self
-    {
-        if ($this->likedPosts->removeElement($likedPost)) {
-            $likedPost->removeUsersWhoLiked($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Remark[]
-     */
-    public function getLikedRemarks(): Collection
-    {
-        return $this->likedRemarks;
-    }
-
-    public function addLikedRemark(Remark $likedRemark): self
-    {
-        if (!$this->likedRemarks->contains($likedRemark)) {
-            $this->likedRemarks[] = $likedRemark;
-            $likedRemark->addUserRemark($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLikedRemark(Remark $likedRemark): self
-    {
-        if ($this->likedRemarks->removeElement($likedRemark)) {
-            $likedRemark->removeUserRemark($this);
+        if($this->challenge->removeElement($challenge)){
+            $challenge->removeUser($this);
         }
 
         return $this;
@@ -559,6 +511,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection|Friends[]
+     */
+    public function getFriendRequestSent(): Collection
+    {
+        return $this->friendRequestSent;
+    }
+
+    public function addFriendRequestSent(Friends $friendRequestSent): self
+    {
+        if (!$this->friendRequestSent->contains($friendRequestSent)) {
+            $this->friendRequestSent[] = $friendRequestSent;
+            $friendRequestSent->setSenderUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendRequestSent(Friends $friendRequestSent): self
+    {
+        if ($this->friendRequestSent->removeElement($friendRequestSent)) {
+            // set the owning side to null (unless already changed)
+            if ($friendRequestSent->getSenderUser() === $this) {
+                $friendRequestSent->setSenderUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Friends[]
+     */
+    public function getFriendRequestReceived(): Collection
+    {
+        return $this->friendRequestReceived;
+    }
+
+    public function addFriendRequestReceived(Friends $friendRequestReceived): self
+    {
+        if (!$this->friendRequestReceived->contains($friendRequestReceived)) {
+            $this->friendRequestReceived[] = $friendRequestReceived;
+            $friendRequestReceived->setReceiverUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriendRequestReceived(Friends $friendRequestReceived): self
+    {
+        if ($this->friendRequestReceived->removeElement($friendRequestReceived)) {
+            // set the owning side to null (unless already changed)
+            if ($friendRequestReceived->getReceiverUser() === $this) {
+                $friendRequestReceived->setReceiverUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Post[]
      */
     public function getPostsId(): Collection
@@ -607,6 +619,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->remarks->removeElement($remark)) {
             $remark->removeUserId($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ChallengesUserRegister[]
+     */
+    public function getChallengesUserRegister(): Collection
+    {
+        return $this->challengesUserRegister;
+    }
+
+    public function addChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if (!$this->challengesUserRegister->contains($challengesUserRegister)) {
+            $this->challengesUserRegister[] = $challengesUserRegister;
+            $challengesUserRegister->setUserRegister($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChallengesUserRegister(ChallengesUserRegister $challengesUserRegister): self
+    {
+        if ($this->challengesUserRegister->removeElement($challengesUserRegister)) {
+            // set the owning side to null (unless already changed)
+            if ($challengesUserRegister->getUserRegister() === $this) {
+                $challengesUserRegister->setUserRegister(null);
+            }
         }
 
         return $this;
