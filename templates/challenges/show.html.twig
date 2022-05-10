@@ -89,11 +89,11 @@
                     {% for like in post.userLikePosts %}
                             {% set count = count + 1 %}
                     {% endfor %}
-                    {{ count }}
+                    <span class="id-{{ post.id }}-count">{{ count }}</span>
                         {% if post.userLikePosts is defined and post.userLikePosts is empty %}
-                            <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like_post red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+                            <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
                         {% else %}
-                            <i data-url="{{ path('unlike_post', {'id': post.id }) }}" class=" unlike_post red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+                            <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
                         {% endif %}
                 </span>
                 <p>{{ post.content }} </p>
@@ -119,11 +119,11 @@
                                 {% for like in remark.userLikeRemarks %}
                                     {% set count = count + 1 %}
                                 {% endfor %}
-                                {{ count }}
+                                <span class="id-{{ remark.id }}-count">{{ count }}</span>
                                 {% if remark.userLikeRemarks is defined and remark.userLikeRemarks is empty %}
-                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like_remark red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
+                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
                                 {% else %}
-                                    <i data-url="{{ path('unlike_remark', {'id': remark.id }) }}" class=" unlike_remark red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
+                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
                                 {% endif %}
                             </span>
                         </div>

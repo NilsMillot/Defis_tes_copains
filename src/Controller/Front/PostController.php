@@ -95,27 +95,23 @@ class PostController extends AbstractController
     }
 
     #[Route('/like/{id}', name:'like_post', methods: ['POST','GET'])]
-    public function likePost(Request $request, Post $post): Response
+    public function likePost(Request $request, Post $post, UserLikePostRepository $userLikePostRepository): Response
     {
-        $userLikePost = new UserLikePost();
-        $entityManager = $this->getDoctrine()->getManager();
-        $userLikePost->setUserWhoLiked($this->security->getUser());
-        $userLikePost->setPostLiked($post);
-        $entityManager->persist($userLikePost);
-        $entityManager->flush();
+        $exist = $userLikePostRepository->findBy(['postLiked'=>$post->getId(),'userWhoLiked'=>$this->security->getUser()]);
+        if($exist){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($exist[0]);
+            $entityManager->flush();
+        }else{
+            $userLikePost = new UserLikePost();
+            $entityManager = $this->getDoctrine()->getManager();
+            $userLikePost->setUserWhoLiked($this->security->getUser());
+            $userLikePost->setPostLiked($post);
+            $entityManager->persist($userLikePost);
+            $entityManager->flush();
+        }
         $id = $post->getId();
         return new Response($id, 200, array('Content-Type' => 'text/html'));
     }
 
-    #[Route('/unlike/{id}', name:'unlike_post', methods: ['POST','GET'])]
-    public function unlikePost(Request $request, Post $post, UserLikePostRepository $userLikePostRepository): Response
-    {
-        $userLikePost = $userLikePostRepository->findBy(['postLiked'=>$post->getId(),'userWhoLiked'=>$this->security->getUser()]);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($userLikePost[0]);
-        $entityManager->flush();
-        $id = $post->getId();
-        return new Response($id, 200, array('Content-Type' => 'text/html'));
-
-    }
 }
