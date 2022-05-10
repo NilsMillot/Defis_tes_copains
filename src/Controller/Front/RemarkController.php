@@ -94,27 +94,26 @@ class RemarkController extends AbstractController
     }
 
     #[Route('/like/{id}', name:'like_remark', methods: ['POST','GET'])]
-    public function likeRemark(Request $request, Remark $remark): Response
+    public function likeRemark(Request $request, Remark $remark, UserLikeRemarkRepository $userLikeRemarkRepository): Response
     {
-        $userLikeRemark = new UserLikeRemark();
-        $entityManager = $this->getDoctrine()->getManager();
-        $userLikeRemark->setUserId($this->security->getUser());
-        $userLikeRemark->setRemarkId($remark);
-        $entityManager->persist($userLikeRemark);
-        $entityManager->flush();
+        $exist = $userLikeRemarkRepository->findBy(['remarkId'=>$remark->getId(),'userId'=>$this->security->getUser()]);
+
+        if($exist){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($exist[0]);
+            $entityManager->flush();
+        }else{
+            $userLikeRemark = new UserLikeRemark();
+            $entityManager = $this->getDoctrine()->getManager();
+            $userLikeRemark->setUserId($this->security->getUser());
+            $userLikeRemark->setRemarkId($remark);
+            $entityManager->persist($userLikeRemark);
+            $entityManager->flush();
+        }
+
         $id = $remark->getId();
         return new Response($id, 200, array('Content-Type' => 'text/html'));
     }
 
-    #[Route('/unlike/{id}', name:'unlike_remark', methods: ['POST','GET'])]
-    public function unlikeRemark(Request $request,Remark $remark, UserLikeRemarkRepository $userLikeRemarkRepository): Response
-    {
-        $userLikeRemark = $userLikeRemarkRepository->findBy(['remarkId'=>$remark->getId(),'userId'=>$this->security->getUser()]);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($userLikeRemark[0]);
-        $entityManager->flush();
-        $id = $remark->getId();
-        return new Response($id, 200, array('Content-Type' => 'text/html'));
 
-    }
 }
