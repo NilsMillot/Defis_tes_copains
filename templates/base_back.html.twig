@@ -11,6 +11,18 @@
     {% block javascripts %}
         {#{{ encore_entry_script_tags('app') }}#}
     {% endblock %}
+    <style>
+        html {
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
 <nav>
