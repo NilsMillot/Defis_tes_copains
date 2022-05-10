@@ -1,0 +1,39 @@
+{% extends 'base_back.html.twig' %}
+
+{% block body %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                {% for role in user.roles %}
+                {{ role }}
+                {% endfor %}
+                </td>
+                <td>
+                    <a href="">show</a>
+                    <a href="">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

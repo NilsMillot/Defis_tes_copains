@@ -1,0 +1,44 @@
+{% extends 'base_back.html.twig' %}
+
+{% block body %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Date de création</th>
+            <th>Deadline</th>
+            <th>Créateur</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for challenge in challenges %}
+            <tr>
+                <td>{{ challenge.id }}</td>
+                <td>{{ challenge.name }}</td>
+                <td>{{ challenge.description }}</td>
+                <td>{{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }}</td>
+                <td>{{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</td>
+                {% for challenge in challenge.users %}
+                    <td> {{ challenge.username }} </td>
+                    {%  set username = challenge.username %}
+                {% endfor %}
+
+                {#                <td><img src="{{ group.picture }}" width="40px" /></td>#}
+                <td>
+                    <a href="">show</a>
+                    <a href="">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
