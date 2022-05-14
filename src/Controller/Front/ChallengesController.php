@@ -121,8 +121,8 @@ class ChallengesController extends AbstractController
         $formPost = $this->createForm(PostType::class, $post);
         $remark = new Remark();
         $formRemark = $this->createForm(RemarkType::class, $remark);
-
         $formPost->handleRequest($request);
+
         if($formPost->isSubmitted() && $formPost->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $post->addUserId($this->security->getUser());
@@ -185,9 +185,18 @@ class ChallengesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'challenges_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'challenges_delete', methods: ['POST','GET'])]
     public function delete(Request $request, Challenges $challenge): Response
     {
+
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+
         if ($this->isCsrfTokenValid('delete'.$challenge->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($challenge);

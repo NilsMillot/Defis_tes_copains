@@ -94,7 +94,11 @@
         {% endif %}
         <ul class="collapsible popout">
             <li>
-                <div class="collapsible-header"> <i class="material-icons prefix">mode_edit</i>Commentaires </div>
+                {% set count = 0 %}
+                {% for remark in post.remark %}
+                    {% set count = count + 1 %}
+                {% endfor %}
+                <div class="collapsible-header"> <i class="material-icons prefix">mode_edit</i>Commentaires ({{ count }}) </div>
                 <div class="collapsible-body">
                 <a class="waves-effect waves-light btn modal-trigger modal_href" data-id="{{post.id}}" href="#modal1">Répondre</a>
                     {% for remark in post.remark %}
@@ -116,6 +120,11 @@
                                 {% endif %}
                             </span>
                         </div>
+                        {% for user in remark.userId %}
+                            {%  if user.username == app.user.username %}
+                                {{ include('remark/_delete_form.html.twig') }}
+                            {% endif %}
+                        {% endfor %}
                         <div class="divider"></div>
                     {% endfor %}
                 </div>

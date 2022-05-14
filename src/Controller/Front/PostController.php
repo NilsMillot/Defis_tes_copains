@@ -112,6 +112,13 @@ class PostController extends AbstractController
      **/
     public function delete(Request $request, Post $post, Challenges $challenge, PostRepository $postRepository): Response
     {
+        $post_user = $post->getUserId();
+        foreach ($post_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($post);
