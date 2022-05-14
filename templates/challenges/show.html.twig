@@ -69,16 +69,16 @@
             <div class="section">
                 <h5 id="{{ post.id }}">{{ post.name }}</h5>
                 <span>Like :
-                    {% set count = 0 %}
-                    {% for like in post.userLikePosts %}
-                            {% set count = count + 1 %}
-                    {% endfor %}
-                    <span class="id-{{ post.id }}-count">{{ count }}</span>
-                        {% if post.userLikePosts is defined and post.userLikePosts is empty %}
-                            <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
-                        {% else %}
-                            <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
-                        {% endif %}
+                {% set count = 0 %}
+                {% for like in post.userLikePosts %}
+                        {% set count = count + 1 %}
+                {% endfor %}
+                <span class="id-{{ post.id }}-count">{{ count }}</span>
+                {% if post.userLikePosts is defined and post.userLikePosts is empty %}
+                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+                {% else %}
+                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+                {% endif %}
                 </span>
                 <p>{{ post.content }} </p>
                 {% for user in post.userId %}

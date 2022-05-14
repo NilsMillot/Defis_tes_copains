@@ -84,25 +84,7 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/{id_challenge}', name: 'post_delete', methods: ['POST','GET'])]
-    /**
-    * @ParamConverter("challenge", options={"id" = "id_challenge"})
-    **/
-    public function delete(Request $request, Post $post, Challenges $challenge, PostRepository $postRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($post);
-            $entityManager->flush();
-        }
 
-        $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
-        return $this->redirectToRoute('challenges_show', [
-            'id'=>$challenge->getId(),
-            'posts'=>$allPosts,
-        ],
-            Response::HTTP_SEE_OTHER);
-    }
 
     #[Route('/like/{id}', name:'like_post', methods: ['POST','GET'])]
     public function likePost(Request $request, Post $post, UserLikePostRepository $userLikePostRepository): Response
@@ -122,6 +104,26 @@ class PostController extends AbstractController
         }
         $id = $post->getId();
         return new Response($id, 200, array('Content-Type' => 'text/html'));
+    }
+
+    #[Route('/{id}/{id_challenge}', name: 'post_delete', methods: ['POST','GET'])]
+    /**
+     * @ParamConverter("challenge", options={"id" = "id_challenge"})
+     **/
+    public function delete(Request $request, Post $post, Challenges $challenge, PostRepository $postRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($post);
+            $entityManager->flush();
+        }
+
+        $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
+        return $this->redirectToRoute('challenges_show', [
+            'id'=>$challenge->getId(),
+            'posts'=>$allPosts,
+        ],
+            Response::HTTP_SEE_OTHER);
     }
 
 }
