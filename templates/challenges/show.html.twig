@@ -45,27 +45,11 @@
                     {% else %}
                     <div class="row">
                         <div class="col s2 offset-s7">
-{#                        {% for register in challenge.challengesUserRegisters %}#}
-{#                            {% if register is not empty  %}#}
-{#                            {% else %}#}
-{#                                <p>Bla</p>#}
-{#                            {% endif %}#}
                             {% if challenge.challengesUserRegisters is defined and challenge.challengesUserRegisters is empty %}
                             <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
                             {% else %}
                                 <a class="waves-effect waves-light btn orange accent-3 " href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>
                             {% endif %}
-                            {#                           TODO: Reussie a afficher seuelemtn le bouton qu'il faut #}
-{#                            {% if register is null %}#}
-{#                                <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
-{#                            {% endif %}#}
-{#                            {% if register.userRegister == app.user and register.challengeRegister == challenge %}#}
-{#                                <a class="waves-effect waves-light btn orange accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>#}
-{#                            {% elseif register.userRegister == app.user and register.challengeRegister != challenge %}#}
-{#                            <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
-{#                            {% endif %}#}
-{#                        {% endfor %}#}
-{#                            <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
                         </div>
                     </div>
                     {% endif %}
@@ -81,7 +65,7 @@
         <div class="divider"></div>
         {% for user in post.userId %}
             {{ user.username }}
-            {% endfor %}
+        {% endfor %}
             <div class="section">
                 <h5 id="{{ post.id }}">{{ post.name }}</h5>
                 <span>Like :
@@ -97,6 +81,11 @@
                         {% endif %}
                 </span>
                 <p>{{ post.content }} </p>
+                {% for user in post.userId %}
+                    {%  if user.username == app.user.username %}
+                     {{ include('post/_delete_form.html.twig') }}
+                    {% endif %}
+                {% endfor %}
             </div>
         {% if(post.imageName) %}
         <div>

@@ -4,9 +4,11 @@ namespace App\Controller\Front;
 
 use App\Entity\Post;
 use App\Entity\UserLikePost;
+use App\Entity\Challenges;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Repository\UserLikePostRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -82,8 +84,11 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'post_delete', methods: ['POST'])]
-    public function delete(Request $request, Post $post): Response
+    #[Route('/{id}/{id_challenge}', name: 'post_delete', methods: ['POST','GET'])]
+    /**
+    * @ParamConverter("challenge", options={"id" = "id_challenge"})
+    **/
+    public function delete(Request $request, Post $post, Challenges $challenge, PostRepository $postRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -91,7 +96,12 @@ class PostController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
+        $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
+        return $this->redirectToRoute('challenges_show', [
+            'id'=>$challenge->getId(),
+            'posts'=>$allPosts,
+        ],
+            Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/like/{id}', name:'like_post', methods: ['POST','GET'])]
