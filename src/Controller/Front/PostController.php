@@ -10,6 +10,7 @@ use App\Repository\PostRepository;
 use App\Repository\UserLikePostRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -66,22 +67,31 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'post_edit', methods: ['GET','POST'])]
-    public function edit(Request $request, Post $post): Response
+    #[Route('/edit/{id}', name: 'post_edit', methods: ['GET','POST'])]
+    public function edit(Request $request, Post $post, PostRepository $postRepository): JsonResponse
     {
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $formPost = $this->createForm(PostType::class, $post);
+        $formPost->handleRequest($request);
+
+        $challenge = $post->getChallengeId();
+        if ($formPost->isSubmitted() && $formPost->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('post_index', [], Response::HTTP_SEE_OTHER);
+
+            $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
+            return $this->redirectToRoute('challenges_show', [
+                'id'=>$challenge->getId(),
+                'posts'=>$allPosts,
+            ],
+            );
         }
 
-        return $this->renderForm('post/edit.html.twig', [
-            'post' => $post,
-            'form' => $form,
-        ]);
+        $name = $post->getName();
+        $content = $post->getContent();
+        $image = $post->getImageFile();
+        return $this->json(['name'=>$name,'content'=>$content,'image'=>$image]);
+
     }
 
 

@@ -3,6 +3,7 @@
     <div class="row">
         {{ form_label(formPost.name,'Nom du post') }}
         {{ form_widget(formPost.name) }}
+        <input id="post_id"  name="post-id" hidden>
         <div class="input-field col s6">
             <i class="material-icons prefix">mode_edit</i>
             {{ form_widget(formPost.content) }}
@@ -15,6 +16,7 @@
                 <div class="file-path-wrapper">
                     <input class="file-path validate" type="text">
                 </div>
+                <span class="warning-img red-text">Vous ne pourrez modifier votre image une fois votre post envoyé</span>
             </div>
         </div>
     </div>

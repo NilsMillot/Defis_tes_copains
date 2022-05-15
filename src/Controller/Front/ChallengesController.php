@@ -124,15 +124,26 @@ class ChallengesController extends AbstractController
         $formPost->handleRequest($request);
 
         if($formPost->isSubmitted() && $formPost->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $post->addUserId($this->security->getUser());
-            $post->setChallengeId($challenge);
-            $entityManager->persist($post);
-            $entityManager->flush();
+
+            if (!empty($_POST['post-id'])) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $post = $postRepository->findOneBy(['id'=>$_POST['post-id']]);
+                $post->setName($_POST['post']['name']);
+                $post->setContent($_POST['post']['content']);
+
+                $entityManager->persist($post);
+                $entityManager->flush();
+            } else {
+                $entityManager = $this->getDoctrine()->getManager();
+                $post->addUserId($this->security->getUser());
+                $post->setChallengeId($challenge);
+                $entityManager->persist($post);
+                $entityManager->flush();
+            }
             return $this->redirectToRoute('challenges_show', [
-                'id'=>$challenge->getId(),
-                'posts'=>$allPosts,
-                ],
+                'id' => $challenge->getId(),
+                'posts' => $allPosts,
+            ],
                 Response::HTTP_SEE_OTHER);
         }
 
