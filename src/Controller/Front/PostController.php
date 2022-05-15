@@ -127,7 +127,7 @@ class PostController extends AbstractController
     /**
      * @ParamConverter("challenge", options={"id" = "id_challenge"})
      **/
-    public function delete(Request $request, Post $post, Challenges $challenge, PostRepository $postRepository): Response
+    public function delete(Request $request, Post $post, Challenges $challenge, PostRepository $postRepository,UserLikePostRepository $userLikePostRepository): Response
     {
         $post_user = $post->getUserId();
         foreach ($post_user->toArray() as $user)
@@ -137,7 +137,11 @@ class PostController extends AbstractController
             }
         }
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
+           $likes = $userLikePostRepository->findBy(['postLiked'=>$post->getId()]);
             $entityManager = $this->getDoctrine()->getManager();
+            foreach ($likes as $like ){
+                $entityManager->remove($like);
+            }
             $entityManager->remove($post);
             $entityManager->flush();
         }

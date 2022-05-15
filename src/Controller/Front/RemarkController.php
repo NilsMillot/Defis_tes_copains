@@ -114,7 +114,7 @@ class RemarkController extends AbstractController
     /**
      * @ParamConverter("challenge", options={"id" = "id_challenge"})
      **/
-    public function delete(Request $request, Remark $remark, Challenges $challenge, RemarkRepository $remarkRepository): Response
+    public function delete(Request $request, Remark $remark, Challenges $challenge, RemarkRepository $remarkRepository,UserLikeRemarkRepository $userLikeRemarkRepository): Response
     {
 
         $remark_user = $remark->getUserId();
@@ -125,7 +125,12 @@ class RemarkController extends AbstractController
             }
         }
         if ($this->isCsrfTokenValid('delete'.$remark->getId(), $request->request->get('_token'))) {
+            $likes = $userLikeRemarkRepository->findBy(['remarkId'=>$remark->getId()]);
+
             $entityManager = $this->getDoctrine()->getManager();
+            foreach ($likes as $like ){
+                $entityManager->remove($like);
+            }
             $entityManager->remove($remark);
             $entityManager->flush();
         }
