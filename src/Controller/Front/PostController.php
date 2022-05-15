@@ -70,6 +70,13 @@ class PostController extends AbstractController
     #[Route('/edit/{id}', name: 'post_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Post $post, PostRepository $postRepository): JsonResponse
     {
+        $post_user = $post->getUserId();
+        foreach ($post_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
 
         $formPost = $this->createForm(PostType::class, $post);
         $formPost->handleRequest($request);

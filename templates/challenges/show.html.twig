@@ -123,6 +123,7 @@
                         </div>
                         {% for user in remark.userId %}
                             {%  if user.username == app.user.username %}
+                                <a class="waves-effect waves-light btn edit_remark" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">Edit</a>
                                 {{ include('remark/_delete_form.html.twig') }}
                             {% endif %}
                         {% endfor %}

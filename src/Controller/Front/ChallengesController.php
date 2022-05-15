@@ -16,6 +16,7 @@ use App\Repository\UserRepository;
 use App\Repository\UserLikePostRepository;
 use App\Repository\ChallengesUserRegisterRepository;
 use App\Services\QrCodeService;
+use App\Repository\RemarkRepository;
 use Doctrine\DBAL\Types\DateType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
@@ -114,7 +115,7 @@ class ChallengesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, Challenges $challenge, PostRepository $postRepository, UserLikePostRepository $userLikePostRepository): Response
+    public function show(Request $request, Challenges $challenge, PostRepository $postRepository, RemarkRepository $remarkRepository, UserLikePostRepository $userLikePostRepository): Response
     {
         $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
         $post = new Post();
@@ -149,12 +150,21 @@ class ChallengesController extends AbstractController
 
         $formRemark->handleRequest($request);
         if($formRemark->isSubmitted() && $formRemark->isValid()){
-            $post = $postRepository->findOneBy(['id'=>$_POST['post-id']]);
-            $entityManager = $this->getDoctrine()->getManager();
-            $remark->addUserId($this->security->getUser());
-            $remark->setPost($post);
-            $entityManager->persist($remark);
-            $entityManager->flush();
+            if (!empty($_POST['remark-id'])) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $remark = $remarkRepository->findOneBy(['id'=>$_POST['remark-id']]);
+                $remark->setContentRemark($_POST['remark']['contentRemark']);
+                $entityManager->persist($remark);
+                $entityManager->flush();
+
+            }else {
+                $post = $postRepository->findOneBy(['id' => $_POST['post-id']]);
+                $entityManager = $this->getDoctrine()->getManager();
+                $remark->addUserId($this->security->getUser());
+                $remark->setPost($post);
+                $entityManager->persist($remark);
+                $entityManager->flush();
+            }
             return $this->redirectToRoute('challenges_show', [
                 'id'=>$challenge->getId(),
                 'posts'=>$allPosts,

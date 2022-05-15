@@ -65,9 +65,16 @@ class RemarkController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'remark_edit', methods: ['GET','POST'])]
+    #[Route('/edit/{id}', name: 'remark_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Remark $remark): Response
     {
+        $remark_user = $remark->getUserId();
+        foreach ($remark_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
         $form = $this->createForm(RemarkType::class, $remark);
         $form->handleRequest($request);
 
@@ -76,11 +83,8 @@ class RemarkController extends AbstractController
 
             return $this->redirectToRoute('remark_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('remark/edit.html.twig', [
-            'remark' => $remark,
-            'form' => $form,
-        ]);
+        $content_remark = $remark->getContentRemark();
+        return $this->json(['content'=>$content_remark]);
     }
 
 
