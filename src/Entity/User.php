@@ -109,6 +109,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $challengesUserRegister;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $pro;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -575,6 +580,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $challengesUserRegister->setUserRegister(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPro(): ?bool
+    {
+        return $this->pro;
+    }
+
+    public function setPro(?bool $pro): self
+    {
+        $this->pro = $pro;
 
         return $this;
     }

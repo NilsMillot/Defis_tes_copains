@@ -21,6 +21,8 @@ class UserType extends AbstractType
             ->add('likedPosts')
             ->add('likedRemarks')
             ->add('idGroup')
+            ->add('pro')
+
         ;
     }
 
