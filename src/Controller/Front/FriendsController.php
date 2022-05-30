@@ -3,8 +3,10 @@
 namespace App\Controller\Front;
 
 use App\Entity\Friends;
+use App\Entity\FriendsSearch;
 use App\Entity\User;
 use App\Form\FriendsType;
+use App\Form\FriendsSearchType;
 use App\Repository\FriendsRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +57,16 @@ class FriendsController extends AbstractController
         $friendsAcceptedByCurrentUser = array_merge($friendsAcceptedReceivedByCurrentUser, $friendsAcceptedSendedByCurrentUser);
 
         $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $allUsersExceptCurrent = array_filter(
+            $allUsers,
+            function ($e) {
+                return $e->getId() !== $this->getUser()->getId();
+            }
+        );
 
+        $search = new FriendsSearch();
+        $formSearch = $this->createForm(FriendsSearchType::class, $search);
+        $formSearch->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -70,6 +81,8 @@ class FriendsController extends AbstractController
 
         return $this->renderForm('friends/new.html.twig', [
             'form' => $form,
+            'formSearch' => $formSearch,
+            'allUsers' => $allUsersExceptCurrent,
         ]);
     }
 
