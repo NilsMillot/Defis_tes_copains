@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Challenges;
+use App\Entity\Category;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -21,12 +23,17 @@ class ChallengesType extends AbstractType
             ])
             ->add('description')
             ->add('imageFile', VichImageType::class, [
-                'required' => true,
+                'required' => false,
                 'allow_delete' => true,
                 'download_uri' => false,
                 'image_uri' => true,
                 'asset_helper' => true,
             ])
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'name',
+                'placeholder'=>'Choisir une catégorie',
+            ]);
         ;
     }
 

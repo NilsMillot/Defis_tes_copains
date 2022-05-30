@@ -50,10 +50,6 @@ class Challenges implements \Serializable
      */
     private $qr_code;
 
-    /**
-     * @ORM\OneToMany(targetEntity=CategoryChallenges::class, mappedBy="idChallenge")
-     */
-    private $categoryChallenges;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="challenge")
@@ -70,9 +66,13 @@ class Challenges implements \Serializable
      */
     private $challengesUserRegisters;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="challenges")
+     */
+    private $category;
+
     public function __construct()
     {
-        $this->categoryChallenges = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->postId = new ArrayCollection();
         $this->challengesUserRegisters = new ArrayCollection();
@@ -156,35 +156,7 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    /**
-     * @return Collection|CategoryChallenges[]
-     */
-    public function getCategoryChallenges(): Collection
-    {
-        return $this->categoryChallenges;
-    }
 
-    public function addCategoryChallenge(CategoryChallenges $categoryChallenge): self
-    {
-        if (!$this->categoryChallenges->contains($categoryChallenge)) {
-            $this->categoryChallenges[] = $categoryChallenge;
-            $categoryChallenge->setIdChallenge($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategoryChallenge(CategoryChallenges $categoryChallenge): self
-    {
-        if ($this->categoryChallenges->removeElement($categoryChallenge)) {
-            // set the owning side to null (unless already changed)
-            if ($categoryChallenge->getIdChallenge() === $this) {
-                $categoryChallenge->setIdChallenge(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|User[]
@@ -211,23 +183,6 @@ class Challenges implements \Serializable
         }
 
         return $this;
-    }
-
-   
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->imageName,
-        ));
-    }
-
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->imageName,
-            ) = unserialize($serialized, array('allowed_classes' => false));
     }
 
     /**
@@ -290,5 +245,32 @@ class Challenges implements \Serializable
         return $this;
     }
 
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->imageName,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->imageName,
+            ) = unserialize($serialized, array('allowed_classes' => false));
+    }
 
 }
