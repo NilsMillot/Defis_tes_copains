@@ -30,7 +30,7 @@
                         <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
                         <p>{{ challenge.category }}</p>
                         {% for category in challenge.category %}
-                            <p>{{ category.name }}</p>
+                            <p>Categorie : {{ category.name }}</p>
                         {% endfor %}
                         </div>
                         <div class="col s6">
