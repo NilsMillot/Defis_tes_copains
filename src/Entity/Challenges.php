@@ -76,6 +76,11 @@ class Challenges implements \Serializable
      */
     private $tags;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -296,6 +301,18 @@ class Challenges implements \Serializable
     public function removeTag(Tag $tag): self
     {
         $this->tags->removeElement($tag);
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
         return $this;
     }
 

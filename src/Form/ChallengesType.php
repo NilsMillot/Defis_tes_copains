@@ -7,6 +7,7 @@ use App\Entity\Category;
 use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -45,6 +46,10 @@ class ChallengesType extends AbstractType
                     'id'=>'categorie'
                 )
             ])
+            ->add('status', CheckboxType::class, [
+                'label'    => 'Ouvert ? ',
+                'required' => false,
+            ]);
         ;
     }
 
