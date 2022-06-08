@@ -67,7 +67,9 @@ class ChallengesController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $challenge->setCreationDate(new \DateTime());
             $challenge->addUser($this->security->getUser());
-
+            foreach($form["tags"]->getData() as $tag) {
+                $challenge->addTag($tag);
+            }
             $lastChallenge = $challengesRepository->findOneBy([], ['id' => 'desc']);
             if ($lastChallenge === null) {
                 $futurId = 1;
@@ -75,6 +77,7 @@ class ChallengesController extends AbstractController
                 $lastId = $lastChallenge->getId();
                 $futurId = $lastId + 1;
             }
+
             $qrCode = $qrCodeService->qrcode($futurId);
 
             $challenge->setQrCode($qrCode);

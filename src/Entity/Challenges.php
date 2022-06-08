@@ -71,11 +71,17 @@ class Challenges implements \Serializable
      */
     private $category;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="challenge")
+     */
+    private $tags;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->postId = new ArrayCollection();
         $this->challengesUserRegisters = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -271,6 +277,26 @@ class Challenges implements \Serializable
             $this->id,
             $this->imageName,
             ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
+        return $this;
+    }
+    public function removeTag(Tag $tag): self
+    {
+        $this->tags->removeElement($tag);
+        return $this;
     }
 
 }

@@ -32,6 +32,12 @@
                         {% for category in challenge.category %}
                             <p>Categorie : {{ category.name }}</p>
                         {% endfor %}
+
+                            <p>Tags :{% for tags in challenge.tags %}
+                                {{tags.name }}
+                                {% endfor %}
+                            </p>
+
                         </div>
                         <div class="col s6">
                            <img src="{{ challenge.qrCode }}" />
