@@ -27,7 +27,7 @@ class ChallengesType extends AbstractType
             ->add('description')
             ->add('imageFile', VichImageType::class, [
                 'required' => false,
-                'allow_delete' => true,
+                'allow_delete' => false,
                 'download_uri' => false,
                 'image_uri' => true,
                 'asset_helper' => true,
