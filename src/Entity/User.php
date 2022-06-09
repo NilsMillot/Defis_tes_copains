@@ -119,6 +119,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $challengesUserRegister;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="winner")
+     */
+    private $challenges;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -135,6 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->postsId = new ArrayCollection();
         $this->remarks = new ArrayCollection();
         $this->challengesUserRegister = new ArrayCollection();
+        $this->challenges = new ArrayCollection();
     }
 
     public function __toString()
@@ -652,5 +658,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Challenges>
+     */
+    public function getChallenges(): Collection
+    {
+        return $this->challenges;
     }
 }

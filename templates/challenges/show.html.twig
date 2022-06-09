@@ -53,7 +53,10 @@
                     </div>
                     {% if app.user.username == username %}
                     <div class="row">
-                        <div class="col s2 offset-s7">
+                        <div class="col s2 offset-s4">
+                            <a class="waves-effect waves-light btn blue accent-3" href="{{ path('challenges_info', {'id': challenge.id}) }}">Information</a>
+                        </div>
+                        <div class="col s2 ">
                             <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
                         </div>
                         <div class="col s2">
@@ -63,11 +66,24 @@
                     {% else %}
                     <div class="row">
                         <div class="col s2 offset-s7">
-                            {% if challenge.challengesUserRegisters is defined and challenge.challengesUserRegisters is empty %}
-                            <a class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
-                            {% else %}
+                            {% set user = 0 %}
+                            {% for register in challenge.challengesUserRegisters %}
+                                {% if app.user.username in register.userRegister.username  %}
+                                {% set user = 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if user == 1  %}
                                 <a class="waves-effect waves-light btn orange accent-3 " {{ disabled }} href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>
-                            {% endif %}
+                            {% else%}
+                                <a class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
+                            {%  endif %}
+
+
+{#                            {% if challenge.challengesUserRegisters is defined and challenge.challengesUserRegisters is empty %}#}
+{#                            <a class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
+{#                            {% else %}#}
+{#                                <a class="waves-effect waves-light btn orange accent-3 " {{ disabled }} href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>#}
+{#                            {% endif %}#}
                         </div>
                     </div>
                     {% endif %}

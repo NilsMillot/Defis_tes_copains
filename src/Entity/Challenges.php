@@ -81,6 +81,11 @@ class Challenges implements \Serializable
      */
     private $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="challenges")
+     */
+    private $winner;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -312,6 +317,18 @@ class Challenges implements \Serializable
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getWinner(): ?User
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?User $winner): self
+    {
+        $this->winner = $winner;
 
         return $this;
     }
