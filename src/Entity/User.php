@@ -119,6 +119,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $challengesUserRegister;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $githubId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $facebookId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $googleId;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="github_access_token", type="string", length=255, nullable=true, options={"default"="NULL"})
+     */
+    private $githubAccessToken;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -287,7 +309,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeChallenge(Challenges $challenge): self
     {
-        if($this->challenge->removeElement($challenge)){
+        if ($this->challenge->removeElement($challenge)) {
             $challenge->removeUser($this);
         }
 
@@ -650,6 +672,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $challengesUserRegister->setUserRegister(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGithubId(): ?string
+    {
+        return $this->githubId;
+    }
+
+    public function setGithubId(?string $githubId): self
+    {
+        $this->githubId = $githubId;
+
+        return $this;
+    }
+
+    public function getFacebookId(): ?string
+    {
+        return $this->facebookId;
+    }
+
+    public function setFacebookId(?string $facebookId): self
+    {
+        $this->facebookId = $facebookId;
+
+        return $this;
+    }
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): self
+    {
+        $this->googleId = $googleId;
+
+        return $this;
+    }
+
+    public function getGithubAccessToken(): ?string
+    {
+        return $this->githubAccessToken;
+    }
+
+    public function setGithubAccessToken(?string $githubAccessToken): self
+    {
+        $this->githubAccessToken = $githubAccessToken;
 
         return $this;
     }
