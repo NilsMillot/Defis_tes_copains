@@ -254,7 +254,7 @@ class ChallengesController extends AbstractController
 
 
     #[Route('/{id}/delete', name: 'challenges_delete', methods: ['POST','GET'])]
-    public function delete(Request $request, Challenges $challenge): Response
+    public function delete(Request $request, Challenges $challenge,UserLikeChallengeRepository $userLikeChallengeRepository, PostRepository $postRepository, ChallengesUserRegisterRepository $challengesUserRegisterRepository): Response
     {
 
         $challenge_user = $challenge->getUsers();
@@ -267,6 +267,19 @@ class ChallengesController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete'.$challenge->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $posts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
+            $challenge_user_registers = $challengesUserRegisterRepository->findBy(['challengeRegister'=>$challenge->getId()]);
+            $user_like_challenges = $userLikeChallengeRepository->findBy(['challengesLiked'=>$challenge->getId()]);
+
+            foreach ($posts as $post){
+                $entityManager->remove($post);
+            }
+            foreach ($challenge_user_registers as $challenge_user_register){
+                $entityManager->remove($challenge_user_register);
+            }
+            foreach ($user_like_challenges as $user_like_challenge) {
+                $entityManager->remove($user_like_challenge);
+            }
             $entityManager->remove($challenge);
             $entityManager->flush();
         }

@@ -1,4 +1,17 @@
 .container{
-    margin-left: 20%;
     padding-top: 20px;
+    width: 100%;
+}
+
+.has-fixed-sidenav .navbar-fixed nav.navbar{
+    width: calc(100% - 15%);
+    left:15%;
+}
+
+body.has-fixed-sidenav{
+    padding-left: 15%;
+}
+
+.back_th{
+    text-align: center !important;
 }
