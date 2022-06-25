@@ -32,6 +32,7 @@ use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 #[Route('/challenges')]
 class ChallengesController extends AbstractController
@@ -206,6 +207,49 @@ class ChallengesController extends AbstractController
         return $this->renderForm('challenges/edit.html.twig', [
             'challenge' => $challenge,
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/info', name: 'challenges_info', methods: ['GET','POST'])]
+    public function information(Request $request, Challenges $challenge): Response
+    {
+
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+
+
+        return $this->renderForm('challenges/info.html.twig', [
+            'challenge' => $challenge,
+        ]);
+    }
+    #[Route('/{id}/{id_user}', name: 'challenges_info_winner', methods: ['GET','POST'])]
+    /**
+     * @ParamConverter("user", options={"id" = "id_user"})
+     **/
+    public function winner(Request $request, Challenges $challenge, ChallengesRepository $challengesRepository, User $user, UserRepository $userRepository): Response
+    {
+
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $userChallenge)
+        {
+            if ($userChallenge !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+        $winner = $userRepository->findBy(['id'=>$user->getId()]);
+        $entityManager = $this->getDoctrine()->getManager();
+        $challenge = $challengesRepository->findOneBy(['id'=>$challenge->getId()]);
+        $challenge->setWinner($winner[0]);
+        $entityManager->persist($challenge);
+        $entityManager->flush();
+
+        return $this->renderForm('challenges/info.html.twig', [
+            'challenge' => $challenge,
         ]);
     }
 
