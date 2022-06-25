@@ -249,6 +249,31 @@ class ChallengesController extends AbstractController
             'challenge' => $challenge,
         ]);
     }
+
+
+
+
+    #[Route('/{id}/delete', name: 'challenges_delete', methods: ['POST','GET'])]
+    public function delete(Request $request, Challenges $challenge): Response
+    {
+
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+
+        if ($this->isCsrfTokenValid('delete'.$challenge->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($challenge);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}/{id_user}', name: 'challenges_info_winner', methods: ['GET','POST'])]
     /**
      * @ParamConverter("user", options={"id" = "id_user"})
@@ -273,28 +298,5 @@ class ChallengesController extends AbstractController
         return $this->renderForm('challenges/info.html.twig', [
             'challenge' => $challenge,
         ]);
-    }
-
-
-
-    #[Route('/{id}/delete', name: 'challenges_delete', methods: ['POST','GET'])]
-    public function delete(Request $request, Challenges $challenge): Response
-    {
-
-        $challenge_user = $challenge->getUsers();
-        foreach ($challenge_user->toArray() as $user)
-        {
-            if ($user !== $this->security->getUser()) {
-                throw $this->createAccessDeniedException();
-            }
-        }
-
-        if ($this->isCsrfTokenValid('delete'.$challenge->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($challenge);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
     }
 }
