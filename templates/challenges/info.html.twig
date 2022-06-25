@@ -73,18 +73,18 @@
 
         <div class="col s3 ">
             <div class="card horizontal red accent-2" style="height: 100px;">
-                {# {% set count = 0 %} #}
-                {# {% for post in challenge %} #}
-                {# {% set count = count + 1 %} #}
-                {# {% endfor %} #}
+                 {% set count = 0 %}
+                 {% for liked in challenge.userLikeChallenges %}
+                    {% set count = count + 1 %}
+                 {% endfor %}
 {#                todo gestion des likes des challenges #}
                 <div style="text-align: center;width: 100%;">
-                    <h3> 0<i class="material-icons small">favorite_border</i></h3>
+                    <h3> {{ count }}<i class="material-icons small">favorite_border</i></h3>
                 </div>
             </div>
         </div>
-
     </div>
+
     <a  class="waves-effect waves-light btn orange accent-3 " href="{{ path('challenges_show', {'id': challenge.id}) }}">Retour au challenge</a>
 
 {% endblock %}

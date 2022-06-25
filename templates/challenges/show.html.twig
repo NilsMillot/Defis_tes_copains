@@ -18,26 +18,46 @@
     <div class="col s12 m7">
         <div class="card horizontal">
             <div class="card-image">
-                <img  src={{ vich_uploader_asset(challenge, 'imageFile') }} height="400px"/>
+                <img src={{ vich_uploader_asset(challenge, 'imageFile') }} height="400px"/>
             </div>
             <div class="card-stacked">
                 <div class="card-content">
                     <p>{{ challenge.description }}
-                    {%  if challenge.status == true  %}
-                    <span class="chip teal accent-3"> Ouvert </span>
-                    {%  else %}
-                        <span class="chip red darken-1"> Fermé </span>
-                    {% endif %}
+                        {% if challenge.status == true %}
+                            <span class="chip teal accent-3"> Ouvert </span>
+                        {% else %}
+                            <span class="chip red darken-1"> Fermé </span>
+                        {% endif %}
+                        <span>Like :
+                        {% set count = 0 %}
+                            {% for like in challenge.userLikeChallenges %}
+                                {% set count = count + 1 %}
+                            {% endfor %}
+                        <span class="id-{{ challenge.id }}-count">{{ count }}</span>
+                            {% set liked_challenge = 0 %}
+                            {% for like in challenge.userLikeChallenges %}
+                                {% if app.user.username in like.userWhoLikedChallenge.username  %}
+                                    {% set liked_challenge = 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if liked_challenge == 0  %}
+                                <i data-url="{{ path('like_challenge', {'id': challenge.id }) }}"
+                                   class=" like liked red-text text-darken-3 far fa-heart id-{{ challenge.id }}"></i>
+                            {% else%}
+                                <i data-url="{{ path('like_challenge', {'id': challenge.id }) }}"
+                                   class=" unlike liked b red-text text-darken-3 fas fa-heart id-{{ challenge.id }}"></i>
+                            {% endif %}
+                     </span>
                     </p>
                 </div>
                 <div class="card-action">
                     <div class="row">
                         <div class="col s6">
-                        <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
-                        {% for challenge in challenge.users %}
-                            <p>Par : {{ challenge.username }} </p>
-                            {%  set username = challenge.username %}
-                        {% endfor %}
+                            <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
+                            {% for challenge in challenge.users %}
+                                <p>Par : {{ challenge.username }} </p>
+                                {% set username = challenge.username %}
+                            {% endfor %}
                         <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
                         <p>{{ challenge.category }}</p>
                         {% for category in challenge.category %}
@@ -46,6 +66,7 @@
                         {% for tags in challenge.tags %}
                             <div class="chip"> {{ tags.name }}</div>
                         {% endfor %}
+                            <h5> {{ challenge.winner.username }} <i class="amber-text darken-3 fas fa-crown"></i></h5>
                         </div>
                         <div class="col s6">
                            <img src="{{ challenge.qrCode }}" />
@@ -77,13 +98,6 @@
                             {% else%}
                                 <a class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
                             {%  endif %}
-
-
-{#                            {% if challenge.challengesUserRegisters is defined and challenge.challengesUserRegisters is empty %}#}
-{#                            <a class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
-{#                            {% else %}#}
-{#                                <a class="waves-effect waves-light btn orange accent-3 " {{ disabled }} href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>#}
-{#                            {% endif %}#}
                         </div>
                     </div>
                     {% endif %}
@@ -108,7 +122,13 @@
                         {% set count = count + 1 %}
                 {% endfor %}
                 <span class="id-{{ post.id }}-count">{{ count }}</span>
-                {% if post.userLikePosts is defined and post.userLikePosts is empty %}
+                    {% set liked_post = 0 %}
+                    {% for like in post.userLikePosts %}
+                         {% if app.user.username in like.userWhoLiked.username   %}
+                            {% set liked_post = 1 %}
+                        {% endif %}
+                    {% endfor %}
+                {% if liked_post == 0  %}
                     <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
                 {% else %}
                     <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
@@ -148,7 +168,13 @@
                                     {% set count = count + 1 %}
                                 {% endfor %}
                                 <span class="id-{{ remark.id }}-count">{{ count }}</span>
-                                {% if remark.userLikeRemarks is defined and remark.userLikeRemarks is empty %}
+                                 {% set liked_remark = 0 %}
+                                {% for like in remark.userLikeRemarks %}
+                                    {% if app.user.username in like.userId.username  %}
+                                        {% set liked_remark = 1 %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if liked_remark == 0  %}
                                     <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
                                 {% else %}
                                     <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
