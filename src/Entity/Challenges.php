@@ -86,6 +86,11 @@ class Challenges implements \Serializable
      */
     private $winner;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikeChallenge::class, mappedBy="challengesLiked")
+     */
+    private $userLikeChallenges;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -332,5 +337,33 @@ class Challenges implements \Serializable
 
         return $this;
     }
+    /**
+     * @return Collection|UserLikeChallenge[]
+     */
+    public function getUserLikeChallenges(): Collection
+    {
+        return $this->userLikeChallenges;
+    }
 
+    public function addUserLikeChallenges(UserLikeChallenge $userLikeChallenge): self
+    {
+        if (!$this->userLikeChallenges->contains($userLikeChallenge)) {
+            $this->userLikeChallenges[] = $userLikeChallenge;
+            $userLikeChallenge->setChallengesLiked($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikeChallenge(UserLikeChallenge $userLikeChallenge): self
+    {
+            if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikeChallenge->getChallengesLiked() === $this) {
+                $userLikeChallenge->setChallengesLiked(null);
+            }
+        }
+
+        return $this;
+    }
 }

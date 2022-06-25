@@ -7,6 +7,7 @@ use App\Entity\ChallengesUserRegister;
 use App\Entity\Post;
 use App\Entity\Remark;
 use App\Entity\User;
+use App\Entity\UserLikeChallenge;
 use App\Form\ChallengesType;
 use App\Form\PostType;
 use App\Form\RemarkType;
@@ -14,6 +15,7 @@ use App\Repository\ChallengesRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserLikePostRepository;
+use App\Repository\UserLikeChallengeRepository;
 use App\Repository\ChallengesUserRegisterRepository;
 use App\Services\QrCodeService;
 use App\Repository\RemarkRepository;
@@ -210,6 +212,26 @@ class ChallengesController extends AbstractController
         ]);
     }
 
+    #[Route('/like/{id}', name:'like_challenge', methods: ['POST','GET'])]
+    public function likeChallenge(Request $request, Challenges $challenges, UserLikeChallengeRepository $userLikeChallengeRepository): Response
+    {
+        $exist = $userLikeChallengeRepository->findBy(['challengesLiked'=>$challenges->getId(),'userWhoLikedChallenge'=>$this->security->getUser()]);
+        if($exist){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($exist[0]);
+            $entityManager->flush();
+        }else{
+            $userLikeChallenge = new UserLikeChallenge();
+            $entityManager = $this->getDoctrine()->getManager();
+            $userLikeChallenge->setUserWhoLikedChallenge($this->security->getUser());
+            $userLikeChallenge->setChallengesLiked($challenges);
+            $entityManager->persist($userLikeChallenge);
+            $entityManager->flush();
+        }
+        $id = $challenges->getId();
+        return new Response($id, 200, array('Content-Type' => 'text/html'));
+    }
+
     #[Route('/{id}/info', name: 'challenges_info', methods: ['GET','POST'])]
     public function information(Request $request, Challenges $challenge): Response
     {
@@ -252,6 +274,8 @@ class ChallengesController extends AbstractController
             'challenge' => $challenge,
         ]);
     }
+
+
 
     #[Route('/{id}/delete', name: 'challenges_delete', methods: ['POST','GET'])]
     public function delete(Request $request, Challenges $challenge): Response
