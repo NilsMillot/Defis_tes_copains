@@ -80,6 +80,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $userLikePosts;
 
     /**
+     * @ORM\OneToMany(targetEntity=UserLikeChallenge::class, mappedBy="userWhoLikedChallenge")
+     */
+    private $userLikeChallenges;
+
+    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
      */
     private $send_message;
@@ -119,6 +124,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $challengesUserRegister;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="winner")
+     */
+    private $challenges;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -128,6 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->idGroup = new ArrayCollection();
         $this->userLikeRemarks = new ArrayCollection();
         $this->userLikePosts = new ArrayCollection();
+        $this->userLikeChallenges = new ArrayCollection();
         $this->send_message = new ArrayCollection();
         $this->received_message = new ArrayCollection();
         $this->friendRequestSent = new ArrayCollection();
@@ -135,6 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->postsId = new ArrayCollection();
         $this->remarks = new ArrayCollection();
         $this->challengesUserRegister = new ArrayCollection();
+        $this->challenges = new ArrayCollection();
     }
 
     public function __toString()
@@ -439,6 +451,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection|UserLikeChallenge[]
+     */
+    public function getUserLikeChallenges(): Collection
+    {
+        return $this->userLikeChallenges;
+    }
+
+    public function addUserLikeChallenges(UserLikeChallenge $userLikeChallenge): self
+    {
+        if (!$this->userLikeChallenges->contains($userLikeChallenge)) {
+            $this->userLikeChallenges[] = $userLikeChallenge;
+            $userLikeChallenge->setUserWhoLikedChallenge($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikeChallenge(UserLikeChallenge $userLikeChallenge): self
+    {
+        if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikeChallenge->getUserWhoLikedChallenge() === $this) {
+                $userLikeChallenge->setUserWhoLikedChallenge(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Message[]
      */
     public function getSendMessage(): Collection
@@ -652,5 +694,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Challenges>
+     */
+    public function getChallenges(): Collection
+    {
+        return $this->challenges;
     }
 }

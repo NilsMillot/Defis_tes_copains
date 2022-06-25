@@ -1,5 +1,5 @@
 {% extends 'base_front.html.twig' %}
-
+{% set currentUser = "" %}
 {% block title %}Friends index{% endblock %}
 
 {% block body %}
@@ -11,19 +11,27 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>UserName of this person</th>
                 <th>Status</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for friend in friends %}
+        {% set currentUser = app.user %}
+        {% for friend in friendsRequestsOfCurrentUser %}
             <tr>
                 <td>{{ friend.id }}</td>
+                {% if friend.receiverUser.id is same as currentUser.id %}
+                    <td>{{ friend.senderUser.username }}</td>
+                {% else %}
+                    <td>{{ friend.receiverUser.username }}</td>
+                {% endif %}
                 <td>{{ friend.status }}</td>
                 <td>
-                    <a href="{{ path('friends_show', {'id': friend.id}) }}">show</a>
-                    {% if friend.status is same as('accepted') %}><a href="{{ path('friends_edit', {'id': friend.id}) }}"> edit</a>{% endif %}
-                    {% if friend.status is same as('sent') %}><span> en attente...</span>{% endif %}
+                    {% if friend.status is same as('accepted') %}{{ include('friends/_delete_form.html.twig') }}{% endif %}
+                    {% if friend.status is same as('sent') %}<span> en attente...</span>{% endif %}
+                    {% if friend.status is same as('sent') and friend.receiverUser.id is same as currentUser.id %}><a href="{{ path('friends_accept', {'id': friend.id}) }}"> Accepter la demande</a>{% endif %}
+                    {% if friend.status is same as('sent') and friend.receiverUser.id is same as currentUser.id %}>{{ include('friends/_delete_form.html.twig') }}{% endif %}
                 </td>
             </tr>
         {% else %}
@@ -35,33 +43,4 @@
     </table>
 
     <a href="{{ path('friends_new') }}">Create new</a>
-    {% if friendsRequestReceived is not same as(null) %}
-    <h2>Ils attendent une réponse...</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Email</th>
-            <th>Username</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for friend in friendsRequestReceived %}
-            <tr>
-                <td>{{ friend.id }}</td>
-                <td>{{ friend.email }}</td>
-                <td>{{ friend.username }}</td>
-                <td>
-                    <span>accept</span>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no friend request found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
 {% endblock %}

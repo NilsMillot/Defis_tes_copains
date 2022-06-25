@@ -18,13 +18,13 @@ class Friends
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="friendRequestSent")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="friendRequestSent", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $senderUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="friendRequestReceived")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="friendRequestReceived", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $receiverUser;
@@ -34,7 +34,8 @@ class Friends
      */
     private $status;
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->id;
     }
 

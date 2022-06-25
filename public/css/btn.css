@@ -1,0 +1,9 @@
+/*.checkbox-challenge{*/
+/*    opacity : 100% !important;*/
+/*    position: relative !important;*/
+/*    color: red;*/
+/*}*/
+
+div.vich-image > a > img{
+    height: 100px !important;
+}

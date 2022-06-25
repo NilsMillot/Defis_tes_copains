@@ -3,31 +3,70 @@
 {% block title %}Challenges{% endblock %}
 {%  set username = "" %}
 {%  set likes = "" %}
+{% if challenge.status == false %}
+    {% set disabled = "disabled" %}
+{% else %}
+    {% set disabled = "" %}
+{% endif %}
 
 {% block body %}
     <div class="row">
-        <h1 id='{{ challenge.id }}' class="col">{{ challenge.name }}     <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
+        <h1 id='{{ challenge.id }}' class="col">{{ challenge.name }}   <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
         </h1>
     </div>
 
     <div class="col s12 m7">
         <div class="card horizontal">
             <div class="card-image">
-                <img  src={{ vich_uploader_asset(challenge, 'imageFile') }} height="400px"/>
+                <img src={{ vich_uploader_asset(challenge, 'imageFile') }} height="400px"/>
             </div>
             <div class="card-stacked">
                 <div class="card-content">
-                    <p>{{ challenge.description }}</p>
+                    <p>{{ challenge.description }}
+                        {% if challenge.status == true %}
+                            <span class="chip teal accent-3"> Ouvert </span>
+                        {% else %}
+                            <span class="chip red darken-1"> Fermé </span>
+                        {% endif %}
+                        <span>Like :
+                        {% set count = 0 %}
+                            {% for like in challenge.userLikeChallenges %}
+                                {% set count = count + 1 %}
+                            {% endfor %}
+                        <span class="id-{{ challenge.id }}-count">{{ count }}</span>
+                            {% set liked_challenge = 0 %}
+                            {% for like in challenge.userLikeChallenges %}
+                                {% if app.user.username in like.userWhoLikedChallenge.username  %}
+                                    {% set liked_challenge = 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if liked_challenge == 0  %}
+                                <i data-url="{{ path('like_challenge', {'id': challenge.id }) }}"
+                                   class=" like liked red-text text-darken-3 far fa-heart id-{{ challenge.id }}"></i>
+                            {% else%}
+                                <i data-url="{{ path('like_challenge', {'id': challenge.id }) }}"
+                                   class=" unlike liked b red-text text-darken-3 fas fa-heart id-{{ challenge.id }}"></i>
+                            {% endif %}
+                     </span>
+                    </p>
                 </div>
                 <div class="card-action">
                     <div class="row">
                         <div class="col s6">
-                        <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
-                        {% for challenge in challenge.users %}
-                            <p>Par : {{ challenge.username }} </p>
-                            {%  set username = challenge.username %}
-                        {% endfor %}
+                            <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
+                            {% for challenge in challenge.users %}
+                                <p>Par : {{ challenge.username }} </p>
+                                {% set username = challenge.username %}
+                            {% endfor %}
                         <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
+                        <p>{{ challenge.category }}</p>
+                        {% for category in challenge.category %}
+                            <p>Categorie : {{ category.name }}</p>
+                        {% endfor %}
+                        {% for tags in challenge.tags %}
+                            <div class="chip"> {{ tags.name }}</div>
+                        {% endfor %}
+                            <h5> {{ challenge.winner.username }} <i class="amber-text darken-3 fas fa-crown"></i></h5>
                         </div>
                         <div class="col s6">
                            <img src="{{ challenge.qrCode }}" />
@@ -35,7 +74,10 @@
                     </div>
                     {% if app.user.username == username %}
                     <div class="row">
-                        <div class="col s2 offset-s7">
+                        <div class="col s2 offset-s4">
+                            <a class="waves-effect waves-light btn blue accent-3" href="{{ path('challenges_info', {'id': challenge.id}) }}">Information</a>
+                        </div>
+                        <div class="col s2 ">
                             <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
                         </div>
                         <div class="col s2">
@@ -45,27 +87,17 @@
                     {% else %}
                     <div class="row">
                         <div class="col s2 offset-s7">
-{#                        {% for register in challenge.challengesUserRegisters %}#}
-{#                            {% if register is not empty  %}#}
-{#                            {% else %}#}
-{#                                <p>Bla</p>#}
-{#                            {% endif %}#}
-                            {% if challenge.challengesUserRegisters is defined and challenge.challengesUserRegisters is empty %}
-                            <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
-                            {% else %}
-                                <a class="waves-effect waves-light btn orange accent-3 " href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>
-                            {% endif %}
-                            {#                           TODO: Reussie a afficher seuelemtn le bouton qu'il faut #}
-{#                            {% if register is null %}#}
-{#                                <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
-{#                            {% endif %}#}
-{#                            {% if register.userRegister == app.user and register.challengeRegister == challenge %}#}
-{#                                <a class="waves-effect waves-light btn orange accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>#}
-{#                            {% elseif register.userRegister == app.user and register.challengeRegister != challenge %}#}
-{#                            <a class="waves-effect waves-light btn red accent-3 pulse" href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
-{#                            {% endif %}#}
-{#                        {% endfor %}#}
-{#                            <a class="waves-effect waves-light btn red accent-3 " href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>#}
+                            {% set user = 0 %}
+                            {% for register in challenge.challengesUserRegisters %}
+                                {% if app.user.username in register.userRegister.username  %}
+                                {% set user = 1 %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if user == 1  %}
+                                <a class="waves-effect waves-light btn orange accent-3 " {{ disabled }} href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Déjà_Inscrit</a>
+                            {% else%}
+                                <a class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
+                            {%  endif %}
                         </div>
                     </div>
                     {% endif %}
@@ -73,30 +105,42 @@
             </div>
         </div>
     </div>
-
-    {{ include('post/_form.html.twig') }}
+    <a class="waves-effect waves-light btn modal-trigger modal_href create_post"  href="#modal_post">Ecrire un commentaire</a>
+{#    {{ include('post/_form.html.twig') }}#}
 
 {% for post in posts %}
     <div class="col s12 m7">
         <div class="divider"></div>
         {% for user in post.userId %}
             {{ user.username }}
-            {% endfor %}
+        {% endfor %}
             <div class="section">
                 <h5 id="{{ post.id }}">{{ post.name }}</h5>
                 <span>Like :
-                    {% set count = 0 %}
+                {% set count = 0 %}
+                {% for like in post.userLikePosts %}
+                        {% set count = count + 1 %}
+                {% endfor %}
+                <span class="id-{{ post.id }}-count">{{ count }}</span>
+                    {% set liked_post = 0 %}
                     {% for like in post.userLikePosts %}
-                            {% set count = count + 1 %}
-                    {% endfor %}
-                    {{ count }}
-                        {% if post.userLikePosts is defined and post.userLikePosts is empty %}
-                            <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like_post red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
-                        {% else %}
-                            <i data-url="{{ path('unlike_post', {'id': post.id }) }}" class=" unlike_post red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+                         {% if app.user.username in like.userWhoLiked.username   %}
+                            {% set liked_post = 1 %}
                         {% endif %}
+                    {% endfor %}
+                {% if liked_post == 0  %}
+                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+                {% else %}
+                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+                {% endif %}
                 </span>
                 <p>{{ post.content }} </p>
+                {% for user in post.userId %}
+                    {%  if user.username == app.user.username %}
+                        <a class="waves-effect waves-light btn edit_post" data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}" >Edit</a>
+                        {{ include('post/_delete_form.html.twig') }}
+                    {% endif %}
+                {% endfor %}
             </div>
         {% if(post.imageName) %}
         <div>
@@ -105,7 +149,11 @@
         {% endif %}
         <ul class="collapsible popout">
             <li>
-                <div class="collapsible-header"> <i class="material-icons prefix">mode_edit</i>Commentaires </div>
+                {% set count = 0 %}
+                {% for remark in post.remark %}
+                    {% set count = count + 1 %}
+                {% endfor %}
+                <div class="collapsible-header"> <i class="material-icons prefix">mode_edit</i>Commentaires ({{ count }}) </div>
                 <div class="collapsible-body">
                 <a class="waves-effect waves-light btn modal-trigger modal_href" data-id="{{post.id}}" href="#modal1">Répondre</a>
                     {% for remark in post.remark %}
@@ -119,14 +167,26 @@
                                 {% for like in remark.userLikeRemarks %}
                                     {% set count = count + 1 %}
                                 {% endfor %}
-                                {{ count }}
-                                {% if remark.userLikeRemarks is defined and remark.userLikeRemarks is empty %}
-                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like_remark red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
+                                <span class="id-{{ remark.id }}-count">{{ count }}</span>
+                                 {% set liked_remark = 0 %}
+                                {% for like in remark.userLikeRemarks %}
+                                    {% if app.user.username in like.userId.username  %}
+                                        {% set liked_remark = 1 %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if liked_remark == 0  %}
+                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
                                 {% else %}
-                                    <i data-url="{{ path('unlike_remark', {'id': remark.id }) }}" class=" unlike_remark red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
+                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
                                 {% endif %}
                             </span>
                         </div>
+                        {% for user in remark.userId %}
+                            {%  if user.username == app.user.username %}
+                                <a class="waves-effect waves-light btn edit_remark" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">Edit</a>
+                                {{ include('remark/_delete_form.html.twig') }}
+                            {% endif %}
+                        {% endfor %}
                         <div class="divider"></div>
                     {% endfor %}
                 </div>
@@ -140,7 +200,12 @@
 <div id="modal1" class="modal">
     <div class="modal-content">
      {{include('remark/_form.html.twig')}}
-  </div>
-
+    </div>
+</div>
+<div id="modal_post" class="modal">
+    <div class="modal-content">
+        {{ include('post/_form.html.twig') }}
+    </div>
+</div>
 
 {% endblock %}
