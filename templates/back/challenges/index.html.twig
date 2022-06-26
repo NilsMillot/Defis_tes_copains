@@ -2,6 +2,7 @@
 
 {% block body %}
     <div class="container">
+        <a class="waves-effect waves-light btn green accent-4" href="{{ path("admin_challenges_new") }}">Créer</a>
         <div class="card card_back">
             <div class="card_back_content">
                 <table id="challenge_view" class="table row-border">
@@ -12,6 +13,7 @@
                         <th class="back_th">Description</th>
                         <th class="back_th">Date de création</th>
                         <th class="back_th">Deadline</th>
+                        <th class="back_th"> Image </th>
                         <th class="back_th">Statut</th>
                         <th class="back_th">Créateur</th>
                         <th class="back_th">Catégorie</th>
@@ -27,6 +29,7 @@
                             <td>{{ challenge.description }}</td>
                             <td>{{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }}</td>
                             <td>{{ challenge.deadline ? challenge.deadline|date('d-m-Y') : '' }}</td>
+                            <td><img src={{ vich_uploader_asset(challenge, 'imageFile') }} height="40px"></td>
                             <td> {% if challenge.status == true %}
                                     <span class="chip teal accent-3"> Ouvert </span>
                                 {% else %}
@@ -44,12 +47,16 @@
 
                             {# <td><img src="{{ group.picture }}" width="40px" /></td> #}
                             <td class="row">
-                                    <div class="col s6 ">
-                                        <a href="{{ path('admin_challenges_edit', {'id': challenge.id}) }}"><i class="orange-text darken-4 material-icons small">create</i></a>
-                                    </div>
-                                    <div class="col s6">
-                                        {{ include('back/challenges/_delete_form.html.twig') }}
-                                    </div>
+                                <div class="col s4 ">
+                                    <a href="{{ path('admin_challenges_edit', {'id': challenge.id}) }}"><i
+                                                class="orange-text darken-4 material-icons small">create</i></a>
+                                </div>
+                                <div class="col s4">
+                                    {{ include('back/challenges/_delete_form.html.twig') }}
+                                </div>
+                                <div class="col s4">
+                                    <a href="{{ path('challenges_show', {'id': challenge.id }) }}"><i class="green-text darken-4 material-icons small">visibility</i></a>
+                                </div>
                             </td>
                         </tr>
                     {% else %}
@@ -62,4 +69,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}

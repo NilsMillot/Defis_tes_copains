@@ -13,6 +13,8 @@ use App\Form\ChallengesType;
 use App\Repository\PostRepository;
 use App\Repository\UserLikeChallengeRepository;
 use App\Repository\ChallengesUserRegisterRepository;
+use App\Services\QrCodeService;
+
 class ChallengesController extends AbstractController
 {
     private $security;
@@ -33,6 +35,46 @@ class ChallengesController extends AbstractController
             'title' => 'Challenges'
         ]);
     }
+
+    #[Route('admin/new', name: 'admin_challenges_new', methods: ['GET','POST'])]
+    public function new(Request $request,QrCodeService $qrCodeService, ChallengesRepository $challengesRepository): Response
+    {
+        $qrCode = null;
+        $challenges = new Challenges();
+        $form = $this->createForm(ChallengesType::class, $challenges);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $challenges->setCreationDate(new \DateTime());
+            $challenges->addUser($this->security->getUser());
+            foreach($form["tags"]->getData() as $tag) {
+                $challenges->addTag($tag);
+            }
+            $lastChallenge = $challengesRepository->findOneBy([], ['id' => 'desc']);
+            if ($lastChallenge === null) {
+                $futurId = 1;
+            } else {
+                $lastId = $lastChallenge->getId();
+                $futurId = $lastId + 1;
+            }
+
+            $qrCode = $qrCodeService->qrcode($futurId);
+
+            $challenges->setQrCode($qrCode);
+
+            $entityManager->persist($challenges);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_challenges_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('back/challenges/new.html.twig', [
+            'challenges' => $challenges,
+            'form' => $form,
+        ]);
+    }
+
 
     #[Route('/admin/{id}/edit', name: 'admin_challenges_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Challenges $challenges): Response

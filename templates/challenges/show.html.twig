@@ -63,7 +63,9 @@
                         {% for tags in challenge.tags %}
                             <div class="chip"> {{ tags.name }}</div>
                         {% endfor %}
+                            {% if challenge.winner %}
                             <h5> {{ challenge.winner.username }} <i class="amber-text darken-3 fas fa-crown"></i></h5>
+                            {% endif %}
                         </div>
                         <div class="col s6">
                            <img src="{{ challenge.qrCode }}" />
