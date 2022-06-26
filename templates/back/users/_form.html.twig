@@ -1,0 +1,36 @@
+<div class="row">
+{{ form_start(form) }}
+<div class="row">
+    <div class=" col s12">
+        {{ form_widget(form.username) }}
+    </div>
+</div>
+<div class="row">
+    <div class=" col s12">
+        {{ form_widget(form.email) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col s12">
+        <div class="inline">
+            <label>Roles</label>
+            {% for roles in form.roles %}
+                <p>
+                    <label>
+                        {{ form_widget(roles, {'attr': {'class': 'checkbox-role'}}) }}
+                        <span>{{ form_label(roles) }}</span>
+                    </label>
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class=" col s12">
+        {{ form_widget(form.password) }}
+    </div>
+</div>
+
+<button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+</div>

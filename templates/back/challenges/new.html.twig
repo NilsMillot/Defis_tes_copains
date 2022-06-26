@@ -1,14 +1,14 @@
-{% extends 'base_front.html.twig' %}
+{% extends 'base_back.html.twig' %}
 
 {% block title %}New Challenges{% endblock %}
 
 {% block body %}
     <h1>Create new Challenges</h1>
 
-    {{ include('challenges/_form.html.twig',{'button_label': 'Créer'}) }}
+    {{ include('back/challenges/_form.html.twig',{'button_label': 'Créer'}) }}
 
     <div style="padding: 30px">
-        <a class="btn btn-lg" href="{{ path('challenges_index') }}">Retour à la liste</a>
+        <a class="btn btn-lg" href="{{ path('admin_challenges_index') }}">Retour à la liste</a>
     </div>
     <style>
         #date{

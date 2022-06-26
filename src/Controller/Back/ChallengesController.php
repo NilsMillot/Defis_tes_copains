@@ -15,6 +15,7 @@ use App\Repository\UserLikeChallengeRepository;
 use App\Repository\ChallengesUserRegisterRepository;
 use App\Services\QrCodeService;
 
+#[Route('/admin/challenges')]
 class ChallengesController extends AbstractController
 {
     private $security;
@@ -27,7 +28,7 @@ class ChallengesController extends AbstractController
     }
 
 
-    #[Route('/admin/challenges', name: 'admin_challenges_index', methods: ['GET'])]
+    #[Route('/', name: 'admin_challenges_index', methods: ['GET'])]
     public function index(ChallengesRepository $challengesRepository): Response
     {
         return $this->render('back/challenges/index.html.twig', [
@@ -36,7 +37,7 @@ class ChallengesController extends AbstractController
         ]);
     }
 
-    #[Route('admin/new', name: 'admin_challenges_new', methods: ['GET','POST'])]
+    #[Route('/new', name: 'admin_challenges_new', methods: ['GET','POST'])]
     public function new(Request $request,QrCodeService $qrCodeService, ChallengesRepository $challengesRepository): Response
     {
         $qrCode = null;
@@ -72,11 +73,13 @@ class ChallengesController extends AbstractController
         return $this->renderForm('back/challenges/new.html.twig', [
             'challenges' => $challenges,
             'form' => $form,
+            'title' => 'Challenges'
+
         ]);
     }
 
 
-    #[Route('/admin/{id}/edit', name: 'admin_challenges_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/edit', name: 'admin_challenges_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Challenges $challenges): Response
     {
         $form = $this->createForm(ChallengesType::class, $challenges);
@@ -91,11 +94,13 @@ class ChallengesController extends AbstractController
         return $this->renderForm('back/challenges/edit.html.twig', [
             'offer' => $challenges,
             'form' => $form,
+            'title' => 'Challenges'
+
         ]);
     }
 
 
-    #[Route('/admin/{id}/delete', name: 'admin_challenges_delete', methods: ['POST','GET'])]
+    #[Route('/{id}/delete', name: 'admin_challenges_delete', methods: ['POST','GET'])]
     public function delete(Request $request, Challenges $challenge,UserLikeChallengeRepository $userLikeChallengeRepository, PostRepository $postRepository, ChallengesUserRegisterRepository $challengesUserRegisterRepository): Response
     {
 

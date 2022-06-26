@@ -52,13 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToMany(targetEntity=Challenges::class, mappedBy="users")
      */
     private $challenge;
-
-
-    /**
-     * @ORM\OneToMany(targetEntity=Role::class, mappedBy="userId")
-     */
-    private $role;
-
+    
     /**
      * @ORM\OneToMany(targetEntity=Statistical::class, mappedBy="userId")
      */
@@ -133,7 +127,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->ranks = new ArrayCollection();
         $this->challenge = new ArrayCollection();
-        $this->role = new ArrayCollection();
         $this->statisticals = new ArrayCollection();
         $this->idGroup = new ArrayCollection();
         $this->userLikeRemarks = new ArrayCollection();
@@ -306,35 +299,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Role[]
-     */
-    public function getRole(): Collection
-    {
-        return $this->role;
-    }
-
-    public function addRole(Role $role): self
-    {
-        if (!$this->role->contains($role)) {
-            $this->role[] = $role;
-            $role->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRole(Role $role): self
-    {
-        if ($this->role->removeElement($role)) {
-            // set the owning side to null (unless already changed)
-            if ($role->getUserId() === $this) {
-                $role->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Statistical[]
