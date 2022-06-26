@@ -12,6 +12,7 @@
             <th class="back_th">Username</th>
             <th class="back_th">Email</th>
             <th class="back_th">Role</th>
+            <th class="back_th">Statut</th>
             <th class="back_th">Action</th>
         </tr>
         </thead>
@@ -25,6 +26,13 @@
                 {% for role in user.roles %}
                     <div class="chip">{{ role }}</div>
                 {% endfor %}
+                </td>
+                <td>
+                    {% if user.statut == true %}
+                        <span class="chip teal accent-3"> Actif </span>
+                    {% else %}
+                        <span class="chip red darken-1"> Non Actif </span>
+                    {% endif %}
                 </td>
                 <td class="row">
                     <div class="col s4 ">

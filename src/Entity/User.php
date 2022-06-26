@@ -123,6 +123,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $challenges;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $statut;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -666,5 +671,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getChallenges(): Collection
     {
         return $this->challenges;
+    }
+
+    public function getStatut(): ?bool
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(bool $statut): self
+    {
+        $this->statut = $statut;
+
+        return $this;
     }
 }
