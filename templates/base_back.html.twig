@@ -60,7 +60,6 @@
                 <div class="collapsible-body teal blue-grey darken-2">
                     <ul>
                         <li><a  class="waves-effect" href="{{ path('admin_user_index') }}">Utilisateur</a></li>
-                        <li><a  class="waves-effect" href="">Rôles</a></li>
                         <li><a class="waves-effect" href="#!">Amis</a></li>
                         <li><a  class="waves-effect"href="#!">Groupes</a></li>
                     </ul>
@@ -72,9 +71,8 @@
                     <ul>
                         <li><a  class="waves-effect" href="{{ path('admin_challenges_index') }}">Challenges</a></li>
                         <li><a  class="waves-effect" href="#">Signalement</a></li>
-                        <li><a  class="waves-effect" href="#">Postes</a></li>
+                        <li><a  class="waves-effect" href="{{ path('admin_post_index') }}">Posts</a></li>
                         <li><a  class="waves-effect" href="#">Commentaires</a></li>
-
                     </ul>
                 </div>
             </li>
@@ -141,6 +139,7 @@
 <script src="{{ asset('js/datatable.js') }}"></script>
 <script src="{{ asset('js/modal.js') }}"></script>
 <script src="{{ asset('js/modal_show_admin.js') }}"></script>
+<script src="{{ asset('js/select.js') }}"></script>
 
 </body>
 </html>

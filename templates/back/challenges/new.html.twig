@@ -3,7 +3,9 @@
 {% block title %}New Challenges{% endblock %}
 
 {% block body %}
-    <h1>Create new Challenges</h1>
+<div class="container">
+
+<h1>Create new Challenges</h1>
 
     {{ include('back/challenges/_form.html.twig',{'button_label': 'Créer'}) }}
 
@@ -21,4 +23,5 @@
             width: 180px;
         }
     </style>
+</div>
 {% endblock %}

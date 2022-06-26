@@ -24,13 +24,17 @@
                     <tbody>
                     {% for challenge in challenges %}
                         <tr class="row">
-                            <td>{{ challenge.id }}</td>
-                            <td>{{ challenge.name }}</td>
-                            <td>{{ challenge.description }}</td>
-                            <td>{{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }}</td>
-                            <td>{{ challenge.deadline ? challenge.deadline|date('d-m-Y') : '' }}</td>
-                            <td><img src={{ vich_uploader_asset(challenge, 'imageFile') }} height="40px"></td>
-                            <td> {% if challenge.status == true %}
+                            <td class="back_th">{{ challenge.id }}</td>
+                            <td class="back_th">{{ challenge.name }}</td>
+                            <td class="back_th">{{ challenge.description }}</td>
+                            <td class="back_th">{{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }}</td>
+                            <td class="back_th">{{ challenge.deadline ? challenge.deadline|date('d-m-Y') : '' }}</td>
+                            <td class="back_th">
+                                {% if(challenge.imageName) %}
+                                    <img src={{ vich_uploader_asset(challenge, 'imageFile') }} height="40px">
+                                {% endif %}
+                            </td>
+                            <td class="back_th"> {% if challenge.status == true %}
                                     <span class="chip teal accent-3"> Ouvert </span>
                                 {% else %}
                                     <span class="chip red darken-1"> Fermé </span>
@@ -39,14 +43,14 @@
                                 <td> {{ challenge.username }} </td>
                                 {% set username = challenge.username %}
                             {% endfor %}
-                            <td> {{ challenge.category }}</td>
-                            <td>{% for tags in challenge.tags %}
+                            <td class="back_th"> {{ challenge.category }}</td>
+                            <td class="back_th">{% for tags in challenge.tags %}
                                     <div class="chip"> {{ tags.name }}</div>
                                 {% endfor %}
                             </td>
 
                             {# <td><img src="{{ group.picture }}" width="40px" /></td> #}
-                            <td class="row">
+                            <td class="row back_th">
                                 <div class="col s4 ">
                                     <a href="{{ path('admin_challenges_edit', {'id': challenge.id}) }}"><i
                                                 class="orange-text darken-4 material-icons small">create</i></a>

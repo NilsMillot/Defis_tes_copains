@@ -1,0 +1,31 @@
+<div class="row">
+    {{ form_start(formPost) }}
+    <div class="row">
+        {{ form_label(formPost.challengeId,'Choisir un challenge') }}
+        <div class=" col s12 input-field">
+            {{ form_widget(formPost.challengeId) }}
+        </div>
+    </div>
+    <div class="row">
+        {{ form_label(formPost.name,'Nom du post') }}
+        <div class=" col s12 input-field">
+            {{ form_widget(formPost.name) }}
+        </div>
+    </div>
+    <div class="row">
+        {{ form_label(formPost.content,'Contenue') }}
+        <div class=" col s12 input-field">
+
+            {{ form_widget(formPost.content) }}
+        </div>
+    </div>
+    <div class="row">
+        {{ form_label(formPost.imageFile,'Image') }}
+        <div class=" col s12 input-field">
+            {{ form_widget(formPost.imageFile) }}
+        </div>
+    </div>
+
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(formPost) }}
+</div>
