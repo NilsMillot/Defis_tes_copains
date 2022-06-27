@@ -178,7 +178,6 @@ class ChallengesController extends AbstractController
                 Response::HTTP_SEE_OTHER);
 
         }
-        
         return $this->render('challenges/show.html.twig', [
             'challenge' => $challenge,
             'posts'=>$allPosts,
