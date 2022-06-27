@@ -1,8 +1,8 @@
 security:
     role_hierarchy:
-        ROLE_EDITOR: ROLE_USER
-        ROLE_VALIDATOR: ROLE_USER
-        ROLE_ADMIN: [ ROLE_EDITOR, ROLE_VALIDATOR ]
+        ROLE_COMPANY: ROLE_USER
+        ROLE_MODERATEUR: ROLE_USER
+        ROLE_ADMIN: [ ROLE_MODERATEUR, ROLE_COMPANY ]
 
     # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: true
@@ -29,6 +29,7 @@ security:
             lazy: true
             provider: app_user_provider
             custom_authenticator: App\Security\CustomAuthenticator
+            user_checker: App\Security\UserChecker
             logout:
                 path: app_logout
                 # where to redirect after logout
