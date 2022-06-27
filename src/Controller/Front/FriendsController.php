@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security as security;
+use TeamTNT\TNTSearch\TNTSearch;
 
 #[Route('/friends')]
 class FriendsController extends AbstractController
@@ -103,5 +104,34 @@ class FriendsController extends AbstractController
         }
 
         return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/generate-index', name: 'app_generate-index', methods: ['GET'])]
+    public function generate_index(Request $request, UserRepository $userRepository): Response
+    {
+        $tnt = new TNTSearch;
+        // $databaseURL = $_ENV['DATABASE_URL'];
+
+        // $databaseParameters = parse_url($databaseURL);
+        // dd($databaseParameters);
+        $tnt->loadConfig([
+            'driver'    => 'pgsql',
+            'host'      => 'db',
+            'database'  => 'db',
+            'username'  => 'postgres',
+            'password'  => 'password',
+            'storage'   => '/var/www/tntsearch/',
+            // 'storage'   => '/Users/nmillot/Documents/esgi/Defis_tes_copains/public/tntsearch/examples/',
+            'stemmer'   => \TeamTNT\TNTSearch\Stemmer\PorterStemmer::class //optional
+        ]);
+
+        $indexer = $tnt->createIndex('user.index');
+        $indexer->query('SELECT username FROM user;');
+        //$indexer->setLanguage('german');
+        $indexer->run();
+
+        return new Response(
+            '<html><body>Index succesfully generated !</body></html>'
+        );
     }
 }
