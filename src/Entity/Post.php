@@ -37,7 +37,7 @@ class Post
 
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $content;
 
@@ -226,11 +226,10 @@ class Post
         return $this->picture;
     }
 
-    public function setPicture(string $file )
+    public function setPicture(string $file)
     {
         $this->picture = $file;
 
         return $this;
-
     }
 }

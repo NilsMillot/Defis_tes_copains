@@ -59,13 +59,14 @@ class FacebookAuthenticator extends OAuth2Authenticator
                     $user = new User();
                     $user->setFacebookId($facebookUser->getId());
                     $user->setUsername($facebookUser->getName());
+                    $user->setStatut(true);
+                    $user->setRoles(['ROLE_USER']);
                     $user->setEmail($email);
                     $user->setPassword('password');
                 }
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
 
-                dd($user);
                 return $user;
             })
         );

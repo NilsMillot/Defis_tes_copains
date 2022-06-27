@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180)
      */
     private $username;
 
@@ -52,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToMany(targetEntity=Challenges::class, mappedBy="users")
      */
     private $challenge;
-    
+
     /**
      * @ORM\OneToMany(targetEntity=Statistical::class, mappedBy="userId")
      */
@@ -139,6 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="github_access_token", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
     private $githubAccessToken;
+    /*
      * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="winner")
      */
     private $challenges;
@@ -729,7 +730,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGithubAccessToken(?string $githubAccessToken): self
     {
         $this->githubAccessToken = $githubAccessToken;
-    /**
+    }
+    /*
      * @return Collection<int, Challenges>
      */
     public function getChallenges(): Collection
