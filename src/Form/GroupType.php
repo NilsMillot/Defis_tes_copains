@@ -13,10 +13,8 @@ class GroupType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('number_user')
             ->add('picture')
-            ->add('users')
-        ;
+            ->add('users');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
