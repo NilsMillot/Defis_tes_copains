@@ -5,10 +5,13 @@ namespace App\Controller\Front;
 use App\Entity\Payment;
 use App\Form\PaymentType;
 use App\Repository\PaymentRepository;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Route('/payment')]
 class PaymentController extends AbstractController
@@ -40,6 +43,42 @@ class PaymentController extends AbstractController
             'payment' => $payment,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/checkout', name: 'checkout', methods: ['POST'])]
+    public function checkout(): Response
+    {
+        Stripe::setApiKey($_SERVER['STRIPE_SK']);
+
+        $session = Session::create([
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => 'T-shirt',
+                    ],
+                    'unit_amount' => 2000,
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $this->generateUrl('success-url', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'cancel_url' => $this->generateUrl('cancel-url', [], UrlGeneratorInterface::ABSOLUTE_URL),
+        ]);
+
+        return $this->redirect($session->url, 303);
+    }
+
+    #[Route('/success-url', name: 'success-url')]
+    public function succesUrl(): Response
+    {
+        return $this->render('payment/success.html.twig', []);
+    }
+
+    #[Route('/cancel-url', name: 'cancel-url')]
+    public function cancelUrl(): Response
+    {
+        return $this->render('payment/cancel.html.twig', []);
     }
 
     #[Route('/{id}', name: 'payment_show', methods: ['GET'])]
@@ -79,4 +118,6 @@ class PaymentController extends AbstractController
 
         return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
 }

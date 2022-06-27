@@ -6,6 +6,10 @@
     <h1 class="h3 mb-3 font-weight-normal">S'enregistrer</h1>
 
     {{ form_start(form) }}
+    {# {{ form_widget(form.email) }}
+    {{ form_widget(form.username) }}
+    {{ form_widget(form.password) }}
+    {{ form_widget(form.pro) }}#}
     {{ form_rest(form) }}
     <button style="margin: 20px" class="btn btn-lg btn-primary" type="submit">
         S'enregistrer
@@ -24,6 +28,12 @@
         form{
             width: 70%;
             margin: auto;
+        }
+
+        input#register_pro{
+            opacity:1;
+            margin: 5px;
+            pointer-events: auto;
         }
 
         #link{

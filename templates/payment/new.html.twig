@@ -7,5 +7,10 @@
 
     {{ include('payment/_form.html.twig') }}
 
+    <form action="/payment/checkout" method="POST">
+        <button type="submit" class="btn btn-primary btn-lg">Checkout</button>
+    </form>
+
+
     <a href="{{ path('payment_index') }}">back to list</a>
 {% endblock %}

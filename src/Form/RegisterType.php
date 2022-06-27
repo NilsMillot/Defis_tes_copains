@@ -34,12 +34,10 @@ class RegisterType extends AbstractType
                     'label'=>"Repeter votre mot de passe",
                 ]
             ])
-            ->add('pro', ChoiceType::class, array(
-                'choices'=> array(
-                    'true',
-                    'false'
-                )
-            ));
+            ->add('pro', CheckboxType::class, [
+                'label'    => 'Professionnal ?',
+                'required' => false,
+            ]);
         ;
     }
 

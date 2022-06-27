@@ -220,4 +220,17 @@ class Post
 
         return $this;
     }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $file )
+    {
+        $this->picture = $file;
+
+        return $this;
+
+    }
 }
