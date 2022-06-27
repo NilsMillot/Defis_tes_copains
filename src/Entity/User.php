@@ -52,13 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToMany(targetEntity=Challenges::class, mappedBy="users")
      */
     private $challenge;
-
-
-    /**
-     * @ORM\OneToMany(targetEntity=Role::class, mappedBy="userId")
-     */
-    private $role;
-
+    
     /**
      * @ORM\OneToMany(targetEntity=Statistical::class, mappedBy="userId")
      */
@@ -78,6 +72,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=UserLikePost::class, mappedBy="userWhoLiked")
      */
     private $userLikePosts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikeChallenge::class, mappedBy="userWhoLikedChallenge")
+     */
+    private $userLikeChallenges;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
@@ -140,16 +139,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="github_access_token", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
     private $githubAccessToken;
+     * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="winner")
+     */
+    private $challenges;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $statut;
 
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
         $this->challenge = new ArrayCollection();
-        $this->role = new ArrayCollection();
         $this->statisticals = new ArrayCollection();
         $this->idGroup = new ArrayCollection();
         $this->userLikeRemarks = new ArrayCollection();
         $this->userLikePosts = new ArrayCollection();
+        $this->userLikeChallenges = new ArrayCollection();
         $this->send_message = new ArrayCollection();
         $this->received_message = new ArrayCollection();
         $this->friendRequestSent = new ArrayCollection();
@@ -157,6 +164,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->postsId = new ArrayCollection();
         $this->remarks = new ArrayCollection();
         $this->challengesUserRegister = new ArrayCollection();
+        $this->challenges = new ArrayCollection();
     }
 
     public function __toString()
@@ -316,35 +324,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Role[]
-     */
-    public function getRole(): Collection
-    {
-        return $this->role;
-    }
-
-    public function addRole(Role $role): self
-    {
-        if (!$this->role->contains($role)) {
-            $this->role[] = $role;
-            $role->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRole(Role $role): self
-    {
-        if ($this->role->removeElement($role)) {
-            // set the owning side to null (unless already changed)
-            if ($role->getUserId() === $this) {
-                $role->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Statistical[]
@@ -454,6 +433,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($userLikePost->getUserWhoLiked() === $this) {
                 $userLikePost->setUserWhoLiked(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserLikeChallenge[]
+     */
+    public function getUserLikeChallenges(): Collection
+    {
+        return $this->userLikeChallenges;
+    }
+
+    public function addUserLikeChallenges(UserLikeChallenge $userLikeChallenge): self
+    {
+        if (!$this->userLikeChallenges->contains($userLikeChallenge)) {
+            $this->userLikeChallenges[] = $userLikeChallenge;
+            $userLikeChallenge->setUserWhoLikedChallenge($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikeChallenge(UserLikeChallenge $userLikeChallenge): self
+    {
+        if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikeChallenge->getUserWhoLikedChallenge() === $this) {
+                $userLikeChallenge->setUserWhoLikedChallenge(null);
             }
         }
 
@@ -720,6 +729,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGithubAccessToken(?string $githubAccessToken): self
     {
         $this->githubAccessToken = $githubAccessToken;
+    /**
+     * @return Collection<int, Challenges>
+     */
+    public function getChallenges(): Collection
+    {
+        return $this->challenges;
+    }
+
+    public function getStatut(): ?bool
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(bool $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }

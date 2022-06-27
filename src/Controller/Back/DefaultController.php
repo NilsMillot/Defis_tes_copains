@@ -13,6 +13,7 @@ class DefaultController extends AbstractController
     {
         return $this->render('back/default/index.html.twig', [
             'controller_name' => 'DefaultControllerADMIN',
+            'title'=>'Home'
         ]);
     }
 }

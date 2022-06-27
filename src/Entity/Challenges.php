@@ -50,10 +50,6 @@ class Challenges implements \Serializable
      */
     private $qr_code;
 
-    /**
-     * @ORM\OneToMany(targetEntity=CategoryChallenges::class, mappedBy="idChallenge")
-     */
-    private $categoryChallenges;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="challenge")
@@ -70,12 +66,37 @@ class Challenges implements \Serializable
      */
     private $challengesUserRegisters;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="challenges")
+     */
+    private $category;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="challenge")
+     */
+    private $tags;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="challenges")
+     */
+    private $winner;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikeChallenge::class, mappedBy="challengesLiked")
+     */
+    private $userLikeChallenges;
+
     public function __construct()
     {
-        $this->categoryChallenges = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->postId = new ArrayCollection();
         $this->challengesUserRegisters = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,35 +177,7 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    /**
-     * @return Collection|CategoryChallenges[]
-     */
-    public function getCategoryChallenges(): Collection
-    {
-        return $this->categoryChallenges;
-    }
 
-    public function addCategoryChallenge(CategoryChallenges $categoryChallenge): self
-    {
-        if (!$this->categoryChallenges->contains($categoryChallenge)) {
-            $this->categoryChallenges[] = $categoryChallenge;
-            $categoryChallenge->setIdChallenge($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategoryChallenge(CategoryChallenges $categoryChallenge): self
-    {
-        if ($this->categoryChallenges->removeElement($categoryChallenge)) {
-            // set the owning side to null (unless already changed)
-            if ($categoryChallenge->getIdChallenge() === $this) {
-                $categoryChallenge->setIdChallenge(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|User[]
@@ -211,23 +204,6 @@ class Challenges implements \Serializable
         }
 
         return $this;
-    }
-
-   
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->imageName,
-        ));
-    }
-
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->imageName,
-            ) = unserialize($serialized, array('allowed_classes' => false));
     }
 
     /**
@@ -290,5 +266,104 @@ class Challenges implements \Serializable
         return $this;
     }
 
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
 
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->imageName,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->imageName,
+            ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
+        return $this;
+    }
+    public function removeTag(Tag $tag): self
+    {
+        $this->tags->removeElement($tag);
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getWinner(): ?User
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?User $winner): self
+    {
+        $this->winner = $winner;
+
+        return $this;
+    }
+    /**
+     * @return Collection|UserLikeChallenge[]
+     */
+    public function getUserLikeChallenges(): Collection
+    {
+        return $this->userLikeChallenges;
+    }
+
+    public function addUserLikeChallenges(UserLikeChallenge $userLikeChallenge): self
+    {
+        if (!$this->userLikeChallenges->contains($userLikeChallenge)) {
+            $this->userLikeChallenges[] = $userLikeChallenge;
+            $userLikeChallenge->setChallengesLiked($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikeChallenge(UserLikeChallenge $userLikeChallenge): self
+    {
+            if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikeChallenge->getChallengesLiked() === $this) {
+                $userLikeChallenge->setChallengesLiked(null);
+            }
+        }
+
+        return $this;
+    }
 }
