@@ -36,7 +36,7 @@ class Group
     private $picture;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="idGroup")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="idGroup")
      */
     private $users;
 

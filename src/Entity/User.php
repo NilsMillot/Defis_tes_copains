@@ -65,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $statisticals;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Group::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Group::class, mappedBy="users")
      */
     private $idGroup;
 

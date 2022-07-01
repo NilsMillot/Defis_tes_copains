@@ -5,8 +5,6 @@
 
 {% block body %}
 	<h1>Group</h1>
-	{{ dump(group) }}
-
 	<table class="table">
 		<tbody>
 			<tr>
@@ -28,12 +26,11 @@
 			</tr>
 			<tr>
 				<th>Users</th>
+				<td>
 				{% for usr in group.users %}
-					{# <li>grup</li> #}
-					{{ dump(usr.username) }}
-					{{ dump('a')  }}
+					<span class="chip">{{ usr.username }}</span>
 				{% endfor %}
-				{# <td><img src="{{ group.picture }}" width="300px"/></td> #}
+				</td>
 			</tr>
 		</tbody>
 	</table>
