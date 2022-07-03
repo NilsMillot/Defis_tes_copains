@@ -1,0 +1,14 @@
+<div class="row">
+    {{ form_start(formPost) }}
+    <div class="row">
+        {{ form_label(formPost.name,'Nom du post') }}
+        {{ form_widget(formPost.name) }}
+        <input id="post_id" name="post-id" hidden>
+        {{ form_label(formPost.content,'Contenue') }}
+        {{ form_widget(formPost.content) }}
+        <span>File</span>
+        {{ form_widget(formPost.imageFile) }}
+    </div>
+<button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(formPost) }}
+</div>

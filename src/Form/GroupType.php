@@ -15,14 +15,13 @@ class GroupType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('picture')
-            ->add('users',EntityType::class,[
+            ->add('users', EntityType::class, [
                 'class' => User::class,
                 'expanded' => true,
                 'multiple' => true,
                 'attr'   =>  array(
                     'class'   => 'filled-in',
-                    'id'=>'categorie'
+                    'id' => 'categorie'
                 )
             ]);
     }

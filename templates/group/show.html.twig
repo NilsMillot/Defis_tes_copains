@@ -21,15 +21,11 @@
 				</td>
 			</tr>
 			<tr>
-				<th>Picture</th>
-				<td><img src="{{ group.picture }}" width="300px"/></td>
-			</tr>
-			<tr>
 				<th>Users</th>
 				<td>
-				{% for usr in group.users %}
-					<span class="chip">{{ usr.username }}</span>
-				{% endfor %}
+					{% for usr in group.users %}
+						<span class="chip">{{ usr.username }}</span>
+					{% endfor %}
 				</td>
 			</tr>
 		</tbody>
