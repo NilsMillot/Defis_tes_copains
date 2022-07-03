@@ -18,20 +18,19 @@ class GroupFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < 3; $i++) {
             $groupWithOneUser = (new Group())
                 ->setName($this->faker->name)
-                ->setNumberUser(random_int(0, 1000))
                 ->addUser($this->getReference(UserFixtures::USER_TEST_1));
+            $groupWithOneUser->setNumberUser(sizeof($groupWithOneUser->getUsers()));
 
             $manager->persist($groupWithOneUser);
         }
         for ($i = 0; $i < 3; $i++) {
             $groupWithManyUsers = (new Group())
                 ->setName($this->faker->name)
-                ->setNumberUser(random_int(0, 1000))
                 ->addUser($this->getReference(UserFixtures::USER_TEST_1))
                 ->addUser($this->getReference(UserFixtures::USER_TEST_2))
                 ->addUser($this->getReference(UserFixtures::USER_TEST_3))
                 ->addUser($this->getReference(UserFixtures::USER_ADMIN));
-
+            $groupWithManyUsers->setNumberUser(sizeof($groupWithManyUsers->getUsers()));
             $manager->persist($groupWithManyUsers);
         }
 
