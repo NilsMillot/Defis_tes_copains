@@ -7,3 +7,10 @@
 div.vich-image > a > img{
     height: 100px !important;
 }
+
+.btn_edit_generic, .btn_delete_generic {
+    display: flex;
+}
+.btn_edit_generic i, .btn_delete_generic i {
+    margin-right: 5px;
+}

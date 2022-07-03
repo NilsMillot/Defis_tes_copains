@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Group;
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,10 +15,15 @@ class GroupType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('number_user')
-            ->add('picture')
-            ->add('users')
-        ;
+            ->add('users', EntityType::class, [
+                'class' => User::class,
+                'expanded' => true,
+                'multiple' => true,
+                'attr'   =>  array(
+                    'class'   => 'filled-in',
+                    'id' => 'categorie'
+                )
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
