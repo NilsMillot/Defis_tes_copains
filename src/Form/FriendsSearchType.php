@@ -18,7 +18,7 @@ class FriendsSearchType extends AbstractType
                 'required' => false,
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Tu cherches qui pelo?',
+                    'placeholder' => 'Qui cherchez-vous ?',
                 ]
             ]);
         // ->add('submit', SubmitType::class, [

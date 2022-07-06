@@ -4,7 +4,6 @@ namespace App\Controller\Front;
 
 use App\Entity\Friends;
 use App\Entity\FriendsSearch;
-use App\Entity\User;
 use App\Form\FriendsType;
 use App\Form\FriendsSearchType;
 use App\Repository\FriendsRepository;
@@ -39,29 +38,25 @@ class FriendsController extends AbstractController
             array_push($arrUserFriendsReceivedStatusSent, $userRepository->findOneBy(['id' => $friendsReceivedByCurrentUserStatusSent[$i]->getSenderUser()->getId()]));
         }
 
-
-        // $search = new FriendsSearch();
-        // $formSearch = $this->createForm(FriendsSearchType::class, $search);
-        // $formSearch->handleRequest($request);
-
         return $this->render('friends/index.html.twig', [
             'friendsRequestsOfCurrentUser' => $uniqueFriendsOfCurrentUser,
             'friendsRequestReceived' => $arrUserFriendsReceivedStatusSent ?? null,
             'currentUser' => $this->getUser(),
-            // 'formSearch' => $formSearch,
         ]);
     }
 
     #[Route('/new', name: 'friends_new', methods: ['GET', 'POST'])]
     public function new(Request $request, FriendsRepository $friendsRepository, UserRepository $userRepository): Response
     {
-        $friend = new Friends();
-        $form = $this->createForm(FriendsType::class, $friend);
-        $form->handleRequest($request);
-
-        $friendsAcceptedSendedByCurrentUser = $friendsRepository->findBy(['status' => 'accepted', 'senderUser' => $this->getUser()]);
-        $friendsAcceptedReceivedByCurrentUser = $friendsRepository->findBy(['status' => 'accepted', 'receiverUser' => $this->getUser()]);
-        $friendsAcceptedByCurrentUser = array_merge($friendsAcceptedReceivedByCurrentUser, $friendsAcceptedSendedByCurrentUser);
+        $friendsAcceptedOrSentSendedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'senderUser' => $this->getUser()]);
+        $friendsAcceptedOrSentReceivedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'receiverUser' => $this->getUser()]);
+        $usersAcceptedOrSentReceivedByCurrentUser = array_map(function ($friend) {
+            return $friend->getSenderUser();
+        }, $friendsAcceptedOrSentReceivedByCurrentUser);
+        $usersAcceptedOrSentSendedByCurrentUser = array_map(function ($friend) {
+            return $friend->getReceiverUser();
+        }, $friendsAcceptedOrSentSendedByCurrentUser);
+        $usersAcceptedOrSent = array_merge($usersAcceptedOrSentReceivedByCurrentUser, $usersAcceptedOrSentSendedByCurrentUser);
 
         $search = new FriendsSearch();
         $formSearch = $this->createForm(FriendsSearchType::class, $search);
@@ -77,25 +72,28 @@ class FriendsController extends AbstractController
             );
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $friend->setSenderUser($this->security->getUser());
-            $friend->setStatus('sent');
-
-            $entityManager->persist($friend);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
-        }
-
         return $this->renderForm('friends/new.html.twig', [
-            'form' => $form,
             'formSearch' => $formSearch,
-            // 'allUsers' => $allUsersExceptCurrent,
+            'usersAcceptedOrSent' => $usersAcceptedOrSent,
             'currentUser' => $this->getUser(),
             'arrUsers' => $arrUsersExceptCurrent ?? null,
         ]);
     }
+
+    #[Route('/{id}/send', name: 'friends_sendRequest', methods: ['GET', 'POST'])]
+    public function sendRequest(Request $request, UserRepository $userRepository): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $friend = new Friends();
+        $friend->setSenderUser($this->security->getUser());
+        $friend->setStatus('sent');
+        $friend->setReceiverUser($userRepository->findOneBy(['id' => $request->get('id')]));
+        $entityManager->persist($friend);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('friends_new', [], Response::HTTP_SEE_OTHER);
+    }
+
 
     /*
      * @ParamConverter("id", class="Friends", options={"id": "id"})

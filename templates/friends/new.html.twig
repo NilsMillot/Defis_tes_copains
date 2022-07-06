@@ -26,18 +26,13 @@
 					<td>{{ friend.id }}</td>
 					<td>{{ friend.username }}</td>
 					<td>
-						{# {% if friend.status is same as('sent') and friend.receiverUser.id is same as currentUser.id %}><a href="{{ path('friends_accept', {'id': friend.id}) }}"> #}
 						<a href="/user/{{ friend.id }}">Voir le profil</a>
-						{# {% if friend.id is same as(currentUser.id) %}
-													<span>me</span>
-												{% endif %} #}
+						{% if friend not in usersAcceptedOrSent  %}
+							<a href="{{ path('friends_sendRequest', {'id': friend.id}) }}">Envoyer une demande d'ami</a>
+						{% endif %}
 					</td>
 				</tr>
 			</td>
 		</tbody>
-	</tr>
-{% else %}
-	<tr>
-		<td colspan="3">no friend found</td>
-	</tr>
-{% endfor %}</tbody></table><a href="{{ path('friends_index') }}">back to list</a>{% endblock %}
+	</td>
+</tr></td></tbody></tr>{% else %}<tr><td colspan="3">no friend found</td></tr>{% endfor %}</tbody></table><a href="{{ path('friends_index') }}">back to list</a>{% endblock %}
