@@ -11,12 +11,16 @@ class ChallengeFixtures extends Fixture implements DependentFixtureInterface
 {
     protected $faker;
 
+    const CHALLENGE_TEST_1 = 'CHALLENGE_TEST_1';
+    const CHALLENGE_TEST_2 = 'CHALLENGE_TEST_2';
+    const CHALLENGE_TEST_3 = 'CHALLENGE_TEST_3';
+
     public function load(ObjectManager $manager): void
     {
         $this->faker = \Faker\Factory::create('us_US');
 
-        for ($i = 0; $i < 3; $i++) {
-            $challengeWithOneUser = (new Challenges())
+        for ($i = 1; $i < 4; $i++) {
+            $challenge = (new Challenges())
                 ->setName($this->faker->name)
                 ->setCreationDate($this->faker->dateTime)
                 ->setDescription('Amet officia sit dolore ad excepteur deserunt nisi labore non Lorem. Dolore occaecat incididunt culpa minim velit enim voluptate laborum deserunt sunt id. Elit laborum veniam ea tempor proident.')
@@ -25,7 +29,8 @@ class ChallengeFixtures extends Fixture implements DependentFixtureInterface
                 ->setCategory($this->getReference(CategoryFixtures::SPORT_CATEGORY))
                 ->addUser($this->getReference(UserFixtures::USER_TEST_1));
 
-            $manager->persist($challengeWithOneUser);
+            $manager->persist($challenge);
+            $this->setReference("CHALLENGE_TEST_" . $i, $challenge);
         }
 
         $manager->flush();
