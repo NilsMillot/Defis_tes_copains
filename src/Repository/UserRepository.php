@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use League\OAuth2\Client\Provider\GithubResourceOwner;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -35,6 +37,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
+
+    // public function findOrCreateFromOauth (GithubResourceOwner $resourceOwner)
+    // {
+    //     $user = $this->createQueryBuilder('u')
+    //         ->where('u.githubId = :githubId')
+    //         ->setParameters([
+    //             'githubId' => $resourceOwner->getId()
+    //         ])
+    //         ->getQuery()
+    //         ->getOneOrNullResult();
+    //     if ($user){
+    //         return $user;
+    //     }
+    //     $user = (new User())
+    //         ->setGithubId($resourceOwner->getId())
+    //         ->setEmail($resourceOwner->getEmail())
+    //         ->setUsername($resourceOwner->getNickname());
+    //     $em = $this->getEntityManager();
+    //     $em->persist($user);
+    //     $em->flush();
+
+    //     return $user;
+    // }
 
     // /**
     //  * @return User[] Returns an array of User objects

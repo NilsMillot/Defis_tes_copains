@@ -31,12 +31,7 @@ class Group
     private $number_user;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $picture;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="idGroup")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="idGroup")
      */
     private $users;
 
@@ -70,18 +65,6 @@ class Group
     public function setNumberUser(int $number_user): self
     {
         $this->number_user = $number_user;
-
-        return $this;
-    }
-
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): self
-    {
-        $this->picture = $picture;
 
         return $this;
     }
