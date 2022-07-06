@@ -37,7 +37,7 @@ class Post
 
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $content;
 
@@ -217,6 +217,18 @@ class Post
                 $remark->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(string $file)
+    {
+        $this->picture = $file;
 
         return $this;
     }
