@@ -27,6 +27,7 @@ class ChallengeFixtures extends Fixture implements DependentFixtureInterface
                 ->setDeadline($this->faker->dateTimeBetween('now', '+1 year'))
                 ->setPicture($this->faker->imageUrl(640, 480, 'technics'))
                 ->setCategory($this->getReference(CategoryFixtures::SPORT_CATEGORY))
+                ->setStatus(true)
                 ->addUser($this->getReference(UserFixtures::USER_TEST_1));
 
             $manager->persist($challenge);
