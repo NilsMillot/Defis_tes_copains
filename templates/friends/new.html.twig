@@ -4,10 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Create new Friends</h1>
-	<h2>Liste de tous les utilisateurs du site</h2>
-
-	{{ include('friends/_form.html.twig') }}
+	<h1>Trouvez vous des amis</h1>
 
 	{{ form_start(formSearch) }}
 	{{ form_row(formSearch.name) }}
@@ -24,23 +21,23 @@
 		</thead>
 		<tbody>
 			{% set currentUser = app.user %}
-			{% for friend in allUsers %}
+			{% for friend in arrUsers %}
 				<tr>
 					<td>{{ friend.id }}</td>
 					<td>{{ friend.username }}</td>
 					<td>
-						{# {% if friend.status is same as('sent') and friend.receiverUser.id is same as currentUser.id %}><a href="{{ path('friends_accept', {'id': friend.id}) }}">
-														Accepter la demande</a>
+						{# {% if friend.status is same as('sent') and friend.receiverUser.id is same as currentUser.id %}><a href="{{ path('friends_accept', {'id': friend.id}) }}"> #}
+						<a href="/user/{{ friend.id }}">Voir le profil</a>
+						{# {% if friend.id is same as(currentUser.id) %}
+													<span>me</span>
 												{% endif %} #}
 					</td>
 				</tr>
-			{% else %}
-				<tr>
-					<td colspan="3">no friend found</td>
-				</tr>
-			{% endfor %}
+			</td>
 		</tbody>
-	</table>
-
-	<a href="{{ path('friends_index') }}">back to list</a>
-{% endblock %}
+	</tr>
+{% else %}
+	<tr>
+		<td colspan="3">no friend found</td>
+	</tr>
+{% endfor %}</tbody></table><a href="{{ path('friends_index') }}">back to list</a>{% endblock %}

@@ -38,15 +38,22 @@ class FriendsController extends AbstractController
         for ($i = 0; $i < sizeof($friendsReceivedByCurrentUserStatusSent); $i++) {
             array_push($arrUserFriendsReceivedStatusSent, $userRepository->findOneBy(['id' => $friendsReceivedByCurrentUserStatusSent[$i]->getSenderUser()->getId()]));
         }
+
+
+        // $search = new FriendsSearch();
+        // $formSearch = $this->createForm(FriendsSearchType::class, $search);
+        // $formSearch->handleRequest($request);
+
         return $this->render('friends/index.html.twig', [
             'friendsRequestsOfCurrentUser' => $uniqueFriendsOfCurrentUser,
             'friendsRequestReceived' => $arrUserFriendsReceivedStatusSent ?? null,
             'currentUser' => $this->getUser(),
+            // 'formSearch' => $formSearch,
         ]);
     }
 
     #[Route('/new', name: 'friends_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FriendsRepository $friendsRepository): Response
+    public function new(Request $request, FriendsRepository $friendsRepository, UserRepository $userRepository): Response
     {
         $friend = new Friends();
         $form = $this->createForm(FriendsType::class, $friend);
@@ -56,17 +63,19 @@ class FriendsController extends AbstractController
         $friendsAcceptedReceivedByCurrentUser = $friendsRepository->findBy(['status' => 'accepted', 'receiverUser' => $this->getUser()]);
         $friendsAcceptedByCurrentUser = array_merge($friendsAcceptedReceivedByCurrentUser, $friendsAcceptedSendedByCurrentUser);
 
-        $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
-        $allUsersExceptCurrent = array_filter(
-            $allUsers,
-            function ($e) {
-                return $e->getId() !== $this->getUser()->getId();
-            }
-        );
-
         $search = new FriendsSearch();
         $formSearch = $this->createForm(FriendsSearchType::class, $search);
         $formSearch->handleRequest($request);
+
+        if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+            $arrUsers = $userRepository->findUsers($formSearch->getData()->getName());
+            $arrUsersExceptCurrent = array_filter(
+                $arrUsers,
+                function ($e) {
+                    return $e->getId() !== $this->getUser()->getId();
+                }
+            );
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -82,7 +91,9 @@ class FriendsController extends AbstractController
         return $this->renderForm('friends/new.html.twig', [
             'form' => $form,
             'formSearch' => $formSearch,
-            'allUsers' => $allUsersExceptCurrent,
+            // 'allUsers' => $allUsersExceptCurrent,
+            'currentUser' => $this->getUser(),
+            'arrUsers' => $arrUsersExceptCurrent ?? null,
         ]);
     }
 
