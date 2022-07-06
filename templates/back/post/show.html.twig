@@ -1,0 +1,49 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Post{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div class="col s12 m7">
+        {% for user in post.userId %}
+            {{ user.username }}
+        {% endfor %}
+        <div class="section">
+            <h5 id="{{ post.id }}">{{ post.name }}</h5>
+            <span>Like :
+                {% set count = 0 %}
+                {% for like in post.userLikePosts %}
+                    {% set count = count + 1 %}
+                {% endfor %}
+                <span class="id-{{ post.id }}-count">{{ count }}</span>
+                    {% set liked_post = 0 %}
+                {% for like in post.userLikePosts %}
+                    {% if app.user.username in like.userWhoLiked.username   %}
+                        {% set liked_post = 1 %}
+                    {% endif %}
+                {% endfor %}
+                {% if liked_post == 0  %}
+                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+                {% else %}
+                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+                {% endif %}
+                </span>
+            <p>{{ post.content }} </p>
+            {% for user in post.userId %}
+                {%  if user.username == app.user.username %}
+                    <a class="waves-effect waves-light btn edit_post" data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}" >Edit</a>
+                    {{ include('post/_delete_form.html.twig') }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if(post.imageName) %}
+        <div>
+            <img height="200px" src={{ vich_uploader_asset(post, 'imageFile') }} />
+        </div>
+        {% endif %}
+    </div>
+    <a href="{{ path('post_index') }}">back to list</a>
+
+</div>
+{% endblock %}

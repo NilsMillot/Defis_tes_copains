@@ -1,0 +1,61 @@
+{% extends 'base_back.html.twig' %}
+
+{% block body %}
+    <div class="container">
+    <a class="waves-effect waves-light btn green accent-4" href="{{ path("admin_user_new") }}">Créer</a>
+    <div class="card card_back">
+    <div class="card_back_content">
+        <table id="user_view" class="datatable table row-border">
+            <thead>
+        <tr>
+            <th class="back_th">Id</th>
+            <th class="back_th">Username</th>
+            <th class="back_th">Email</th>
+            <th class="back_th">Role</th>
+            <th class="back_th">Statut</th>
+            <th class="back_th">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td class="back_th">{{ user.id }}</td>
+                <td class="back_th">{{ user.username }}</td>
+                <td class="back_th">{{ user.email }}</td>
+                <td class="back_th">
+                {% for role in user.roles %}
+                    <div class="chip">{{ role }}</div>
+                {% endfor %}
+                </td>
+                <td class="back_th">
+                    {% if user.statut == true %}
+                        <span class="chip teal accent-3"> Actif </span>
+                    {% else %}
+                        <span class="chip red darken-1"> Non Actif </span>
+                    {% endif %}
+                </td>
+                <td class="row back_th">
+                    <div class="col s4 ">
+                        <a href="{{ path('admin_user_edit', {'id': user.id}) }}"><i
+                                    class="orange-text darken-4 material-icons small">create</i></a>
+                    </div>
+                    <div class="col s4">
+                        {{ include('back/users/_delete_form.html.twig') }}
+                    </div>
+                    <div class="col s4">
+                        <a href="{{ path('admin_user_show', {'id': user.id }) }}"><i class="green-text darken-4 material-icons small">visibility</i></a>
+                    </div>
+                </td>
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+{% endblock %}

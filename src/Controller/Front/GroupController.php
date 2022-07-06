@@ -23,14 +23,17 @@ class GroupController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'group_new', methods: ['GET','POST'])]
+    #[Route('/new', name: 'group_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
+        // $group->addUser($this->getUser());
+        $group->setNumberUser(sizeOf($group->getUsers()));
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // dd($group);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($group);
             $entityManager->flush();
@@ -47,12 +50,13 @@ class GroupController extends AbstractController
     #[Route('/{id}', name: 'group_show', methods: ['GET'])]
     public function show(Group $group): Response
     {
+        // dd($group->getUsers());
         return $this->render('group/show.html.twig', [
             'group' => $group,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'group_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/edit', name: 'group_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Group $group): Response
     {
         $form = $this->createForm(GroupType::class, $group);
@@ -73,7 +77,7 @@ class GroupController extends AbstractController
     #[Route('/{id}', name: 'group_delete', methods: ['POST'])]
     public function delete(Request $request, Group $group): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$group->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $group->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($group);
             $entityManager->flush();
