@@ -11,29 +11,31 @@
 	<button class="btn">Rechercher</button>
 	{{ form_end(formSearch) }}
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>UserName of this person</th>
-				<th>actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% set currentUser = app.user %}
-			{% for friend in arrUsers %}
+	{% if arrUsers|length > 0 %}
+		<table class="table">
+			<thead>
 				<tr>
-					<td>{{ friend.id }}</td>
-					<td>
-						<a href="/user/{{ friend.id }}">{{ friend.username }}</a>
-					</td>
-					<td>
-						{% if friend not in usersAcceptedOrSent  %}
-							<a href="{{ path('friends_sendRequest', {'id': friend.id}) }}">Envoyer une demande d'ami</a>
-						{% endif %}
-					</td>
+					<th>Id</th>
+					<th>UserName of this person</th>
+					<th>actions</th>
 				</tr>
-			</td>
-		</tbody>
-	</td>
-</tr></td></tbody></tr>{% else %}<tr><td colspan="3">no friend found</td></tr>{% endfor %}</tbody></table><a href="{{ path('friends_index') }}">back to list</a>{% endblock %}
+			</thead>
+			<tbody>
+				{% set currentUser = app.user %}
+				{% for friend in arrUsers %}
+					<tr>
+						<td>{{ friend.id }}</td>
+						<td>
+							<a href="/user/{{ friend.id }}">{{ friend.username }}</a>
+						</td>
+						<td>
+							{% if friend not in usersAcceptedOrSent  %}
+								<a href="{{ path('friends_sendRequest', {'id': friend.id}) }}">Envoyer une demande d'ami</a>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+{% endblock %}

@@ -62,7 +62,7 @@ class FriendsController extends AbstractController
         $formSearch = $this->createForm(FriendsSearchType::class, $search);
         $formSearch->handleRequest($request);
 
-        if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+        if ($formSearch->isSubmitted() && $formSearch->isValid() && $formSearch->getData()->getName() != null) {
             $arrUsers = $userRepository->findUsers($formSearch->getData()->getName());
             $arrUsersExceptCurrent = array_filter(
                 $arrUsers,
