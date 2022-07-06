@@ -22,9 +22,9 @@
             <tr>
                 <td>{{ friend.id }}</td>
                 {% if friend.receiverUser.id is same as currentUser.id %}
-                    <td>{{ friend.senderUser.username }}</td>
+                    <td><a href="/user/{{ friend.senderUser.id }}">{{ friend.senderUser.username }}</a></td>
                 {% else %}
-                    <td>{{ friend.receiverUser.username }}</td>
+                    <td><a href="/user/{{ friend.receiverUser.id }}">{{ friend.receiverUser.username }}</a></td>
                 {% endif %}
                 <td>{{ friend.status }}</td>
                 <td>
