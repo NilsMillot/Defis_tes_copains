@@ -1,0 +1,36 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %} Register {% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-3 font-weight-normal">S'enregistrer</h1>
+
+    {{ form_start(form) }}
+    {{ form_rest(form) }}
+    <button style="margin: 20px" class="btn btn-lg btn-primary" type="submit">
+        S'enregistrer
+    </button>
+
+    <div id="link">
+        Déjà inscrit ?
+        <a href="/login">
+            Se connecter
+        </a>
+
+    </div>
+    {{ form_end(form) }}
+
+    <style>
+        form{
+            width: 70%;
+            margin: auto;
+        }
+
+        #link{
+            display: block;
+            margin: auto;
+            width: fit-content;
+            padding: 60px;
+        }
+    </style>
+{% endblock %}

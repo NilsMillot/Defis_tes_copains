@@ -3,17 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
-    {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://kit.fontawesome.com/af8bf20642.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/text.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/btn.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/card.css') }}">
+
+    {# Run `composer require symfony/webpack-encore-bundle`and uncomment the following Encore helpers to start using Symfony UX #}
     {% block stylesheets %}
         {#{{ encore_entry_link_tags('app') }}#}
     {% endblock %}
-
     {% block javascripts %}
-        {#{{ encore_entry_script_tags('app') }}#}
+        {#// simple example of using react when you need to do dynamic rendering#}
+        {{ vite_asset('main.jsx', ['react']) }}
     {% endblock %}
+    <style>
+        html {
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+    </style>
 </head>
 <body>
-{% block body %}{% endblock %}
+
+<nav class="teal blue-grey darken-2">
+    <div class="nav-wrapper container">
+        <a href="/" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="auto" height="100%"/></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {%  if(app.user) %}
+            <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
+            <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
+            <li><a href="{{ path('front_group_index') }}">Group</a></li>
+            <li><a id='compte' class="{{ app.user.id}}" href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
+            <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
+            {% if is_granted('ROLE_ADMIN') %}
+               <li> <a href="{{ path('admin_home') }}">Admin</a></li>
+            {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<main>
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
+</main>
+<footer class="page-footer blue-grey darken-2">
+    <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+                <h5 class="white-text">En savoir plus</h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Liens Utiles</h5>
+                <ul>
+                    <li><a class="text-lien-social facebook" href="#!"><i class="fab fa-facebook-square"></i> Facebook</a></li>
+                    <li><a  class="text-lien-social instagram" href="#!"><i  class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a class="text-lien-social twitter" href="#!"><i  class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a class="text-lien-social twitch" href="#!"><i  class="fab fa-twitch"></i> Twitch</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+            © 2014 Copyright Eliwena - NilsM - Sidox
+            <a class="grey-text text-lighten-4 right" href="#!"><i class="fab fa-github"></i> Github</a>
+        </div>
+    </div>
+</footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script  src="{{ asset('js/collapse.js') }}"></script>
+<script  src="{{ asset('js/modal.js') }}"></script>
+<script  src="{{ asset('js/like.js') }}"></script>
+<script  src="{{ asset('js/edit_modal.js') }}"></script>
+<script src="{{ asset('js/select.js') }}"></script>
+
+
+
+<script>
+    {% for label, messages in app.flashes() %}
+    {% for message in messages %}
+    M.toast({html: '{{ message }}', classes: '{{ label }}'})
+    {{ label }}
+    {% endfor %}
+    {% endfor %}
+</script>
 </body>
 </html>

@@ -8,11 +8,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    #[Route('/', name: 'default')]
+    #[Route('/admin', name: 'admin_home')]
     public function index(): Response
     {
         return $this->render('back/default/index.html.twig', [
             'controller_name' => 'DefaultControllerADMIN',
+            'title'=>'Home'
         ]);
     }
 }

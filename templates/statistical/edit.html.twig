@@ -1,0 +1,13 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Edit Statistical{% endblock %}
+
+{% block body %}
+    <h1>Edit Statistical</h1>
+
+    {{ include('statistical/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('statistical_index') }}">back to list</a>
+
+    {{ include('statistical/_delete_form.html.twig') }}
+{% endblock %}

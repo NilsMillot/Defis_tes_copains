@@ -25,13 +25,17 @@ class Category
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Place::class, mappedBy="categories")
+     * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="category")
      */
-    private $places;
+    private $challenges;
 
     public function __construct()
     {
-        $this->places = new ArrayCollection();
+        $this->challenges = new ArrayCollection();
+    }
+    public function __toString()
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -52,27 +56,30 @@ class Category
     }
 
     /**
-     * @return Collection|Place[]
+     * @return Collection<int, Challenges>
      */
-    public function getPlaces(): Collection
+    public function getChallenges(): Collection
     {
-        return $this->places;
+        return $this->challenges;
     }
 
-    public function addPlace(Place $place): self
+    public function addChallenge(Challenges $challenge): self
     {
-        if (!$this->places->contains($place)) {
-            $this->places[] = $place;
-            $place->addCategory($this);
+        if (!$this->challenges->contains($challenge)) {
+            $this->challenges[] = $challenge;
+            $challenge->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removePlace(Place $place): self
+    public function removeChallenge(Challenges $challenge): self
     {
-        if ($this->places->removeElement($place)) {
-            $place->removeCategory($this);
+        if ($this->challenges->removeElement($challenge)) {
+            // set the owning side to null (unless already changed)
+            if ($challenge->getCategory() === $this) {
+                $challenge->setCategory(null);
+            }
         }
 
         return $this;

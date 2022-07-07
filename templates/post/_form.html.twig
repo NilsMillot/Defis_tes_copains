@@ -1,0 +1,25 @@
+<div class="row">
+    {{ form_start(formPost) }}
+    <div class="row">
+        {{ form_label(formPost.name,'Nom du post') }}
+        {{ form_widget(formPost.name) }}
+        <input id="post_id"  name="post-id" hidden>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">mode_edit</i>
+            {{ form_widget(formPost.content) }}
+            <label class="label_post" for="icon_prefix2">Contenue du post</label>
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>File</span>
+                    {{ form_widget(formPost.imageFile) }}
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+                <span class="warning-img red-text">Vous ne pourrez modifier votre image une fois votre post envoyé</span>
+            </div>
+        </div>
+    </div>
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(formPost) }}
+</div>
