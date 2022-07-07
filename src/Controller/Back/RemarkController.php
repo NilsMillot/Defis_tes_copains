@@ -74,17 +74,17 @@ class RemarkController extends AbstractController
     public function edit(Request $request, Remark $remark): Response
     {
 
-        $form = $this->createForm(RemarkType::class, $remark);
-        $form->handleRequest($request);
+        $formRemark = $this->createForm(RemarkType::class, $remark);
+        $formRemark->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formRemark->isSubmitted() && $formRemark->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('admin_remark_index', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->renderForm('back/remark/new.html.twig', [
+        return $this->renderForm('back/remark/edit.html.twig', [
             'remark' => $remark,
-            'form' => $form,
+            'formRemark' => $formRemark,
             'title'=>'Commentaires'
         ]);
     }
