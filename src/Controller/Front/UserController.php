@@ -33,8 +33,12 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
 
+            if($user->getPro() === false) {
+                return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
+            }else{
+                return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->renderForm('user/new.html.twig', [

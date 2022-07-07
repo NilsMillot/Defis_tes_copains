@@ -52,16 +52,12 @@ class PaymentController extends AbstractController
 
         $session = Session::create([
             'line_items' => [[
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => 'T-shirt',
-                    ],
-                    'unit_amount' => 2000,
-                ],
+                'price' => 'price_1LIgFyBFcxs2WY3DoPUvxguF',
+
+
                 'quantity' => 1,
             ]],
-            'mode' => 'payment',
+            'mode' => 'subscription',
             'success_url' => $this->generateUrl('success-url', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'cancel_url' => $this->generateUrl('cancel-url', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
