@@ -90,6 +90,11 @@ class FriendsController extends AbstractController
         $friend->setReceiverUser($userRepository->findOneBy(['id' => $request->get('id')]));
         $entityManager->persist($friend);
         $entityManager->flush();
+        $this->addFlash(
+            'notice',
+            'Demande d\'ami envoyée!'
+        );
+
 
         return $this->redirectToRoute('friends_new', [], Response::HTTP_SEE_OTHER);
     }
@@ -111,6 +116,10 @@ class FriendsController extends AbstractController
         $friendRequest->setStatus('accepted');
         $entityManager->persist($friendRequest);
         $entityManager->flush();
+        $this->addFlash(
+            'notice',
+            'Demande d\'ami acceptée!'
+        );
         return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 
