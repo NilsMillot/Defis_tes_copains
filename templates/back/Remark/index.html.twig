@@ -10,19 +10,29 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>actions</th>
+                <th class="back_th">Id</th>
+                <th class="back_th">Content</th>
+                <th class="back_th"> Like </th>
+                <th class="back_th">actions</th>
             </tr>
         </thead>
         <tbody>
         {% for remark in remarks %}
             <tr>
-                <td>{{ remark.id }}</td>
-                <td>{{ remark.contentRemark }}</td>
-                <td>
-{#                    <a href="{{ path('remark_show', {'id': remark.id}) }}">show</a>#}
-{#                    <a href="{{ path('remark_edit', {'id': remark.id}) }}">edit</a>#}
+                <td class="back_th">{{ remark.id }}</td>
+                <td class="back_th">{{ remark.contentRemark }}</td>
+                <td class="back_th"></td>
+                <td class="row back_th">
+                    <div class="col s4 ">
+                        <a href="{{ path('admin_remark_edit', {'id': remark.id}) }}"><i
+                                    class="orange-text darken-4 material-icons small">create</i></a>
+                    </div>
+                    <div class="col s4">
+                        {{ include('back/remark/_delete_form.html.twig') }}
+                    </div>
+{#                    <div class="col s4">#}
+{#                        <a href="{{ path('challenges_show', {'id': post.challengeId.id }) }}"><i class="green-text darken-4 material-icons small">visibility</i></a>#}
+{#                    </div>#}
                 </td>
             </tr>
         {% else %}
