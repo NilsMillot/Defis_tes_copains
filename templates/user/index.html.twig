@@ -5,6 +5,12 @@
 {% block body %}
 	<link href="{{ asset('css/profile_card.css') }}" rel="stylesheet"/>
 
+	{{ form_start(formAvatar) }}
+	{# {{ form_row(formAvatar.name) }} #}
+	<button style="background: none; cursor: pointer; padding-top: 5px">
+		<i class="material-icons">search</i>
+	</button>
+	{{ form_end(formAvatar) }}
 	<div id="profil_card_container">
 		<h1 id="profil_card_name">Votre profil
 			{{ user.username }}</h1>

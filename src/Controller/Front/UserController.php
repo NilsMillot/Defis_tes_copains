@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\User;
 use App\Repository\FriendsRepository;
 use App\Repository\UserRepository;
+use App\Form\UserAvatarType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,8 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository, FriendsRepository $friendsRepository): Response
+    #[Route('/', name: 'user_index', methods: ['GET', 'POST'])]
+    public function index(Request $request, UserRepository $userRepository, FriendsRepository $friendsRepository): Response
     {
         $friendsSendedByCurrentUserStatusAccepted = $friendsRepository->findBy(['senderUser' => $this->getUser(), 'status' => 'accepted']);
         $friendsReceivedByCurrentUserStatusAccepted = $friendsRepository->findBy(['receiverUser' => $this->getUser(), 'status' => 'accepted']);
@@ -24,12 +25,29 @@ class UserController extends AbstractController
         $userNames = explode(' ', $this->getUser()->getUsername());
         $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
 
+        $formAvatar = $this->createForm(UserAvatarType::class, $this->getUser());
+        $formAvatar->handleRequest($request);
+
+        if ($formAvatar->isSubmitted() && $formAvatar->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            // dd($formAvatar->getData());
+            // dd($this->getUser());
+            // $entityManager->persist($user);
+            // dd($formAvatar);
+            $entityManager->persist($formAvatar->getData());
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('user/index.html.twig', [
             'user' => $this->getUser(),
             'userInitials' => strtoupper($userInitials),
             'numberOfFriends' => sizeof($uniqueFriendsOfCurrentUser),
             'numberOfChallengesCreated' => sizeof($this->getUser()->getChallenge()),
             'numberOfGroup' => sizeof($this->getUser()->getIdGroup()),
+            'formAvatar' => $formAvatar->createView(),
         ]);
     }
 

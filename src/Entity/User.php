@@ -10,13 +10,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Entity\Traits\VichUploadTrait;
+// use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  * @Vich\Uploadable()
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     use VichUploadTrait;
     /**
@@ -125,11 +126,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $githubId;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $facebookId;
 
     /**
@@ -137,12 +133,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $googleId;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="github_access_token", type="string", length=255, nullable=true, options={"default"="NULL"})
-     */
-    private $githubAccessToken;
     /*
      * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="winner")
      */
@@ -173,6 +163,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function __toString()
+    {
+        return $this->username;
+    }
+
+    public function getUserIdentifier(): string
     {
         return $this->username;
     }
@@ -690,18 +685,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGithubId(): ?string
-    {
-        return $this->githubId;
-    }
-
-    public function setGithubId(?string $githubId): self
-    {
-        $this->githubId = $githubId;
-
-        return $this;
-    }
-
     public function getFacebookId(): ?string
     {
         return $this->facebookId;
@@ -726,15 +709,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGithubAccessToken(): ?string
-    {
-        return $this->githubAccessToken;
-    }
-
-    public function setGithubAccessToken(?string $githubAccessToken): self
-    {
-        $this->githubAccessToken = $githubAccessToken;
-    }
     /*
      * @return Collection<int, Challenges>
      */
@@ -753,5 +727,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->statut = $statut;
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->imageFile,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->imageFile,
+        ) = unserialize($serialized);
     }
 }
