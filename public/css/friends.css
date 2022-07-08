@@ -26,12 +26,12 @@ input:-webkit-autofill:active{
 .collection-item-send-request {
   transition: all 0.3s ease-in-out;
   border-radius: 10px;
-  padding: 0 5px;
+  padding: 0 8px;
 }
 
 .collection-item-send-request:hover {
   transition: all 0.3s ease-in-out;
-  background: #40C0B4;
+  background: #c7c7c7;
 }
 
 .collection-item-send-request:hover + a { background: #ddd; }

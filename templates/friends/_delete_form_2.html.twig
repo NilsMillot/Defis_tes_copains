@@ -1,0 +1,6 @@
+<form style="position: absolute; z-index: 1; top: 30px; right: 15px; color: black" method="post" action="{{ path('friends_delete', {'id': friend[0]}) }}">
+	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ friend[0]) }}">
+	<button style="background: none; cursor: pointer">
+		<i class="material-icons">delete</i>
+	</button>
+</form>
