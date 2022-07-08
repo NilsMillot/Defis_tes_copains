@@ -57,20 +57,30 @@
 
 	<script>
 		let imageUpload = document.querySelector("#imageUpload");
-let imagePreview = document.querySelector("#imagePreview");
-function readURL(input) {
-if (input.files && input.files[0]) {
-var reader = new FileReader();
-reader.onload = function (e) {
-imagePreview.style.backgroundImage = 'url(' + e.target.result + ')';
-}
-reader.readAsDataURL(input.files[0]);
-}
-}
+		let imagePreview = document.querySelector("#imagePreview");
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					imagePreview.style.backgroundImage = 'url(' + e.target.result + ')';
+				}
+				reader.readAsDataURL(input.files[0]);
+				// const formData = new FormData();
+				// formData.append('file', input.files[0]);
+				// fetch('http://localhost/user/post_pp', {
+				// 	method : 'post',
+				// 	body: formData,
+				// });
+				// .then((res) => res.json())
+				// .then((data) => console.log(data))
+				// .catch((error) => console.log(error))
+			}
+		}
 
-imageUpload.addEventListener("change", function () {
-readURL(this);
-});
+		imageUpload.addEventListener("change", function () {
+			readURL(this);
+		});
 	</script>
+	{# <script  src="{{ asset('js/change_picture.js') }}"></script> #}
 
 {% endblock %}
