@@ -128,18 +128,6 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(string $file )
-    {
-        $this->picture = $file;
-
-        return $this;
-
-    }
 
     public function getCreationDate(): ?\DateTimeInterface
     {
