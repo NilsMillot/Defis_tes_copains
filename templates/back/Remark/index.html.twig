@@ -12,7 +12,9 @@
                     <tr>
                         <th class="back_th">Id</th>
                         <th class="back_th">Content</th>
-                        <th class="back_th"> Like</th>
+                        <th class="back_th">Like</th>
+                        <th class="back_th"> Créateur</th>
+                        <th class="back_th"> Post </th>
                         <th class="back_th">actions</th>
                     </tr>
                     </thead>
@@ -27,6 +29,14 @@
                                     {% set count = count + 1 %}
                                 {% endfor %}
                                 {{ count }}
+                            </td>
+                            <td class="back_th">
+                                {% for user in remark.userId %}
+                                    {{ user.username }}
+                                {% endfor %}
+                            </td>
+                            <td class="back_th">
+                                {{ remark.post.name }}
                             </td>
                             <td class="row back_th">
                                 <div class="col s4 ">

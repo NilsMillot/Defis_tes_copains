@@ -50,6 +50,7 @@ class RemarkController extends AbstractController
 
         if ($formRemark->isSubmitted() && $formRemark->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $remark->addUserId($this->security->getUser());
             $entityManager->persist($remark);
             $entityManager->flush();
 
