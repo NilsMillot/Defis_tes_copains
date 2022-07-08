@@ -4,12 +4,16 @@ namespace App\Controller\Back;
 
 use App\Entity\Challenges;
 use App\Entity\Remark;
+use App\Entity\Post;
 use App\Entity\UserLikeRemark;
 use App\Form\RemarkType;
+use App\Form\RemarkBackType;
 use App\Repository\RemarkRepository;
+use App\Repository\PostRepository;
 use App\Repository\UserLikeRemarkRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,10 +45,10 @@ class RemarkController extends AbstractController
     public function new(Request $request): Response
     {
         $remark = new Remark();
-        $form = $this->createForm(RemarkType::class, $remark);
-        $form->handleRequest($request);
+        $formRemark = $this->createForm(RemarkBackType::class, $remark);
+        $formRemark->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formRemark->isSubmitted() && $formRemark->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($remark);
             $entityManager->flush();
@@ -54,10 +58,22 @@ class RemarkController extends AbstractController
 
         return $this->renderForm('back/remark/new.html.twig', [
             'remark' => $remark,
-            'form' => $form,
+            'formRemark' => $formRemark,
             'title'=>'Commentaires'
 
         ]);
+    }
+
+    #[Route('/find/post/{id}', name: 'admin_remark_to_challenge', methods: ['GET','POST'])]
+    public function selectChallengeByPost(Request $request,Post $post, PostRepository $postRepository): JsonResponse
+    {
+
+        $posts = $postRepository->findOneBy(['id'=>$post->getId()]);
+
+        $challenge = $posts->getChallengeId()->getName();
+        return $this->json(['challenge'=>$challenge]);
+
+
     }
 
     #[Route('/{id}', name: 'admin_remark_show', methods: ['GET'])]
