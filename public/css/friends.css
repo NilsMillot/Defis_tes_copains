@@ -1,0 +1,73 @@
+#friends_search_section {
+  height: max-content;
+}
+
+#friends_search_section form div {
+  width: 100%;
+}
+
+#friends_search_section form {
+  display: flex;
+}
+
+#friends_search_section form input {
+  border-bottom: none;
+  border: none;
+  margin: 0;
+  box-shadow: none;
+}
+#friends_search_section form input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px slategray inset !important;
+}
+
+.collection-item-send-request {
+  transition: all 0.3s ease-in-out;
+  border-radius: 10px;
+  padding: 0 5px;
+}
+
+.collection-item-send-request:hover {
+  transition: all 0.3s ease-in-out;
+  background: #40C0B4;
+}
+
+.collection-item-send-request:hover + a { background: #ddd; }
+
+.collection-item-delete-request i {
+  transition: all 0.3s ease-in-out;
+  border-radius: 100%;
+  padding: 2px;
+}
+
+.collection-item-delete-request i:hover {
+  transition: all 0.3s ease-in-out;
+  background: #c7c7c7;
+}
+
+.collection-item-delete-request:hover + a { background: #ddd; }
+
+/* @media screen and (max-width: 1047px) {
+  h1 {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 855px) {
+  h4 {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 550px) {
+  h1, h4 {
+    margin: 15px 0;
+  }
+}
+@media screen and (max-width: 831px) {
+  #sectionSearchFriends {
+    margin-top: 30px;
+    min-width: 0px !important;
+    width: 320px
+  }
+} */

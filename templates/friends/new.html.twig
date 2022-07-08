@@ -1,12 +1,41 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}New Friends{% endblock %}
+{% block title %}New Friends
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Friends</h1>
-    <h2>Liste de tous les utilisateurs du site</h2>
+	<h1>Trouvez vous des amis</h1>
 
-    {{ include('friends/_form.html.twig') }}
+	{{ form_start(formSearch) }}
+	{{ form_row(formSearch.name) }}
+	<button class="btn">Rechercher</button>
+	{{ form_end(formSearch) }}
 
-    <a href="{{ path('friends_index') }}">back to list</a>
+	{% if arrUsers|length > 0 %}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>UserName of this person</th>
+					<th>actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% set currentUser = app.user %}
+				{% for friend in arrUsers %}
+					<tr>
+						<td>{{ friend.id }}</td>
+						<td>
+							<a href="/user/{{ friend.id }}">{{ friend.username }}</a>
+						</td>
+						<td>
+							{% if friend not in usersAcceptedOrSent  %}
+								<a href="{{ path('friends_sendRequest', {'id': friend.id}) }}">Envoyer une demande d'ami</a>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
 {% endblock %}

@@ -134,7 +134,7 @@
                 {% for user in post.userId %}
                     {%  if user.username == app.user.username %}
                         <div style="display: flex; margin-top: 5px">
-                            <a class="waves-effect waves-light btn btn_edit_generic" style="margin-right: 5px"  data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}" ><i class="material-icons edit">edit</i>Editer</a>
+                            <a class="waves-effect waves-light btn btn_edit_generic edit_post" style="margin-right: 5px"  data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}" ><i class="material-icons edit">edit</i>Editer</a>
                             {{ include('post/_delete_form.html.twig') }}
                         </div>
                     {% endif %}

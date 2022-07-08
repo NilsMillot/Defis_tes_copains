@@ -7,6 +7,7 @@ use App\Repository\FriendsRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/user')]
@@ -30,6 +31,17 @@ class UserController extends AbstractController
             'numberOfChallengesCreated' => sizeof($this->getUser()->getChallenge()),
             'numberOfGroup' => sizeof($this->getUser()->getIdGroup()),
         ]);
+    }
+
+    #[Route('/post_pp', name: 'user_post_pp', methods: ['POST', 'GET'])]
+    public function post_pp(Request $request, UserRepository $userRepository): Response
+    {
+        $user = $userRepository->find($this->getUser()->getId());
+        // $user->setImageName($request->get('pp'));
+        // dump('post_pp');
+        // return $request;
+        // return $this->render('user/index.html.twig');
+        return new Response($request->get('pp'), 200, array('Content-Type' => 'multipart/form-data'));
     }
 
     #[Route('/{id}', name: 'user_show', methods: ['GET'])]

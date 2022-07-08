@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use League\OAuth2\Client\Provider\GithubResourceOwner;
-use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -89,4 +87,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+    public function findUsers($usr)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('LOWER(u.username) LIKE LOWER(:usr)')
+            ->setParameter('usr', '%' . $usr . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

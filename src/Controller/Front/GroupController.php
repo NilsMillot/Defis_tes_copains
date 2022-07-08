@@ -29,15 +29,18 @@ class GroupController extends AbstractController
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
-        // $group->addUser($this->getUser());
         $group->setNumberUser(sizeOf($group->getUsers()));
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // dd($group);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($group);
             $entityManager->flush();
 
+            $nameOfGroup = $group->getName();
+            $this->addFlash(
+                'notice',
+                'Groupe "' . $nameOfGroup .  '" crée!'
+            );
             return $this->redirectToRoute('group_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -64,6 +67,11 @@ class GroupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $nameOfGroup = $group->getName();
+            $this->addFlash(
+                'notice',
+                '"' . "$nameOfGroup" . '" modifié!'
+            );
 
             return $this->redirectToRoute('group_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -81,6 +89,11 @@ class GroupController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($group);
             $entityManager->flush();
+            $nameOfGroup = $group->getName();
+            $this->addFlash(
+                'warning',
+                'Groupe "' . "$nameOfGroup" . '" supprimé!'
+            );
         }
 
         return $this->redirectToRoute('group_index', [], Response::HTTP_SEE_OTHER);
