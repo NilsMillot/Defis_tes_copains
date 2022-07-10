@@ -25,16 +25,16 @@ class UserController extends AbstractController
         $userNames = explode(' ', $this->getUser()->getUsername());
         $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
 
+        $currentAvatar = $this->getUser()->getImageName();
+        dd($this->getUser());
+
+        // change avatar
         $formAvatar = $this->createForm(UserAvatarType::class, $this->getUser());
         $formAvatar->handleRequest($request);
 
         if ($formAvatar->isSubmitted() && $formAvatar->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            // dd($formAvatar->getData());
-            // dd($this->getUser());
-            // $entityManager->persist($user);
-            // dd($formAvatar);
             $entityManager->persist($formAvatar->getData());
             $entityManager->flush();
 

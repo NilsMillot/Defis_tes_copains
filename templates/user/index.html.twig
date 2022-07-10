@@ -8,7 +8,7 @@
 	{{ form_start(formAvatar) }}
 	{# {{ form_row(formAvatar.name) }} #}
 	<button style="background: none; cursor: pointer; padding-top: 5px">
-		<i class="material-icons">search</i>
+		<i class="material-icons">imageUpload</i>
 	</button>
 	{{ form_end(formAvatar) }}
 	<div id="profil_card_container">
@@ -20,7 +20,8 @@
 				<label for="imageUpload"></label>
 			</div>
 			<div id="profil_card_avatar-preview">
-				<div id="imagePreview" style="background-image: url('http://i.pravatar.cc/500');"></div>
+				{# <div id="imagePreview" style="background-image: url('http://i.pravatar.cc/500');"></div> #}
+				<div id="imagePreview" style="background-image: url('/images/peugeot-izoard-01-web-scaled.jpeg');"></div>
 				{# <span id="imagePreview">{{ userInitials }}</div> #}
 			</div>
 		</div>

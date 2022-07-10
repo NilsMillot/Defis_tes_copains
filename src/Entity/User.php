@@ -733,7 +733,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     {
         return serialize(array(
             $this->id,
-            $this->imageFile,
+            $this->password,
+            $this->username,
+            $this->imageName,
         ));
     }
 
@@ -741,7 +743,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     {
         list(
             $this->id,
-            $this->imageFile,
-        ) = unserialize($serialized);
+            $this->password,
+            $this->username,
+            $this->imageName,
+        ) = unserialize($serialized, array('allowed_classes' => false));
     }
 }
