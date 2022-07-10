@@ -26,7 +26,6 @@ class UserController extends AbstractController
         $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
 
         $currentAvatar = $this->getUser()->getImageName();
-        dd($this->getUser());
 
         // change avatar
         $formAvatar = $this->createForm(UserAvatarType::class, $this->getUser());
@@ -48,19 +47,20 @@ class UserController extends AbstractController
             'numberOfChallengesCreated' => sizeof($this->getUser()->getChallenge()),
             'numberOfGroup' => sizeof($this->getUser()->getIdGroup()),
             'formAvatar' => $formAvatar->createView(),
+            'currentAvatar' => $currentAvatar,
         ]);
     }
 
-    #[Route('/post_pp', name: 'user_post_pp', methods: ['POST', 'GET'])]
-    public function post_pp(Request $request, UserRepository $userRepository): Response
-    {
-        $user = $userRepository->find($this->getUser()->getId());
-        // $user->setImageName($request->get('pp'));
-        // dump('post_pp');
-        // return $request;
-        // return $this->render('user/index.html.twig');
-        return new Response($request->get('pp'), 200, array('Content-Type' => 'multipart/form-data'));
-    }
+    // #[Route('/post_pp', name: 'user_post_pp', methods: ['POST', 'GET'])]
+    // public function post_pp(Request $request, UserRepository $userRepository): Response
+    // {
+    //     $user = $userRepository->find($this->getUser()->getId());
+    //     // $user->setImageName($request->get('pp'));
+    //     // dump('post_pp');
+    //     // return $request;
+    //     // return $this->render('user/index.html.twig');
+    //     return new Response($request->get('pp'), 200, array('Content-Type' => 'multipart/form-data'));
+    // }
 
     #[Route('/{id}', name: 'user_show', methods: ['GET'])]
     public function show(User $user): Response

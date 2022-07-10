@@ -18,8 +18,8 @@ class ChallengeFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $this->faker = \Faker\Factory::create('us_US');
-        $filesInPublicImages = scandir(__DIR__ . '/../../public/images');
-        $filesInPublicImages = array_slice($filesInPublicImages, 2);
+        $qrCodesInPublicAssets = array_slice(scandir(__DIR__ . '/../../public/assets/qr-code'), 2);
+        $filesInPublicImages = array_slice(scandir(__DIR__ . '/../../public/images'), 2);
 
         for ($i = 1; $i < 4; $i++) {
             $challenge = (new Challenges())
@@ -31,7 +31,8 @@ class ChallengeFixtures extends Fixture implements DependentFixtureInterface
                 ->setCategory($this->getReference(CategoryFixtures::SPORT_CATEGORY))
                 ->setStatus(true)
                 ->addUser($this->getReference(UserFixtures::USER_TEST_1))
-                ->setImageName($filesInPublicImages[$i] ?? '');
+                ->setImageName($filesInPublicImages[$i] ?? '')
+                ->setQrCode('/assets/qr-code/' . $qrCodesInPublicAssets[$i] ?? '');
 
             $manager->persist($challenge);
             $this->setReference("CHALLENGE_TEST_" . $i, $challenge);
