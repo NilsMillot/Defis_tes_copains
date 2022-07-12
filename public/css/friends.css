@@ -69,6 +69,17 @@ input:-webkit-autofill:active{
   transform: rotate(45deg);
 }
 
+/* Hide scrollbar for IE, Edge and Firefox */
+.array_all_users_search {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#array_all_users_search::-webkit-scrollbar {
+  display: none;
+}
+
+
 /* @media screen and (max-width: 1047px) {
   h1 {
     text-align: center;
