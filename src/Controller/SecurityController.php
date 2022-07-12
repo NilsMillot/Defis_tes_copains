@@ -77,9 +77,12 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $userNames = explode(' ', $form->getData()->getUsername());
+            $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
             $user->setRoles(["ROLE_USER"]);
             $user->setStatut(true);
+            $user->setInitials($userInitials);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();

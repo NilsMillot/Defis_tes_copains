@@ -27,11 +27,10 @@ class FriendsController extends AbstractController
     public function index(Request $request, FriendsRepository $friendsRepository, UserRepository $userRepository): Response
     {
         // crud part
-        $friendsSendedByCurrentUser = $friendsRepository->findBy(['senderUser' => $this->getUser()]);
-        $friendsReceivedByCurrentUser = $friendsRepository->findBy(['receiverUser' => $this->getUser()]);
+        $friendsSendedByCurrentUserStatusSent = $friendsRepository->findBy(['senderUser' => $this->getUser(), 'status' => 'sent']);
         $friendsReceivedByCurrentUserStatusSent = $friendsRepository->findBy(['receiverUser' => $this->getUser(), 'status' => 'sent']);
-        $friendsOfCurrentUser = array_merge($friendsSendedByCurrentUser, $friendsReceivedByCurrentUser);
-        $uniqueFriendsOfCurrentUser = array_unique($friendsOfCurrentUser);
+        $friendsOfCurrentUserStatusSent = array_merge($friendsSendedByCurrentUserStatusSent, $friendsReceivedByCurrentUserStatusSent);
+        $uniqueFriendsOfCurrentUserStatusSent = array_unique($friendsOfCurrentUserStatusSent);
 
         $arrUserFriendsReceivedStatusSent = [];
         for ($i = 0; $i < sizeof($friendsReceivedByCurrentUserStatusSent); $i++) {
@@ -74,16 +73,22 @@ class FriendsController extends AbstractController
                     return $e->getId() !== $this->getUser()->getId();
                 }
             );
+            $usrsAccpted = [];
+            for ($i = 0; $i < sizeof($usersAccepted); $i++) {
+                $usrsAccpted[$i] = $usersAccepted[$i][1];
+            }
+            $intersectSearchAndUsersAccepted = array_intersect($arrUsersExceptCurrent, $usrsAccpted);
         }
 
         return $this->renderForm('friends/index.html.twig', [
-            'friendsRequestsOfCurrentUser' => $uniqueFriendsOfCurrentUser,
+            'friendsRequestsOfCurrentUserStatusSent' => $uniqueFriendsOfCurrentUserStatusSent,
             'friendsRequestReceived' => $arrUserFriendsReceivedStatusSent ?? null,
             'currentUser' => $this->getUser(),
             'formSearch' => $formSearch,
             'arrUsers' => $arrUsersExceptCurrent ?? null,
             'usersAcceptedOrSent' => $usersAcceptedOrSent,
             'usersAccepted' => $usersAccepted,
+            'intersectSearchAndUsersAccepted' => $intersectSearchAndUsersAccepted ?? null,
         ]);
     }
 

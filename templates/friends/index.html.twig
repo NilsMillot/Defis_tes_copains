@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 {% set currentUser = "" %}
-{% block title %}Vos amis
+{% block title %}Vos amis réunis au même endroit | DTC
 {% endblock %}
 
 {% block body %}
@@ -25,31 +25,34 @@
 								<a href="{{ path('friends_sendRequest', {'id': friend.id}) }}" class="collection-item-send-request" style="position: absolute; z-index: 1; top: 30px; right: 10px; color: black">Envoyer une demande d'ami</a>
 							{% endif %}
 							<a href="/user/{{ friend.id }}" class="collection-item avatar" style="display: flex; align-items: center;">
-								<img src="http://i.pravatar.cc/500" alt="" class="circle">
+								{% if friend.imageName == '' %}
+									<span style="background: slategray; color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.initials}}</span>
+								{% else %}
+									<img src="/images/{{friend.imageName}}" alt="" class="circle">
+								{% endif %}
 
 								<span>{{ friend.username }}</span>
+								{% if friend in intersectSearchAndUsersAccepted %}
+									<div class="triangle_banner_friend">
+										<span>Ami</span>
+									</div>
+								{% endif %}
 							</a>
 						</div>
 					{% endfor %}
 
 				{% elseif usersAccepted|length > 0 %}
 					{% for friend in usersAccepted %}
-						{# <li class="collection-item avatar" style="display: flex; align-items: center;">
-														<img src="images/yuna.jpg" alt="" class="circle">
-							
-														<a href="/user/{{ friend.id }}">{{ friend.username }}</a>
-													</li> #}
 						<div style="position: relative; border-bottom: 1px solid #e0e0e0;">
 							{% if friend[1] in usersAcceptedOrSent  %}
-								{# <a href="#" class="collection-item-delete-request" style="position: absolute; z-index: 1; top: 30px; right: 10px; color: black">
-																		<i class="material-icons">delete</i>
-																	</a> #}
 								{{ include('friends/_delete_form_2.html.twig') }}
-
 							{% endif %}
 							<a href="/user/{{ friend[1].id }}" class="collection-item avatar" style="display: flex; align-items: center;">
-								<img src="http://i.pravatar.cc/500" alt="" class="circle">
-
+								{% if friend[1].imageName == '' %}
+									<span style="background: slategray; color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend[1].initials}}</span>
+								{% else %}
+									<img src="/images/{{friend[1].imageName}}" alt="" class="circle">
+								{% endif %}
 								<span>{{ friend[1].username }}</span>
 							</a>
 						</div>
@@ -69,14 +72,23 @@
 			<h4 style="margin-top: 12px">Vos notifications</h4>
 			<ul style="max-width: 420px; max-height: 60vh; overflow: scroll; border-radius: 20px" class="collection">
 				{% set currentUser = app.user %}
-				{% for friend in friendsRequestsOfCurrentUser %}
+				{% for friend in friendsRequestsOfCurrentUserStatusSent %}
 					<li class="collection-item avatar" style="display: flex; align-items: center;">
-						<img src="http://i.pravatar.cc/500" alt="" class="circle">
 						{% if friend.receiverUser.id is same as currentUser.id %}
+							{% if friend.senderUser.imageName == '' %}
+								<span style="background: slategray; color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.senderUser.initials}}</span>
+							{% else %}
+								<img src="/images/{{friend.senderUser.imageName}}" alt="image du profil {{ friend.senderUser.username }}" class=" circle">
+							{% endif %}
 							<span>
 								<a style="color: black;" href="/user/{{ friend.senderUser.id }}">{{ friend.senderUser.username }}</a>
 							</span>
 						{% else %}
+							{% if friend.receiverUser.imageName == '' %}
+								<span style="background: slategray; color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.receiverUser.initials}}</span>
+							{% else %}
+								<img src="/images/{{friend.receiverUser.imageName}}" alt="image du profil {{ friend.receiverUser.username }}" class=" circle">
+							{% endif %}
 							<span>
 								<a style="color: black;" href="/user/{{ friend.receiverUser.id }}">{{ friend.receiverUser.username }}</a>
 							</span>
@@ -107,7 +119,7 @@
 						{% endif %}
 					</li>
 				{% endfor %}
-				{% if friendsRequestsOfCurrentUser|length == 0 %}
+				{% if friendsRequestsOfCurrentUserStatusSent|length == 0 %}
 					<li class="collection-item" style="display: flex; align-items: center;">
 						<span>Vous n'avez aucune notif</span>
 					</li>

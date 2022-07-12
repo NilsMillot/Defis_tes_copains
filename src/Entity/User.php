@@ -143,6 +143,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     private $statut;
 
+    /**
+     * @ORM\Column(type="string", length=2)
+     */
+    private $initials;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -747,5 +752,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
             $this->username,
             $this->imageName,
         ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    public function getInitials(): ?string
+    {
+        return $this->initials;
+    }
+
+    public function setInitials(string $initials): self
+    {
+        $this->initials = $initials;
+
+        return $this;
     }
 }
