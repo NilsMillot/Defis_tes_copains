@@ -123,13 +123,13 @@ class ChallengesController extends AbstractController
     #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
     public function show(Request $request, Challenges $challenge, PostRepository $postRepository, RemarkRepository $remarkRepository, UserLikePostRepository $userLikePostRepository): Response
     {
+
         $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
         $post = new Post();
         $formPost = $this->createForm(PostType::class, $post);
         $remark = new Remark();
         $formRemark = $this->createForm(RemarkType::class, $remark);
         $formPost->handleRequest($request);
-
         if($formPost->isSubmitted() && $formPost->isValid()) {
 
             if (!empty($_POST['post-id'])) {

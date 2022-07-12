@@ -20,7 +20,7 @@ class QrCodeService
 
     public function qrcode($id)
     {
-        $url = 'localhost/challenge/'; // URL du challenge
+        $url = $_SERVER['SERVER_NAME'].'/challenge/'; // URL du challenge
 
         $result = $this->builder
             ->data($url.$id)
