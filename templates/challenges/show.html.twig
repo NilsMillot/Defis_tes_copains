@@ -111,7 +111,7 @@
             {{ user.username }}
         {% endfor %}
             <div class="section">
-                <h5 id="{{ post.id }}">{{ post.name }}</h5>
+                <h5 id="{{ post.id }}">{{ post.name }}<i style="vertical-align: bottom" data-url="{{ path('signalement_new_post', {'id':post.id}) }}" class=" signalement orange-text text-darken-3 material-icons small">report_problem</i></h5>
                 <span>Like :
                 {% set count = 0 %}
                 {% for like in post.userLikePosts %}
@@ -131,6 +131,8 @@
                 {% endif %}
                 </span>
                 <p>{{ post.content }} </p>
+                <div>
+                </div>
                 {% for user in post.userId %}
                     {%  if user.username == app.user.username %}
                         <div style="display: flex; margin-top: 5px">

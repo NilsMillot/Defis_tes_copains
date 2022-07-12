@@ -153,6 +153,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $statut;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Signalement::class, mappedBy="id_user_signalement")
+     */
+    private $signalements;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -170,6 +175,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->remarks = new ArrayCollection();
         $this->challengesUserRegister = new ArrayCollection();
         $this->challenges = new ArrayCollection();
+        $this->signalements = new ArrayCollection();
     }
 
     public function __toString()
@@ -751,6 +757,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatut(bool $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Signalement>
+     */
+    public function getSignalements(): Collection
+    {
+        return $this->signalements;
+    }
+
+    public function addSignalement(Signalement $signalement): self
+    {
+        if (!$this->signalements->contains($signalement)) {
+            $this->signalements[] = $signalement;
+            $signalement->setIdUserSignalement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSignalement(Signalement $signalement): self
+    {
+        if ($this->signalements->removeElement($signalement)) {
+            // set the owning side to null (unless already changed)
+            if ($signalement->getIdUserSignalement() === $this) {
+                $signalement->setIdUserSignalement(null);
+            }
+        }
 
         return $this;
     }

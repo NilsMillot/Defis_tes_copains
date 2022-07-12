@@ -62,12 +62,18 @@ class Post
      */
     private $remark;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Signalement::class, mappedBy="id_post")
+     */
+    private $signalements;
+
     public function __construct()
     {
         $this->usersWhoLiked = new ArrayCollection();
         $this->userLikePosts = new ArrayCollection();
         $this->userId = new ArrayCollection();
         $this->remark = new ArrayCollection();
+        $this->signalements = new ArrayCollection();
     }
 
 
@@ -229,6 +235,36 @@ class Post
     public function setPicture(string $file)
     {
         $this->picture = $file;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Signalement>
+     */
+    public function getSignalements(): Collection
+    {
+        return $this->signalements;
+    }
+
+    public function addSignalement(Signalement $signalement): self
+    {
+        if (!$this->signalements->contains($signalement)) {
+            $this->signalements[] = $signalement;
+            $signalement->setIdPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSignalement(Signalement $signalement): self
+    {
+        if ($this->signalements->removeElement($signalement)) {
+            // set the owning side to null (unless already changed)
+            if ($signalement->getIdPost() === $this) {
+                $signalement->setIdPost(null);
+            }
+        }
 
         return $this;
     }
