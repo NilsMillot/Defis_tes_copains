@@ -13,6 +13,7 @@
 {% endif %}
 
 {% block body %}
+	<link href="{{ asset('css/challenge.css') }}" rel="stylesheet"/>
 	<div class="row">
 		<h1 id='{{ challenge.id }}' class="col">{{ challenge.name }}
 			<a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
@@ -174,38 +175,47 @@
 					</div>
 					<div class="collapsible-body">
 						{% for remark in post.remark %}
-							<div>
-								<h6>{{ remark.contentRemark }}</h6>
+							<div class="entire_remark" style="display: flex; align-items: center; margin-bottom: 5px;" class="">
 								{% for user in remark.userId %}
-									<span>
-										By
-										{{ user.username }}</span>
-								{% endfor %}
-								<span>Like :
-									{% set count = 0 %}
-									{% for like in remark.userLikeRemarks %}
-										{% set count = count + 1 %}
-									{% endfor %}
-									<span class="id-{{ remark.id }}-count">{{ count }}</span>
-									{% set liked_remark = 0 %}
-									{% for like in remark.userLikeRemarks %}
-										{% if app.user.username in like.userId.username  %}
-											{% set liked_remark = 1 %}
+									<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center;">
+										{% if user.imageName == '' %}
+											<span style="background: slategray; color: #ddd; border-radius: 100%; padding: 10px; width: 40px; ">{{user.initials}}</span>
+										{% else %}
+											<img src="/images/{{user.imageName}}" alt="" class="circle">
 										{% endif %}
-									{% endfor %}
-									{% if liked_remark == 0  %}
-										<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
-									{% else %}
-										<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
-									{% endif %}
-								</span>
-								{% for user in remark.userId %}
-									{%  if user.username == app.user.username %}
-										<a class="edit_remark btn_edit_generic" style="display: inline-block; color: black;" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">
-											Editer</a>
-										{{ include('remark/_delete_form.html.twig') }}
-									{% endif %}
+										<span>{{ user.username }}</span>
+									</div>
+									<p>{{ remark.contentRemark }}
+										<span style="margin-left: 4px">
+											{% set count = 0 %}
+											{% for like in remark.userLikeRemarks %}
+												{% set count = count + 1 %}
+											{% endfor %}
+											<span class="id-{{ remark.id }}-count">{{ count }}</span>
+											{% set liked_remark = 0 %}
+											{% for like in remark.userLikeRemarks %}
+												{% if app.user.username in like.userId.username  %}
+													{% set liked_remark = 1 %}
+												{% endif %}
+											{% endfor %}
+											{% if liked_remark == 0  %}
+												<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
+											{% else %}
+												<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
+											{% endif %}
+										</span>
+										{% for user in remark.userId %}
+											{%  if user.username == app.user.username %}
+												<div class="buttons_for_owner">
+													<a class="edit_remark btn_edit_generic" style="display: flex; color: black; align-items: center; margin-right: 2px;" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">
+														<i class="material-icons">edit</i>Editer</a>
+													{{ include('remark/_delete_form.html.twig') }}
+												</div>
+											{% endif %}
+										{% endfor %}
+									</p>
 								{% endfor %}
+
 							</div>
 							<div class="divider"></div>
 						{% endfor %}
