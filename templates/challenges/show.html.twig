@@ -173,7 +173,6 @@
 						<i class="material-icons prefix">mode_edit</i>Commentaires ({{ count }})
 					</div>
 					<div class="collapsible-body">
-						<a class="waves-effect waves-light btn modal-trigger modal_href" data-id="{{post.id}}" href="#modal1">Répondre</a>
 						{% for remark in post.remark %}
 							<div>
 								<h6>{{ remark.contentRemark }}</h6>
@@ -200,18 +199,17 @@
 										<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
 									{% endif %}
 								</span>
-							</div>
-							{% for user in remark.userId %}
-								{%  if user.username == app.user.username %}
-									<div style="display: flex;">
-										<a class="waves-effect waves-light btn edit_remark btn_edit_generic" style="margin-right: 5px" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">
-											<i class="material-icons edit">edit</i>Editer</a>
+								{% for user in remark.userId %}
+									{%  if user.username == app.user.username %}
+										<a class="edit_remark btn_edit_generic" style="display: inline-block; color: black;" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">
+											Editer</a>
 										{{ include('remark/_delete_form.html.twig') }}
-									</div>
-								{% endif %}
-							{% endfor %}
+									{% endif %}
+								{% endfor %}
+							</div>
 							<div class="divider"></div>
 						{% endfor %}
+						<a class="btn waves-effect waves-light modal-trigger modal_href" style="margin-top: 15px" data-id="{{post.id}}" href="#modal1">Ecrire un commentaire</a>
 					</div>
 				</li>
 			</ul>
