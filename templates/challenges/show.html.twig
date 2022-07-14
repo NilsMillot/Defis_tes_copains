@@ -123,37 +123,49 @@
 	{% for post in posts %}
 		<div class="entire_post">
 			{% if post == posts|first %}
-				<div style="margin-bottom: 10px" class="divider"></div>
+				<div class="divider"></div>
 			{% endif %}
-			{% for user in post.userId %}
-				{{ user.username }}
-			{% endfor %}
 			<div class="section">
-				<h2 style="font-size: 1.64rem; margin: 0 0 8px 0;" id="{{ post.id }}">{{ post.name }}</h2>
-				<span>Like :
-					{% set count = 0 %}
-					{% for like in post.userLikePosts %}
-						{% set count = count + 1 %}
+				<div style="display: flex; justify-content: space-between;">
+					<div>
+						<h2 style="font-size: 1.64rem; margin: 0 0 8px 0; width: max-content; display: inline;" id="{{ post.id }}">{{ post.name }}</h2>
+						<span style="display: block">Like :
+							{% set count = 0 %}
+							{% for like in post.userLikePosts %}
+								{% set count = count + 1 %}
+							{% endfor %}
+							<span class="id-{{ post.id }}-count">{{ count }}</span>
+							{% set liked_post = 0 %}
+							{% for like in post.userLikePosts %}
+								{% if app.user.username in like.userWhoLiked.username   %}
+									{% set liked_post = 1 %}
+								{% endif %}
+							{% endfor %}
+							{% if liked_post == 0  %}
+								<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+							{% else %}
+								<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+							{% endif %}
+						</span>
+					</div>
+					{% for user in post.userId %}
+						<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center;">
+							{% if user.imageName == '' %}
+								<span style="background: slategray; color: #ddd; border-radius: 100%; width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem;">{{user.initials}}</span>
+							{% else %}
+								<img style="width: 60px; height: 60px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+							{% endif %}
+							<span style="font-weight: 500;">{{ user.username }}</span>
+						</div>
 					{% endfor %}
-					<span class="id-{{ post.id }}-count">{{ count }}</span>
-					{% set liked_post = 0 %}
-					{% for like in post.userLikePosts %}
-						{% if app.user.username in like.userWhoLiked.username   %}
-							{% set liked_post = 1 %}
-						{% endif %}
-					{% endfor %}
-					{% if liked_post == 0  %}
-						<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
-					{% else %}
-						<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
-					{% endif %}
-				</span>
+				</div>
+
 				<p>{{ post.content }}
 				</p>
 				{% for user in post.userId %}
 					{%  if user.username == app.user.username %}
 						<div style="display: flex; margin-top: 5px">
-							<a class="waves-effect waves-light btn btn_edit_generic edit_post" style="margin-right: 5px" data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}">
+							<a class="waves-effect waves-light btn btn_edit_generic edit_post" style="margin-right: 5px; height: 28px; display: inline-flex; align-items: center; padding: 0 7px;" data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}">
 								<i class="material-icons edit">edit</i>Editer</a>
 							{{ include('post/_delete_form.html.twig') }}
 						</div>
@@ -176,7 +188,7 @@
 					</div>
 					<div class="collapsible-body">
 						{% for remark in post.remark %}
-							<div class="entire_remark" style="display: flex; align-items: center; margin-bottom: 5px;" class="">
+							<div class="entire_remark" style="display: flex; align-items: center; {% if remark != post.remark|last %} margin-bottom: 20px {% endif %}; position: relative" class="">
 								{% for user in remark.userId %}
 									<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center;">
 										{% if user.imageName == '' %}
@@ -187,7 +199,7 @@
 										<span style="font-weight: 500;">{{ user.username }}</span>
 									</div>
 									<p style="margin-left: 10px;">{{ remark.contentRemark }}
-										<span style="margin-left: 4px">
+										<span style="margin-left: 4px; white-space: nowrap;">
 											{% set count = 0 %}
 											{% for like in remark.userLikeRemarks %}
 												{% set count = count + 1 %}
@@ -207,7 +219,7 @@
 										</span>
 										{% for user in remark.userId %}
 											{%  if user.username == app.user.username %}
-												<div class="buttons_for_owner">
+												<div style="position: absolute; bottom: -18px; right: 0; z-index: 1;" class="buttons_for_owner">
 													<a class="edit_remark btn_edit_generic" style="display: flex; color: black; align-items: center; margin-right: 2px;" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">
 														<i class="material-icons">edit</i>Editer</a>
 													{{ include('remark/_delete_form.html.twig') }}
@@ -219,7 +231,7 @@
 
 							</div>
 						{% endfor %}
-						<a class="btn waves-effect waves-light modal-trigger modal_href" style="margin-top: 15px" data-id="{{post.id}}" href="#modal1">Ecrire un commentaire</a>
+						<a class="btn waves-effect waves-light modal-trigger modal_href" style="{% if post.remark|length > 0 %} margin-top: 15px {% endif %}" data-id="{{post.id}}" href="#modal1">Ecrire un commentaire</a>
 					</div>
 				</li>
 			</ul>

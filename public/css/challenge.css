@@ -1,6 +1,6 @@
-.entire_remark:not(:first-child), .entire_post:not(:first-child) {
+/* .entire_remark:not(:first-child), .entire_post:not(:first-child) {
   margin-top: 10px;
-}
+} */
 
 .buttons_for_owner {
   display: flex;
@@ -15,7 +15,7 @@
   margin: 0;
 }
 
-.entire_remark:hover .buttons_for_owner {
+.entire_remark:hover .buttons_for_owner, .buttons_for_owner:hover {
   opacity: 0.8;
   transition: opacity 1s;
 } 
