@@ -19,3 +19,10 @@
   opacity: 0.8;
   transition: opacity 1s;
 } 
+
+@media screen and (max-width: 992px) {
+  .buttons_for_owner {
+    opacity: 0.8;
+    transition: opacity 1s;
+  }
+}

@@ -190,11 +190,26 @@
 						{% for remark in post.remark %}
 							<div class="entire_remark" style="display: flex; align-items: center; {% if remark != post.remark|last %} margin-bottom: 20px {% endif %}; position: relative" class="">
 								{% for user in remark.userId %}
+									{# {{ dump(post.userId) }} #}
 									<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center;">
 										{% if user.imageName == '' %}
-											<span style="background: slategray; color: #ddd; border-radius: 100%; padding: 10px; width: 40px; height: 40px;">{{user.initials}}</span>
+											<div style="position: relative">
+												<span style="background: slategray; color: #ddd; border-radius: 100%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center">{{user.initials}}</span>
+												{% for post_owner in post.userId %}
+													{% if user.id == post_owner.id %}
+														<img src="{{ asset('images/logo/crown.svg') }}" alt="crown" style="position: absolute; top: -20px; left: -2px; width: 28px; transform: rotate(343deg);"/>
+													{% endif %}
+												{% endfor %}
+											</div>
 										{% else %}
-											<img style="width: 40px; height: 40px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+											<div style="position: relative">
+												<img style="width: 40px; height: 40px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+												{% for post_owner in post.userId %}
+													{% if user.id == post_owner.id %}
+														<img src="{{ asset('images/logo/crown.svg') }}" alt="crown" style="position: absolute; top: -20px; left: -2px; width: 28px; transform: rotate(343deg);"/>
+													{% endif %}
+												{% endfor %}
+											</div>
 										{% endif %}
 										<span style="font-weight: 500;">{{ user.username }}</span>
 									</div>
