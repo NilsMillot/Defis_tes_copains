@@ -28,7 +28,7 @@
 								{% if friend.imageName == '' %}
 									<span style="background: slategray; color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.initials}}</span>
 								{% else %}
-									<img src="/images/{{friend.imageName}}" alt="" class="circle">
+									<img src="/images/{{friend.imageName}}" alt="image du profil {{ friend.username }}" class="circle">
 								{% endif %}
 
 								<span>{{ friend.username }}</span>
@@ -51,7 +51,7 @@
 								{% if friend[1].imageName == '' %}
 									<span style="background: slategray; color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend[1].initials}}</span>
 								{% else %}
-									<img src="/images/{{friend[1].imageName}}" alt="" class="circle">
+									<img src="/images/{{friend[1].imageName}}" alt="image du profil {{ friend[1].username }}" class="circle">
 								{% endif %}
 								<span>{{ friend[1].username }}</span>
 							</a>

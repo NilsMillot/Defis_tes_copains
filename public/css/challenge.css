@@ -1,4 +1,4 @@
-.entire_remark:not(:first-child) {
+.entire_remark:not(:first-child), .entire_post:not(:first-child) {
   margin-top: 10px;
 }
 

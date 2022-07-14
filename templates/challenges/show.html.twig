@@ -118,17 +118,18 @@
 			</div>
 		</div>
 	</div>
-	<a class="waves-effect waves-light btn modal-trigger modal_href create_post" href="#modal_post">Ecrire un post</a>
 	{#    {{ include('post/_form.html.twig') }}#}
 
 	{% for post in posts %}
-		<div class="col s12 m7">
-			<div class="divider"></div>
+		<div class="entire_post">
+			{% if post == posts|first %}
+				<div style="margin-bottom: 10px" class="divider"></div>
+			{% endif %}
 			{% for user in post.userId %}
 				{{ user.username }}
 			{% endfor %}
 			<div class="section">
-				<h5 id="{{ post.id }}">{{ post.name }}</h5>
+				<h2 style="font-size: 1.64rem; margin: 0 0 8px 0;" id="{{ post.id }}">{{ post.name }}</h2>
 				<span>Like :
 					{% set count = 0 %}
 					{% for like in post.userLikePosts %}
@@ -171,7 +172,7 @@
 						{% set count = count + 1 %}
 					{% endfor %}
 					<div class="collapsible-header">
-						<i class="material-icons prefix">mode_edit</i>Commentaires ({{ count }})
+						<i class="material-icons prefix">forum</i>Commentaires ({{ count }})
 					</div>
 					<div class="collapsible-body">
 						{% for remark in post.remark %}
@@ -179,13 +180,13 @@
 								{% for user in remark.userId %}
 									<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center;">
 										{% if user.imageName == '' %}
-											<span style="background: slategray; color: #ddd; border-radius: 100%; padding: 10px; width: 40px; ">{{user.initials}}</span>
+											<span style="background: slategray; color: #ddd; border-radius: 100%; padding: 10px; width: 40px; height: 40px;">{{user.initials}}</span>
 										{% else %}
-											<img src="/images/{{user.imageName}}" alt="" class="circle">
+											<img style="width: 40px; height: 40px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
 										{% endif %}
-										<span>{{ user.username }}</span>
+										<span style="font-weight: 500;">{{ user.username }}</span>
 									</div>
-									<p>{{ remark.contentRemark }}
+									<p style="margin-left: 10px;">{{ remark.contentRemark }}
 										<span style="margin-left: 4px">
 											{% set count = 0 %}
 											{% for like in remark.userLikeRemarks %}
@@ -217,16 +218,19 @@
 								{% endfor %}
 
 							</div>
-							<div class="divider"></div>
 						{% endfor %}
 						<a class="btn waves-effect waves-light modal-trigger modal_href" style="margin-top: 15px" data-id="{{post.id}}" href="#modal1">Ecrire un commentaire</a>
 					</div>
 				</li>
 			</ul>
+			<div class="divider"></div>
 		</div>
 
 	{% endfor %}
 
+	<div style="display: flex; justify-content: center; padding: 14px">
+		<a class="btn waves-effect waves-light modal-trigger modal_href create_post" href="#modal_post">Ecrire un post</a>
+	</div>
 
 	<div id="modal1" class="modal">
 		<div class="modal-content">
