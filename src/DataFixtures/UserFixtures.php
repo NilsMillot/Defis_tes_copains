@@ -9,8 +9,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    const USER_TEST = 'USER_TEST';
-    const USER_SUPER_ADMIN = 'USER_SUPER_ADMIN';
+    const USER_TEST_1 = 'USER_TEST_1';
+    const USER_TEST_2 = 'USER_TEST_2';
+    const USER_TEST_3 = 'USER_TEST_3';
+    const USER_ADMIN = 'USER_ADMIN';
 
     public function __construct(UserPasswordHasherInterface $userPasswordHasher)
     {
@@ -19,21 +21,28 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $user = (new User())
-            ->setUsername('John Doe')
-            ->setEmail('test@gmail.com')
-            ->setRoles(["ROLE_USER"]);
-        $user->setPassword($this->userPasswordHaser->hashPassword($user, 'test'));
-        $manager->persist($user);
-        $this->setReference(self::USER_TEST, $user);
+        for ($i = 1; $i < 4; $i++) {
+            $user = (new User())
+                ->setUsername('user test' . $i)
+                ->setEmail('test' . $i . '@gmail.com')
+                ->setRoles(['ROLE_USER'])
+                ->setStatut(true)
+                ->setInitials('T' . $i);
+            $user->setPassword($this->userPasswordHaser->hashPassword($user, 'test'));
 
-        $superAdmin = (new User())
-            ->setUsername('John Doe SUPER ADMIN')
-            ->setEmail('superadmin@gmail.com')
-            ->setRoles(["ROLE_SUPER_ADMIN"]);
-        $superAdmin->setPassword($this->userPasswordHaser->hashPassword($superAdmin, 'superadmin'));
-        $manager->persist($superAdmin);
-        $this->setReference(self::USER_SUPER_ADMIN, $superAdmin);
+            $manager->persist($user);
+            $this->setReference("USER_TEST_" . $i, $user);
+        }
+
+        $admin = (new User())
+            ->setUsername('Admin user')
+            ->setEmail('admin@gmail.com')
+            ->setRoles(["ROLE_ADMIN"])
+            ->setStatut(true)
+            ->setInitials('AU');
+        $admin->setPassword($this->userPasswordHaser->hashPassword($admin, 'admin'));
+        $manager->persist($admin);
+        $this->setReference(self::USER_ADMIN, $admin);
 
         $manager->flush();
     }

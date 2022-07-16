@@ -36,6 +36,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    // public function findOrCreateFromOauth (GithubResourceOwner $resourceOwner)
+    // {
+    //     $user = $this->createQueryBuilder('u')
+    //         ->where('u.githubId = :githubId')
+    //         ->setParameters([
+    //             'githubId' => $resourceOwner->getId()
+    //         ])
+    //         ->getQuery()
+    //         ->getOneOrNullResult();
+    //     if ($user){
+    //         return $user;
+    //     }
+    //     $user = (new User())
+    //         ->setGithubId($resourceOwner->getId())
+    //         ->setEmail($resourceOwner->getEmail())
+    //         ->setUsername($resourceOwner->getNickname());
+    //     $em = $this->getEntityManager();
+    //     $em->persist($user);
+    //     $em->flush();
+
+    //     return $user;
+    // }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
@@ -64,4 +87,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+    public function findUsers($usr)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('LOWER(u.username) LIKE LOWER(:usr)')
+            ->setParameter('usr', '%' . $usr . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

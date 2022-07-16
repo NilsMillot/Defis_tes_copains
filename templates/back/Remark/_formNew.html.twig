@@ -1,0 +1,18 @@
+<div class="row">
+    {{ form_start(formRemark) }}
+    <div class="row">
+        {{ form_label(formRemark.post,'Choisir un post') }}
+        <div class=" col s12 input-field">
+                {{ form_widget(formRemark.post,{'attr':{'class':'remark_post_new'}})}}
+            <span class="name_challenge">Bla</span>
+        </div>
+    </div>
+    <div class="row">
+        {{ form_label(formRemark.contentRemark,'Content') }}
+        <div class=" col s12 input-field">
+            {{ form_widget(formRemark.contentRemark) }}
+        </div>
+    </div>
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(formRemark) }}
+</div>

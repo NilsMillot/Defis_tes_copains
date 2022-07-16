@@ -81,6 +81,16 @@ class Challenges implements \Serializable
      */
     private $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="challenges")
+     */
+    private $winner;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserLikeChallenge::class, mappedBy="challengesLiked")
+     */
+    private $userLikeChallenges;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -118,18 +128,6 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(string $file )
-    {
-        $this->picture = $file;
-
-        return $this;
-
-    }
 
     public function getCreationDate(): ?\DateTimeInterface
     {
@@ -316,4 +314,44 @@ class Challenges implements \Serializable
         return $this;
     }
 
+    public function getWinner(): ?User
+    {
+        return $this->winner;
+    }
+
+    public function setWinner(?User $winner): self
+    {
+        $this->winner = $winner;
+
+        return $this;
+    }
+    /**
+     * @return Collection|UserLikeChallenge[]
+     */
+    public function getUserLikeChallenges(): Collection
+    {
+        return $this->userLikeChallenges;
+    }
+
+    public function addUserLikeChallenges(UserLikeChallenge $userLikeChallenge): self
+    {
+        if (!$this->userLikeChallenges->contains($userLikeChallenge)) {
+            $this->userLikeChallenges[] = $userLikeChallenge;
+            $userLikeChallenge->setChallengesLiked($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLikeChallenge(UserLikeChallenge $userLikeChallenge): self
+    {
+            if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
+            // set the owning side to null (unless already changed)
+            if ($userLikeChallenge->getChallengesLiked() === $this) {
+                $userLikeChallenge->setChallengesLiked(null);
+            }
+        }
+
+        return $this;
+    }
 }

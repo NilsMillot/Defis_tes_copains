@@ -19,6 +19,8 @@ services:
       - target: 5432
         published: 5432
         protocol: tcp
+    networks:
+      - elk
 
   php:
     image: php:8.0-fpm
@@ -39,6 +41,8 @@ services:
     volumes:
       - ./:/var/www
       - app-cache:/var/www/var
+    networks:
+      - elk
 
   nginx:
     build:
@@ -54,6 +58,12 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - elk
+
+networks:
+  elk:
+    external: true
 
 volumes:
   db-data: {}

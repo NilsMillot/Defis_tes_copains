@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://kit.fontawesome.com/af8bf20642.js" crossorigin="anonymous"></script>
@@ -17,14 +18,28 @@
     {% endblock %}
     {% block javascripts %}
         {#// simple example of using react when you need to do dynamic rendering#}
-        {{ vite_asset('main.jsx', ['react']) }}
+         {{ vite_asset('main.jsx', ['react']) }}
     {% endblock %}
     <style>
         html {
             box-sizing: border-box;
         }
 
-        select { display: flex }
+        h1 {
+            font-size: 3.2rem;
+        }
+        
+        h2 {
+            font-size: 2.8rem;
+        }
+
+        h3 {
+            font-size: 2.4rem;
+        }
+
+        h4 {
+            font-size: 2rem;
+        }
 
         *, *:before, *:after {
             box-sizing: inherit;
@@ -45,6 +60,7 @@
     </style>
 </head>
 <body>
+
 <nav class="teal blue-grey darken-2">
     <div class="nav-wrapper container">
         <a href="/" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="auto" height="100%"/></a>
@@ -102,6 +118,7 @@
 <script  src="{{ asset('js/modal.js') }}"></script>
 <script  src="{{ asset('js/like.js') }}"></script>
 <script  src="{{ asset('js/edit_modal.js') }}"></script>
+<script src="{{ asset('js/select.js') }}"></script>
 <script  src="{{ asset('js/register.js') }}"></script>
 
 

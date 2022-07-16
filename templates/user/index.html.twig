@@ -1,10 +1,95 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Mon compte{% endblock %}
-
+{% block title %}Mon compte
+{% endblock %}
 {% block body %}
-    <h1>{{ username }}</h1>
+	<link href="{{ asset('css/profile_card.css') }}" rel="stylesheet"/>
 
+	<span>Ce formulaire doit être soit placé dans une modale au moment du click, soit carrément suprimé pour faire la sauvegarde de l'avatar en ajax</span>
+	{{ form_start(formAvatar) }}
+	<button style="background: none; cursor: pointer; padding-top: 5px">
+		<i class="material-icons">upload</i>
+	</button>
+	{{ form_end(formAvatar) }}
+	<div id="profil_card_container">
+		<h1 id="profil_card_name">Votre profil
+			{{ user.username }}</h1>
+		<div id="profil_card_avatar-upload">
+			<div id="profil_card_avatar-edit">
+				<input type='file' id="imageUpload" accept=".png, .jpg, .jpeg"/>
+				<label for="imageUpload"></label>
+			</div>
+			<div id="profil_card_avatar-preview">
+				<div id="imagePreview" style="background-image: url('/images/{{currentAvatar}}'); background: {{ (currentAvatar == '') ? 'slategray' : '' }}; display: flex; justify-content: center; align-items: center;">
+					{% if currentAvatar == '' %} 
+						<span style="font-size: 4.8rem; color: #ddd; height: max-content "id="imagePreview">{{ userInitials }}</span>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<p>
+		<span class="row">
+			{% if ( numberOfFriends > 1 ) %}
+				{{ numberOfFriends }}
+				ami(e)s
+			{% elseif ( numberOfFriends == 1 )%}
+				{{ numberOfFriends }}
+				ami(e)
+			{% else %}
+				Vous n'avez pas encore d'amis
+			{% endif %}
+		</span>
+		<span class="row">
+			{% if ( numberOfChallengesCreated > 1 ) %}
+				{{ numberOfChallengesCreated }}
+				challenges créés
+			{% elseif ( numberOfChallengesCreated == 1 )%}
+				{{ numberOfChallengesCreated }}
+				challenge crée
+			{% else %}
+				Vous n'avez pas encore publié de challenge
+			{% endif %}
+		</span>
+		<span class="row">
+			{% if ( numberOfGroup > 1 ) %}
+				vous faites partie de
+				{{ numberOfGroup }}
+				groupes
+			{% elseif ( numberOfGroup == 1 )%}
+				vous faites partie d'un groupe
+			{% else %}
+				Vous ne faites partie d'aucun groupe
+			{% endif %}
+		</span>
+	</p>
 
+	<script>
+		let imageUpload = document.querySelector("#imageUpload");
+		let imagePreview = document.querySelector("#imagePreview");
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					imagePreview.style.backgroundImage = 'url(' + e.target.result + ')';
+				}
+				reader.readAsDataURL(input.files[0]);
+				// const formData = new FormData();
+				// formData.append('file', input.files[0]);
+				// fetch('http://localhost/user/post_pp', {
+				// 	method : 'post',
+				// 	body: formData,
+				// });
+				// .then((res) => res.json())
+				// .then((data) => console.log(data))
+				// .catch((error) => console.log(error))
+			}
+		}
+
+		imageUpload.addEventListener("change", function () {
+			readURL(this);
+		});
+	</script>
+	{# <script  src="{{ asset('js/change_picture.js') }}"></script> #}
 
 {% endblock %}

@@ -4,7 +4,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegisterType;
+use App\Security\FacebookAuthenticator;
+use Doctrine\ORM\EntityManager;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -14,7 +19,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
 
-    #[Route('/login', name: 'app_login', methods: ['GET','POST'])]
+    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
@@ -29,7 +34,42 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route('/register', name: 'app_register', methods: ['GET','POST'])]
+    #[Route('/connect/facebook', name: 'connect_facebook_start', methods: ['GET'])]
+    public function connectAction(ClientRegistry $clientRegistry)
+    {
+        return $clientRegistry
+            ->getClient('facebook')
+            ->redirect([
+                'public_profile', 'email'
+            ]);
+    }
+
+    #[Route('/connect/facebook/check', name: 'connect_facebook_check', methods: ['GET'])]
+    public function connectCheckAction(Request $request)
+    {
+        $response = new Response();
+        return $response;
+    }
+
+    #[Route('/connect/google', name: 'connect_google_start', methods: ['GET'])]
+    public function connectGoogleAction(ClientRegistry $clientRegistry)
+    {
+        return $clientRegistry
+            ->getClient('google')
+            ->redirect([
+                'email'
+            ]);
+    }
+
+    #[Route('/connect/google/check', name: 'connect_google_check', methods: ['GET'])]
+    public function connectGoogleCheckAction(Request $request, ClientRegistry $clientRegistry)
+    {
+        $response = new Response();
+        return $response;
+    }
+
+
+    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     public function new(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
@@ -37,8 +77,12 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($passwordHasher->hashPassword($user,$user->getPassword()));
+            $userNames = explode(' ', $form->getData()->getUsername());
+            $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
+            $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
             $user->setRoles(["ROLE_USER"]);
+            $user->setStatut(true);
+            $user->setInitials($userInitials);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();

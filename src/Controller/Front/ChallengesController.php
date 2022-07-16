@@ -7,6 +7,7 @@ use App\Entity\ChallengesUserRegister;
 use App\Entity\Post;
 use App\Entity\Remark;
 use App\Entity\User;
+use App\Entity\UserLikeChallenge;
 use App\Form\ChallengesType;
 use App\Form\PostType;
 use App\Form\RemarkType;
@@ -14,6 +15,7 @@ use App\Repository\ChallengesRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserLikePostRepository;
+use App\Repository\UserLikeChallengeRepository;
 use App\Repository\ChallengesUserRegisterRepository;
 use App\Services\QrCodeService;
 use App\Repository\RemarkRepository;
@@ -32,6 +34,7 @@ use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 #[Route('/challenges')]
 class ChallengesController extends AbstractController
@@ -120,13 +123,13 @@ class ChallengesController extends AbstractController
     #[Route('/{id}', name: 'challenges_show', methods: ['GET', 'POST'])]
     public function show(Request $request, Challenges $challenge, PostRepository $postRepository, RemarkRepository $remarkRepository, UserLikePostRepository $userLikePostRepository): Response
     {
+
         $allPosts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
         $post = new Post();
         $formPost = $this->createForm(PostType::class, $post);
         $remark = new Remark();
         $formRemark = $this->createForm(RemarkType::class, $remark);
         $formPost->handleRequest($request);
-
         if($formPost->isSubmitted() && $formPost->isValid()) {
 
             if (!empty($_POST['post-id'])) {
@@ -175,7 +178,6 @@ class ChallengesController extends AbstractController
                 Response::HTTP_SEE_OTHER);
 
         }
-        
         return $this->render('challenges/show.html.twig', [
             'challenge' => $challenge,
             'posts'=>$allPosts,
@@ -209,8 +211,49 @@ class ChallengesController extends AbstractController
         ]);
     }
 
+    #[Route('/like/{id}', name:'like_challenge', methods: ['POST','GET'])]
+    public function likeChallenge(Request $request, Challenges $challenges, UserLikeChallengeRepository $userLikeChallengeRepository): Response
+    {
+        $exist = $userLikeChallengeRepository->findBy(['challengesLiked'=>$challenges->getId(),'userWhoLikedChallenge'=>$this->security->getUser()]);
+        if($exist){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($exist[0]);
+            $entityManager->flush();
+        }else{
+            $userLikeChallenge = new UserLikeChallenge();
+            $entityManager = $this->getDoctrine()->getManager();
+            $userLikeChallenge->setUserWhoLikedChallenge($this->security->getUser());
+            $userLikeChallenge->setChallengesLiked($challenges);
+            $entityManager->persist($userLikeChallenge);
+            $entityManager->flush();
+        }
+        $id = $challenges->getId();
+        return new Response($id, 200, array('Content-Type' => 'text/html'));
+    }
+
+    #[Route('/{id}/info', name: 'challenges_info', methods: ['GET','POST'])]
+    public function information(Request $request, Challenges $challenge): Response
+    {
+
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $user)
+        {
+            if ($user !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+
+
+        return $this->renderForm('challenges/info.html.twig', [
+            'challenge' => $challenge,
+        ]);
+    }
+
+
+
+
     #[Route('/{id}/delete', name: 'challenges_delete', methods: ['POST','GET'])]
-    public function delete(Request $request, Challenges $challenge): Response
+    public function delete(Request $request, Challenges $challenge,UserLikeChallengeRepository $userLikeChallengeRepository, PostRepository $postRepository, ChallengesUserRegisterRepository $challengesUserRegisterRepository): Response
     {
 
         $challenge_user = $challenge->getUsers();
@@ -223,10 +266,49 @@ class ChallengesController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete'.$challenge->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $posts = $postRepository->findBy(['challengeId'=>$challenge->getId()]);
+            $challenge_user_registers = $challengesUserRegisterRepository->findBy(['challengeRegister'=>$challenge->getId()]);
+            $user_like_challenges = $userLikeChallengeRepository->findBy(['challengesLiked'=>$challenge->getId()]);
+
+            foreach ($posts as $post){
+                $entityManager->remove($post);
+            }
+            foreach ($challenge_user_registers as $challenge_user_register){
+                $entityManager->remove($challenge_user_register);
+            }
+            foreach ($user_like_challenges as $user_like_challenge) {
+                $entityManager->remove($user_like_challenge);
+            }
             $entityManager->remove($challenge);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/{id_user}', name: 'challenges_info_winner', methods: ['GET','POST'])]
+    /**
+     * @ParamConverter("user", options={"id" = "id_user"})
+     **/
+    public function winner(Request $request, Challenges $challenge, ChallengesRepository $challengesRepository, User $user, UserRepository $userRepository): Response
+    {
+
+        $challenge_user = $challenge->getUsers();
+        foreach ($challenge_user->toArray() as $userChallenge)
+        {
+            if ($userChallenge !== $this->security->getUser()) {
+                throw $this->createAccessDeniedException();
+            }
+        }
+        $winner = $userRepository->findBy(['id'=>$user->getId()]);
+        $entityManager = $this->getDoctrine()->getManager();
+        $challenge = $challengesRepository->findOneBy(['id'=>$challenge->getId()]);
+        $challenge->setWinner($winner[0]);
+        $entityManager->persist($challenge);
+        $entityManager->flush();
+
+        return $this->renderForm('challenges/info.html.twig', [
+            'challenge' => $challenge,
+        ]);
     }
 }

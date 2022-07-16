@@ -1,4 +1,10 @@
+<div class="row">
+
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    <div class="row">
+        {{ form_label(form.name,'Nom de la catégories') }}
+        {{ form_widget(form.name) }}
+    </div>
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+</div>

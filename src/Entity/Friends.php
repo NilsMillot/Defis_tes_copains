@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=FriendsRepository::class)
+ * @ORM\Table(indexes={@ORM\Index(name="name_idx", columns={"status"})})
  */
 class Friends
 {
