@@ -1,68 +1,65 @@
 {% extends 'base_front.html.twig' %}
-{% block title %}Challenges index{% endblock %}
+{% block title %}Tous les challenges | DTC
+{% endblock %}
 {% set username = "" %}
 {% block body %}
-    <h1>Les challenges <a class="waves-effect waves-light btn green accent-3" href="{{ path('challenges_new') }}">Create
-            new</a>
-    </h1>
+	<div style="display: flex; margin-top: 20px; margin-bottom: 15px; justify-content: space-between; align-items: center;">
+		<h1 style="margin: 0;">Les challenges</h1>
+		<a class="waves-effect waves-light btn green accent-3" href="{{ path('challenges_new') }}">Créer challenge</a>
+	</div>
 
-    <div class="row">
-        {% for challenge in challenges %}
-            <div class="card small col s6">
-                <div class="card-image waves-effect waves-block waves-light">
-                    <img class="activator" src="{{ vich_uploader_asset(challenge, 'imageFile') }}">
-                </div>
-                <div class="card-content">
-                <span class="card-title activator grey-text text-darken-4">{{ challenge.name }}
-                    {% if challenge.status == true %}
-                        <span class="chip teal accent-3"> Ouvert </span>
-                    {% else %}
-                        <span class="chip red darken-1"> Fermé </span>
-                    {% endif %}
+	<div class="row">
+		{% for challenge in challenges %}
+			<div class="one_challenge_card_global col s6">
+				<div class="card">
+					<div class="card-image" style="background: #ddd">
+						<img height="300px" style="object-fit: cover;" src="{{ vich_uploader_asset(challenge, 'imageFile') }}">
+						<span class="card-title" style="display: inline-flex; flex-wrap: wrap; align-items: center;">{{ challenge.name }}
+							{% if challenge.status == true %}
+								<span class="chip teal accent-3" style="margin-left: 5px; margin-bottom: 0;">
+									Ouvert
+								</span>
+							{% else %}
+								<span class="chip red darken-1" style="margin-left: 5px; margin-bottom: 0;">
+									Fermé
+								</span>
+							{% endif %}
 
-                    {% set count = 0 %}
-                    {% for like in challenge.challengesUserRegisters %}
-                        {% set count = count + 1 %}
-                    {% endfor %}
-                 <span class="chip">{{ count }} <i style="vertical-align: sub"
-                                                   class="material-icons tiny">face</i></span>
-                      <i class="material-icons right">more_vert</i></span>
-                </div>
+							{% set count = 0 %}
+							{% for like in challenge.challengesUserRegisters %}
+								{% set count = count + 1 %}
+							{% endfor %}
+							<span class="chip" style="margin-bottom: 0; white-space: nowrap;">{{ count }}
+								<i style="vertical-align: sub" class="material-icons tiny">face</i>
+							</span>
+						</span>
+						<a href="{{ path('challenges_show', {'id': challenge.id}) }}" class="btn-floating halfway-fab waves-effect waves-light red" style="display: inline-flex; justify-content: center;">
+							<span style="font-size: 0.7rem; font-weight: 500;">infos</span>
+						</a>
+					</div>
+					<div class="card-content">
+						<p>{{ challenge.description }}</p>
+					</div>
+				</div>
+			</div>
 
-                <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">{{ challenge.name }}
-                    {% if challenge.status == true %}
-                        <span class="chip teal accent-3"> Ouvert </span>
-                    {% else %}
-                        <span class="chip red darken-1"> Fermé </span>
-                    {% endif %}
-
-                    {% set count = 0 %}
-                    {% for like in challenge.challengesUserRegisters %}
-                        {% set count = count + 1 %}
-                    {% endfor %}
-                 <span class="chip">{{ count }} <i style="vertical-align: sub"
-                                                   class="material-icons tiny">face</i></span>
-                    <i class="material-icons right">close</i></span>
-                    <p id="date">Créer le
-                        : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
-                    <p>Description : {{ challenge.description }}</p>
-                    {% for challenge in challenge.users %}
-                        <p>Par : {{ challenge.username }} </p>
-                        {% set username = challenge.username %}
-                    {% endfor %}
-                    <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : '' }}</p>
-                    {% if app.user.username == username %}
-                        <a href="{{ path('challenges_show', {'id': challenge.id}) }}">show</a>
-                        <a href="{{ path('challenges_edit', {'id': challenge.id}) }}">edit</a>
-                    {% else %}
-                        <a href="{{ path('challenges_show', {'id': challenge.id}) }}">show</a>
-                    {% endif %}
-                </div>
-            </div>
-
-        {% else %}
-            <h1>Pas de challenges disponible</h1>
-        {% endfor %}
-    </div>
+		{% else %}
+			<h1>Pas de challenges disponible</h1>
+		{% endfor %}
+	</div>
+	   <script>
+        var challengeCard = document.querySelectorAll('.one_challenge_card_global');
+        challengeCard.forEach(challenge => {
+            window.addEventListener('resize', function() {            
+                if (window.innerWidth <= 800) {
+                    challenge.classList.remove('s6');
+                    challenge.classList.add('s12');
+                }
+                else {
+                    challenge.classList.remove('s12');
+                    challenge.classList.add('s6');
+                }
+            });
+        });
+    </script>
 {% endblock %}
