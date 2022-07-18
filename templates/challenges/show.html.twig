@@ -22,8 +22,19 @@
 	</div>
 	<div>
 		<div class="card horizontal row" style="max-height: 450px; margin-bottom: 50px">
-			<div style="display: flex; background: #ddd; padding: 0; min-width: 120px" class="col s4">
+			<div style="display: flex; background: #ddd; padding: 0; min-width: 120px; position: relative" class="col s4">
 				<img src={{ vich_uploader_asset(challenge, 'imageFile') }} style="width: 100%; object-fit: cover; "/>
+				{% if challenge.winner %}
+					<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px; position: absolute; left: 50%; top: 50%; margin: -30px 0 0 -40px;">
+						<img src="{{ asset('images/logo/crown-winner.svg') }}" alt="crown winner" style="position: absolute; top: -58px; width: 70px; color: red;"/>
+						{% if challenge.winner.imageName == '' %}
+							<span style="background: slategray; color: #ddd; border-radius: 100%; width: 90px; height: 90px; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem;">{{challenge.winner.initials}}</span>
+						{% else %}
+							<img style="width: 90px; height: 90px;" src="/images/{{challenge.winner.imageName}}" alt="image du profil {{ challenge.winner.username }}" class="circle">
+						{% endif %}
+						<span style="font-weight: 600; color: white;">{{ challenge.winner.username }}</span>
+					</div>
+				{% endif %}
 			</div>
 			<div class="card-stacked">
 				<div class="card-content">
@@ -79,12 +90,6 @@
 							<div class="chip">
 								{{ tags.name }}</div>
 						{% endfor %}
-						{% if challenge.winner %}
-							<h5>
-								{{ challenge.winner.username }}
-								<i class="amber-text darken-3 fas fa-crown"></i>
-							</h5>
-						{% endif %}
 					</div>
 					<div class="col s6" style="display: flex; justify-content: center;">
 						<div style="display: flex; flex-direction: column;">
