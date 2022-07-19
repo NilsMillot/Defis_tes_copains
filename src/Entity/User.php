@@ -124,6 +124,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     private $challengesUserRegister;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $pro;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $facebookId;
@@ -686,6 +691,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
                 $challengesUserRegister->setUserRegister(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPro(): ?bool
+    {
+        return $this->pro;
+    }
+
+    public function setPro(?bool $pro): self
+    {
+        $this->pro = $pro;
 
         return $this;
     }

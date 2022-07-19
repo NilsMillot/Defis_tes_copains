@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -32,6 +34,10 @@ class RegisterType extends AbstractType
                     'label'=>"Repeter votre mot de passe",
                 ]
             ])
+            ->add('pro', CheckboxType::class, [
+                'label'    => 'Professionnal ?',
+                'required' => false,
+            ]);
         ;
     }
 

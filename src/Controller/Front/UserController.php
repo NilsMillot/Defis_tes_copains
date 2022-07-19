@@ -37,7 +37,11 @@ class UserController extends AbstractController
             $entityManager->persist($formAvatar->getData());
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+            if($user->getPro() === false) {
+                return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
+            }else{
+                return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->render('user/index.html.twig', [
