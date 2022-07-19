@@ -92,6 +92,9 @@ class GithubAuthenticator extends SocialAuthenticator
                 $user->setUsername($githubData["name"]);
                 $user->setPassword('password');
                 $user->setEmail($email);
+                $userNames = explode(' ', $githubData["name"]);
+                $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
+                $user->setInitials($userInitials);
             }
         }
 

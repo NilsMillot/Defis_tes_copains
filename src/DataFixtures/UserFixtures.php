@@ -26,7 +26,8 @@ class UserFixtures extends Fixture
                 ->setUsername('user test' . $i)
                 ->setEmail('test' . $i . '@gmail.com')
                 ->setRoles(['ROLE_USER'])
-                ->setStatut(true);
+                ->setStatut(true)
+                ->setInitials('T' . $i);
             $user->setPassword($this->userPasswordHaser->hashPassword($user, 'test'));
 
             $manager->persist($user);
@@ -37,7 +38,8 @@ class UserFixtures extends Fixture
             ->setUsername('Admin user')
             ->setEmail('admin@gmail.com')
             ->setRoles(["ROLE_ADMIN"])
-            ->setStatut(true);
+            ->setStatut(true)
+            ->setInitials('AU');
         $admin->setPassword($this->userPasswordHaser->hashPassword($admin, 'admin'));
         $manager->persist($admin);
         $this->setReference(self::USER_ADMIN, $admin);

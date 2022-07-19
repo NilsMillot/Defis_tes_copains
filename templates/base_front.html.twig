@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://kit.fontawesome.com/af8bf20642.js" crossorigin="anonymous"></script>
@@ -17,6 +18,7 @@
     {% endblock %}
     {% block javascripts %}
         {#// simple example of using react when you need to do dynamic rendering#}
+         {{ vite_asset('main.jsx', ['react']) }}
     {% endblock %}
     <style>
         html {
@@ -64,11 +66,15 @@
         <a href="/" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="auto" height="100%"/></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {%  if(app.user) %}
+                {%  if(app.user.pro) %}
+                    <li><a href="{{ path('payment_new') }}">Payment</a></li>
+                {% endif %}
             <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
             <li><a href="{{ path('front_group_index') }}">Group</a></li>
             <li><a id='compte' class="{{ app.user.id}}" href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
             <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
+
             {% if is_granted('ROLE_ADMIN') %}
                <li> <a href="{{ path('admin_home') }}">Admin</a></li>
             {% endif %}
@@ -113,6 +119,7 @@
 <script  src="{{ asset('js/like.js') }}"></script>
 <script  src="{{ asset('js/edit_modal.js') }}"></script>
 <script src="{{ asset('js/select.js') }}"></script>
+<script  src="{{ asset('js/register.js') }}"></script>
 <script src="{{ asset('js/signalement.js') }}"></script>
 
 

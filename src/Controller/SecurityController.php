@@ -77,14 +77,21 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $userNames = explode(' ', $form->getData()->getUsername());
+            $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
             $user->setRoles(["ROLE_USER"]);
             $user->setStatut(true);
+            $user->setInitials($userInitials);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
+            if($user->getPro() == false) {
+                return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
+            }else{
+                return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->renderForm('security/register.html.twig', [

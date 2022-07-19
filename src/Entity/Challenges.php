@@ -26,7 +26,7 @@ class Challenges implements \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=80)
      */
     private $name;
 
@@ -276,10 +276,10 @@ class Challenges implements \Serializable
 
     public function unserialize($serialized)
     {
-        list (
+        list(
             $this->id,
             $this->imageName,
-            ) = unserialize($serialized, array('allowed_classes' => false));
+        ) = unserialize($serialized, array('allowed_classes' => false));
     }
 
     /**
@@ -345,7 +345,7 @@ class Challenges implements \Serializable
 
     public function removeUserLikeChallenge(UserLikeChallenge $userLikeChallenge): self
     {
-            if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
+        if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
             // set the owning side to null (unless already changed)
             if ($userLikeChallenge->getChallengesLiked() === $this) {
                 $userLikeChallenge->setChallengesLiked(null);

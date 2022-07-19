@@ -52,6 +52,7 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/connect, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
+        - { path: ^/payment_index, roles: PUBLIC_ACCESS }
         # Be careful about this line
         # - { path: ^/, roles: PUBLIC_ACCESS }
 

@@ -1,213 +1,276 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Challenges{% endblock %}
+{% block title %}
+	{{challenge.name}}
+	| Challenge DTC
+{% endblock %}
+{% block meta_description %}{{challenge.description|slice(0, 155) ~ '...'}}{% endblock %}
 {%  set username = "" %}
 {%  set likes = "" %}
 {% if challenge.status == false %}
-    {% set disabled = "disabled" %}
+	{% set disabled = "disabled" %}
 {% else %}
-    {% set disabled = "" %}
+	{% set disabled = "" %}
 {% endif %}
 
 {% block body %}
-    <div class="row">
-        <h1 id='{{ challenge.id }}' class="col">{{ challenge.name }}   <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
-        </h1>
-    </div>
-    <div class="col s12 m7">
-        <div class="card horizontal">
-            <div class="card-image">
-                <img style="object-fit: cover" src={{ vich_uploader_asset(challenge, 'imageFile') }} height="400px"/>
-            </div>
-            <div class="card-stacked">
-                <div class="card-content">
-                    <p>{{ challenge.description }}
-                        {% if challenge.status == true %}
-                            <span class="chip teal accent-3"> Ouvert </span>
-                        {% else %}
-                            <span class="chip red darken-1"> Fermé </span>
-                        {% endif %}
-                        <span>Like :
-                        {% set count = 0 %}
-                            {% for like in challenge.userLikeChallenges %}
-                                {% set count = count + 1 %}
-                            {% endfor %}
-                        <span class="id-{{ challenge.id }}-count">{{ count }}</span>
-                            {% set liked_challenge = 0 %}
-                            {% for like in challenge.userLikeChallenges %}
-                                {% if app.user.username in like.userWhoLikedChallenge.username  %}
-                                    {% set liked_challenge = 1 %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if liked_challenge == 0  %}
-                                <i data-url="{{ path('like_challenge', {'id': challenge.id }) }}"
-                                   class=" like liked red-text text-darken-3 far fa-heart id-{{ challenge.id }}"></i>
-                            {% else%}
-                                <i data-url="{{ path('like_challenge', {'id': challenge.id }) }}"
-                                   class=" unlike liked b red-text text-darken-3 fas fa-heart id-{{ challenge.id }}"></i>
-                            {% endif %}
-                     </span>
-                    </p>
-                </div>
-                <div class="card-action">
-                    <div class="row" style="margin-bottom: 0;">
-                        <div class="col s6">
-                            <p>Créer le : {{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }} </p>
-                            {% for challenge in challenge.users %}
-                                <p>Par : {{ challenge.username }} </p>
-                                {% set username = challenge.username %}
-                            {% endfor %}
-                        <p> Deadline : {{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
-                        <p>Categorie :{{ challenge.category }}</p>
-                        {% for tags in challenge.tags %}
-                            <div class="chip"> {{ tags.name }}</div>
-                        {% endfor %}
-                            {% if challenge.winner %}
-                            <h5> {{ challenge.winner.username }} <i class="amber-text darken-3 fas fa-crown"></i></h5>
-                            {% endif %}
-                        </div>
-                        <div class="col s6">
-                           <img src="{{ challenge.qrCode }}" style="width: 100%;"/>
-                        </div>
-                    </div>
-                    {% if app.user.username == username %}
-                    <div class="row">
-                        <div class="col s2 offset-s4">
-                            <a class="waves-effect waves-light btn blue accent-3" href="{{ path('challenges_info', {'id': challenge.id}) }}">Information</a>
-                        </div>
-                        <div class="col s2 ">
-                            <a class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
-                        </div>
-                        <div class="col s2">
-                            {{ include('challenges/_delete_form.html.twig') }}
-                        </div>
-                    </div>
-                    {% else %}
-                    <div style="display: flex; justify-content: right;">
-                        {% set user = 0 %}
-                        {% for register in challenge.challengesUserRegisters %}
-                            {% if app.user.username in register.userRegister.username  %}
-                            {% set user = 1 %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if user == 1  %}
-                            <a class="waves-effect waves-light btn orange accent-3 " {{ disabled }} href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Se_désinscrire</a>
-                        {% else%}
-                            <a class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
-                        {%  endif %}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <a class="waves-effect waves-light btn modal-trigger modal_href create_post"  href="#modal_post">Ecrire un post</a>
+	<link href="{{ asset('css/challenge.css') }}" rel="stylesheet"/>
+	<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 15px;">
+		<h1 id='{{ challenge.id }}' style="margin: 0">{{ challenge.name }}
+		</h1>
+		<a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
+	</div>
+	<div>
+		<div class="card horizontal row" style="max-height: 450px; margin-bottom: 50px">
+			<div style="display: flex; background: #ddd; padding: 0; min-width: 120px; position: relative" class="col s4">
+				<img src={{ vich_uploader_asset(challenge, 'imageFile') }} style="width: 100%; object-fit: cover; "/>
+				{% if challenge.winner %}
+					<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px; position: absolute; left: 50%; top: 50%; margin: -30px 0 0 -40px;">
+						<img src="{{ asset('images/logo/crown-winner.svg') }}" alt="crown winner" style="position: absolute; top: -58px; width: 70px; color: red;"/>
+						{% if challenge.winner.imageName == '' %}
+							<span style="background: slategray; color: #ddd; border-radius: 100%; width: 90px; height: 90px; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem;">{{challenge.winner.initials}}</span>
+						{% else %}
+							<img style="width: 90px; height: 90px;" src="/images/{{challenge.winner.imageName}}" alt="image du profil {{ challenge.winner.username }}" class="circle">
+						{% endif %}
+						<span style="font-weight: 600; color: white;">{{ challenge.winner.username }}</span>
+					</div>
+				{% endif %}
+			</div>
+			<div class="card-stacked">
+				<div class="card-content">
+					<p style="max-height: 110px; overflow: scroll;">{{ challenge.description }}</p>
+					<br>
+					{% if challenge.status == true %}
+						<span style="margin: 0 10px 0 10px;" class="chip teal accent-3">
+							Ouvert
+						</span>
+					{% else %}
+						<span style="margin: 0 10px 0 10px;" class="chip red darken-1">
+							Fermé
+						</span>
+					{% endif %}
+					<span style="white-space: nowrap;">Like :
+						{% set count = 0 %}
+						{% for like in challenge.userLikeChallenges %}
+							{% set count = count + 1 %}
+						{% endfor %}
+						<span class="id-{{ challenge.id }}-count">{{ count }}</span>
+						{% set liked_challenge = 0 %}
+						{% for like in challenge.userLikeChallenges %}
+							{% if app.user.username in like.userWhoLikedChallenge.username  %}
+								{% set liked_challenge = 1 %}
+							{% endif %}
+						{% endfor %}
+						{% if liked_challenge == 0  %}
+							<i data-url="{{ path('like_challenge', {'id': challenge.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ challenge.id }}"></i>
+							{% else%}
+							<i data-url="{{ path('like_challenge', {'id': challenge.id }) }}" class=" unlike liked b red-text text-darken-3 fas fa-heart id-{{ challenge.id }}"></i>
+						{% endif %}
+					</span>
+				</p>
+			</div>
+			<div class="card-action" style="padding: 0 0 10px 0">
+				<div class="row" style="display: flex; align-items: center; margin-bottom: 0;">
+					<div class="col s6" style="text-align: center; max-height: 160px; overflow: scroll;">
+						<p>Créer le:
+							{{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }}
+						</p>
+						{% for challenge in challenge.users %}
+							<p>Par:
+								{{ challenge.username }}
+							</p>
+							{% set username = challenge.username %}
+						{% endfor %}
+						<p>
+							Deadline:
+							{{ challenge.deadline ? challenge.deadline|date('d-m-Y') : ''  }}</p>
+						<p>Categorie:
+							{{ challenge.category }}</p>
+						{% for tags in challenge.tags %}
+							<div class="chip">
+								{{ tags.name }}</div>
+						{% endfor %}
+					</div>
+					<div class="col s6" style="display: flex; justify-content: center;">
+						<div style="display: flex; flex-direction: column;">
+							<a href="{{ challenge.qrCode }}" download style="margin: 0;">
+								<img src="{{ challenge.qrCode }}" style="width: 100%; max-width: 180px;"/>
+								{% set user = 0 %}
+								{% for register in challenge.challengesUserRegisters %}
+									{% if app.user.username in register.userRegister.username  %}
+										{% set user = 1 %}
+									{% endif %}
+								{% endfor %}
+								{% if user == 1  %}
+									<a style="padding: 0; margin-bottom: 10px;" class="waves-effect waves-light btn orange accent-3 " {{ disabled }} href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Se désinscrire</a>
+								{% else %}
+									<a style="padding: 0; margin-bottom: 10px;" class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
+								{%  endif %}
+							</a>
+						</div>
+					</div>
+				</div>
+				{% if app.user.username == username %}
+					<div style="display: flex; justify-content: space-evenly; max-width: 416px; margin-left: auto; flex-wrap: wrap;">
+						<a style="display: inline-flex; align-items: center; padding: 0 7px; height: 28px;" class="waves-effect waves-light btn blue accent-3" href="{{ path('challenges_info', {'id': challenge.id}) }}">Information</a>
+						<a style="display: inline-flex; align-items: center; padding: 0 7px; height: 28px;" class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
+						{{ include('challenges/_delete_form.html.twig') }}
+					</div>
+					{% else %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
 {#    {{ include('post/_form.html.twig') }}#}
 
 {% for post in posts %}
-    <div class="col s12 m7">
-        <div class="divider"></div>
-        {% for user in post.userId %}
-            {{ user.username }}
-        {% endfor %}
-            <div class="section">
-                <h5 id="{{ post.id }}">{{ post.name }}<i style="vertical-align: bottom" data-url="{{ path('signalement_new_post', {'id':post.id}) }}" class=" signalement orange-text text-darken-3 material-icons small">report_problem</i></h5>
-                <span>Like :
-                {% set count = 0 %}
-                {% for like in post.userLikePosts %}
-                        {% set count = count + 1 %}
-                {% endfor %}
-                <span class="id-{{ post.id }}-count">{{ count }}</span>
-                    {% set liked_post = 0 %}
-                    {% for like in post.userLikePosts %}
-                         {% if app.user.username in like.userWhoLiked.username   %}
-                            {% set liked_post = 1 %}
-                        {% endif %}
-                    {% endfor %}
-                {% if liked_post == 0  %}
-                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
-                {% else %}
-                    <i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
-                {% endif %}
-                </span>
-                <p>{{ post.content }} </p>
-                <div>
-                </div>
-                {% for user in post.userId %}
-                    {%  if user.username == app.user.username %}
-                        <div style="display: flex; margin-top: 5px">
-                            <a class="waves-effect waves-light btn btn_edit_generic edit_post" style="margin-right: 5px"  data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}" ><i class="material-icons edit">edit</i>Editer</a>
-                            {{ include('post/_delete_form.html.twig') }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% if(post.imageName) %}
-        <div>
-            <img height="200px" src={{ vich_uploader_asset(post, 'imageFile') }} />
-        </div>
-        {% endif %}
-        <ul class="collapsible popout">
-            <li>
-                {% set count = 0 %}
-                {% for remark in post.remark %}
-                    {% set count = count + 1 %}
-                {% endfor %}
-                <div class="collapsible-header"> <i class="material-icons prefix">mode_edit</i>Commentaires ({{ count }}) </div>
-                <div class="collapsible-body">
-                <a class="waves-effect waves-light btn modal-trigger modal_href" data-id="{{post.id}}" href="#modal1">Répondre</a>
-                    {% for remark in post.remark %}
-                        <div>
-                            <h6>{{ remark.contentRemark }}</h6>
-                            {% for user in remark.userId %}
-                                <span> By {{ user.username }}</span>
-                            {% endfor %}
-                            <span>Like :
-                                {% set count = 0 %}
-                                {% for like in remark.userLikeRemarks %}
-                                    {% set count = count + 1 %}
-                                {% endfor %}
-                                <span class="id-{{ remark.id }}-count">{{ count }}</span>
-                                 {% set liked_remark = 0 %}
-                                {% for like in remark.userLikeRemarks %}
-                                    {% if app.user.username in like.userId.username  %}
-                                        {% set liked_remark = 1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if liked_remark == 0  %}
-                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
-                                {% else %}
-                                    <i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
-                                {% endif %}
-                            </span>
-                        </div>
-                        {% for user in remark.userId %}
-                            {%  if user.username == app.user.username %}
-                                <div style="display: flex;">
-                                    <a class="waves-effect waves-light btn edit_remark btn_edit_generic" style="margin-right: 5px" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1"><i class="material-icons edit">edit</i>Editer</a>
-                                    {{ include('remark/_delete_form.html.twig') }}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                        <div class="divider"></div>
-                    {% endfor %}
-                </div>
-            </li>
-        </ul>
-    </div>
+               
+	<div class="entire_post">
+		{% if post == posts|first %}
+			<div class="divider"></div>
+		{% endif %}
+		<div class="section">
+			<div style="display: flex; justify-content: space-between;">
+				<div>
+					<h2 style="font-size: 1.64rem; margin: 0 0 8px 0; width: max-content; display: inline;" id="{{ post.id }}">{{ post.name }}<i style="vertical-align: bottom" data-url="{{ path('signalement_new_post', {'id':post.id}) }}" class=" signalement orange-text text-darken-3 material-icons small">report_problem</i></h2>
+					<span style="display: block">Like :
+						{% set count = 0 %}
+						{% for like in post.userLikePosts %}
+							{% set count = count + 1 %}
+						{% endfor %}
+						<span class="id-{{ post.id }}-count">{{ count }}</span>
+						{% set liked_post = 0 %}
+						{% for like in post.userLikePosts %}
+							{% if app.user.username in like.userWhoLiked.username   %}
+								{% set liked_post = 1 %}
+							{% endif %}
+						{% endfor %}
+						{% if liked_post == 0  %}
+							<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ post.id }}"></i>
+						{% else %}
+							<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ post.id }}"></i>
+						{% endif %}
+					</span>
+				</div>
+				{% for user in post.userId %}
+					<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px;">
+						{% if user.imageName == '' %}
+							<span style="background: slategray; color: #ddd; border-radius: 100%; width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem;">{{user.initials}}</span>
+						{% else %}
+							<img style="width: 60px; height: 60px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+						{% endif %}
+						<span style="font-weight: 500;">{{ user.username }}</span>
+					</div>
+				{% endfor %}
+			</div>
+
+			<p>{{ post.content }}
+			</p>
+			{% for user in post.userId %}
+				{%  if user.username == app.user.username %}
+					<div style="display: flex; margin-top: 5px">
+						<a class="waves-effect waves-light btn btn_edit_generic edit_post" style="margin-right: 5px; height: 28px; display: inline-flex; align-items: center; padding: 0 7px;" data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}">
+							<i class="material-icons edit">edit</i>Editer</a>
+						{{ include('post/_delete_form.html.twig') }}
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		{% if(post.imageName) %}
+			<div>
+				<img height="200px" src={{ vich_uploader_asset(post, 'imageFile') }}>
+			</div>
+		{% endif %}
+		<ul class="collapsible popout">
+			<li>
+				{% set count = 0 %}
+				{% for remark in post.remark %}
+					{% set count = count + 1 %}
+				{% endfor %}
+				<div class="collapsible-header">
+					<i class="material-icons prefix">forum</i>Commentaires ({{ count }})
+				</div>
+				<div class="collapsible-body">
+					{% for remark in post.remark %}
+						<div class="entire_remark" style="display: flex; align-items: center; {% if remark != post.remark|last %} margin-bottom: 20px {% endif %}; position: relative" class="">
+							{% for user in remark.userId %}
+								{# {{ dump(post.userId) }} #}
+								<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center;">
+									{% if user.imageName == '' %}
+										<div style="position: relative">
+											<span style="background: slategray; color: #ddd; border-radius: 100%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center">{{user.initials}}</span>
+											{% for post_owner in post.userId %}
+												{% if user.id == post_owner.id %}
+													<img src="{{ asset('images/logo/crown.svg') }}" alt="crown" style="position: absolute; top: -20px; left: -2px; width: 28px; transform: rotate(343deg);"/>
+												{% endif %}
+											{% endfor %}
+										</div>
+									{% else %}
+										<div style="position: relative">
+											<img style="width: 40px; height: 40px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+											{% for post_owner in post.userId %}
+												{% if user.id == post_owner.id %}
+													<img src="{{ asset('images/logo/crown.svg') }}" alt="crown" style="position: absolute; top: -20px; left: -2px; width: 28px; transform: rotate(343deg);"/>
+												{% endif %}
+											{% endfor %}
+										</div>
+									{% endif %}
+									<span style="font-weight: 500;">{{ user.username }}</span>
+								</div>
+								<p style="margin-left: 10px;">{{ remark.contentRemark }}
+									<span style="margin-left: 4px; white-space: nowrap;">
+										{% set count = 0 %}
+										{% for like in remark.userLikeRemarks %}
+											{% set count = count + 1 %}
+										{% endfor %}
+										<span class="id-{{ remark.id }}-count">{{ count }}</span>
+										{% set liked_remark = 0 %}
+										{% for like in remark.userLikeRemarks %}
+											{% if app.user.username in like.userId.username  %}
+												{% set liked_remark = 1 %}
+											{% endif %}
+										{% endfor %}
+										{% if liked_remark == 0  %}
+											<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ remark.id }}"></i>
+										{% else %}
+											<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
+										{% endif %}
+									</span>
+									{% for user in remark.userId %}
+										{%  if user.username == app.user.username %}
+											<div style="position: absolute; bottom: -18px; right: 0; z-index: 1;" class="buttons_for_owner">
+												<a class="edit_remark btn_edit_generic" style="display: flex; color: black; align-items: center; margin-right: 2px;" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">
+													<i class="material-icons">edit</i>Editer</a>
+												{{ include('remark/_delete_form.html.twig') }}
+											</div>
+										{% endif %}
+									{% endfor %}
+								</p>
+							{% endfor %}
+
+						</div>
+					{% endfor %}
+					<a class="btn waves-effect waves-light modal-trigger modal_href" style="{% if post.remark|length > 0 %} margin-top: 15px {% endif %}" data-id="{{post.id}}" href="#modal1">Ecrire un commentaire</a>
+				</div>
+			</li>
+		</ul>
+		<div class="divider"></div>
+	</div>
 
 {% endfor %}
 
+<div style="display: flex; justify-content: center; padding: 14px">
+	<a class="btn waves-effect waves-light modal-trigger modal_href create_post" href="#modal_post">Ecrire un post</a>
+</div>
 
 <div id="modal1" class="modal">
-    <div class="modal-content">
-     {{include('remark/_form.html.twig')}}
-    </div>
+	<div class="modal-content">
+		{{include('remark/_form.html.twig')}}
+	</div>
 </div>
 <div id="modal_post" class="modal">
-    <div class="modal-content">
-        {{ include('post/_form.html.twig') }}
-    </div>
-</div>
-
-{% endblock %}
+	<div class="modal-content">
+		{{ include('post/_form.html.twig') }}
+	</div>
+</div>{% endblock %}
