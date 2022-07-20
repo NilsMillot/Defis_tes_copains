@@ -10,13 +10,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Entity\Traits\VichUploadTrait;
+// use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  * @Vich\Uploadable()
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     use VichUploadTrait;
     /**
@@ -123,9 +124,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $challengesUserRegister;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $githubId;
+    private $pro;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -137,12 +138,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $googleId;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="github_access_token", type="string", length=255, nullable=true, options={"default"="NULL"})
-     */
-    private $githubAccessToken;
     /*
      * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="winner")
      */
@@ -152,6 +147,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean")
      */
     private $statut;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Signalement::class, mappedBy="id_user_signalement")
+     */
+    private $signalements;
+
+    /**
+     * @ORM\Column(type="string", length=2)
+     */
+    private $initials;
 
     public function __construct()
     {
@@ -170,9 +175,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->remarks = new ArrayCollection();
         $this->challengesUserRegister = new ArrayCollection();
         $this->challenges = new ArrayCollection();
+        $this->signalements = new ArrayCollection();
     }
 
     public function __toString()
+    {
+        return $this->username;
+    }
+
+    public function getUserIdentifier(): string
     {
         return $this->username;
     }
@@ -690,14 +701,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGithubId(): ?string
+    public function getPro(): ?bool
     {
-        return $this->githubId;
+        return $this->pro;
     }
 
-    public function setGithubId(?string $githubId): self
+    public function setPro(?bool $pro): self
     {
-        $this->githubId = $githubId;
+        $this->pro = $pro;
 
         return $this;
     }
@@ -726,15 +737,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGithubAccessToken(): ?string
-    {
-        return $this->githubAccessToken;
-    }
-
-    public function setGithubAccessToken(?string $githubAccessToken): self
-    {
-        $this->githubAccessToken = $githubAccessToken;
-    }
     /*
      * @return Collection<int, Challenges>
      */
@@ -751,6 +753,68 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatut(bool $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Signalement>
+     */
+    public function getSignalements(): Collection
+    {
+        return $this->signalements;
+    }
+
+    public function addSignalement(Signalement $signalement): self
+    {
+        if (!$this->signalements->contains($signalement)) {
+            $this->signalements[] = $signalement;
+            $signalement->setIdUserSignalement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSignalement(Signalement $signalement): self
+    {
+        if ($this->signalements->removeElement($signalement)) {
+            // set the owning side to null (unless already changed)
+            if ($signalement->getIdUserSignalement() === $this) {
+                $signalement->setIdUserSignalement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->password,
+            $this->username,
+            $this->imageName,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->password,
+            $this->username,
+            $this->imageName,
+        ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    public function getInitials(): ?string
+    {
+        return $this->initials;
+    }
+
+    public function setInitials(string $initials): self
+    {
+        $this->initials = $initials;
 
         return $this;
     }

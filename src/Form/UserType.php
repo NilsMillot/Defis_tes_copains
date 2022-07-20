@@ -31,6 +31,7 @@ class UserType extends AbstractType
                 )
             ])
             ->add('password',PasswordType::class,[])
+            ->add('pro')
         ;
     }
 

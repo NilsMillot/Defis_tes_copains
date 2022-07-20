@@ -2,34 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\Payment;
-use http\Env\Request;
+use App\Entity\Signalement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PaymentType extends AbstractType
+class SignalementType extends AbstractType
 {
-    /*public function checkout(FormBuilderInterface $builder): void
-    {
-        $builder
-            -> add('checkout')
-        ;
-    }*/
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('colStripe')
-            ->add('id')
-            ->add('company')
+            ->add('id_user_signalement')
+            ->add('id_post')
+            ->add('id_remark')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Payment::class,
+            'data_class' => Signalement::class,
         ]);
     }
 }

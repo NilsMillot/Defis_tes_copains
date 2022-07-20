@@ -5,6 +5,12 @@
 {% block body %}
 	<link href="{{ asset('css/profile_card.css') }}" rel="stylesheet"/>
 
+	<span>Ce formulaire doit être soit placé dans une modale au moment du click, soit carrément suprimé pour faire la sauvegarde de l'avatar en ajax</span>
+	{{ form_start(formAvatar) }}
+	<button style="background: none; cursor: pointer; padding-top: 5px">
+		<i class="material-icons">upload</i>
+	</button>
+	{{ form_end(formAvatar) }}
 	<div id="profil_card_container">
 		<h1 id="profil_card_name">Votre profil
 			{{ user.username }}</h1>
@@ -14,8 +20,11 @@
 				<label for="imageUpload"></label>
 			</div>
 			<div id="profil_card_avatar-preview">
-				<div id="imagePreview" style="background-image: url('http://i.pravatar.cc/500');"></div>
-				{# <span id="imagePreview">{{ userInitials }}</div> #}
+				<div id="imagePreview" style="background-image: url('/images/{{currentAvatar}}'); background: {{ (currentAvatar == '') ? 'slategray' : '' }}; display: flex; justify-content: center; align-items: center;">
+					{% if currentAvatar == '' %} 
+						<span style="font-size: 4.8rem; color: #ddd; height: max-content "id="imagePreview">{{ userInitials }}</span>
+					{% endif %}
+				</div>
 			</div>
 		</div>
 	</div>

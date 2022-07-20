@@ -40,10 +40,16 @@ class Remark
      */
     private $userId;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Signalement::class, mappedBy="id_remark")
+     */
+    private $signalements;
+
     public function __construct()
     {
         $this->userLikeRemarks = new ArrayCollection();
         $this->userId = new ArrayCollection();
+        $this->signalements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,6 +131,36 @@ class Remark
     public function removeUserId(User $userId): self
     {
         $this->userId->removeElement($userId);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Signalement>
+     */
+    public function getSignalements(): Collection
+    {
+        return $this->signalements;
+    }
+
+    public function addSignalement(Signalement $signalement): self
+    {
+        if (!$this->signalements->contains($signalement)) {
+            $this->signalements[] = $signalement;
+            $signalement->setIdRemark($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSignalement(Signalement $signalement): self
+    {
+        if ($this->signalements->removeElement($signalement)) {
+            // set the owning side to null (unless already changed)
+            if ($signalement->getIdRemark() === $this) {
+                $signalement->setIdRemark(null);
+            }
+        }
 
         return $this;
     }

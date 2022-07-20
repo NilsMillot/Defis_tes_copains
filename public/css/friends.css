@@ -26,12 +26,12 @@ input:-webkit-autofill:active{
 .collection-item-send-request {
   transition: all 0.3s ease-in-out;
   border-radius: 10px;
-  padding: 0 5px;
+  padding: 0 8px;
 }
 
 .collection-item-send-request:hover {
   transition: all 0.3s ease-in-out;
-  background: #40C0B4;
+  background: #c7c7c7;
 }
 
 .collection-item-send-request:hover + a { background: #ddd; }
@@ -48,6 +48,37 @@ input:-webkit-autofill:active{
 }
 
 .collection-item-delete-request:hover + a { background: #ddd; }
+
+.triangle_banner_friend {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 50px 50px 0;
+  border-color: transparent #608A32 transparent transparent;
+  right: 0;
+  top: 0;
+  position: absolute;
+}
+
+.triangle_banner_friend span {
+  top: 5px;
+  right: -42px;
+  color: white;
+  position:absolute;
+  transform: rotate(45deg);
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.array_all_users_search {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#array_all_users_search::-webkit-scrollbar {
+  display: none;
+}
+
 
 /* @media screen and (max-width: 1047px) {
   h1 {
