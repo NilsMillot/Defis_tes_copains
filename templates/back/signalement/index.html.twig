@@ -1,0 +1,66 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Signalement index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="card card_back">
+            <div class="card_back_content">
+                <table id="post_view" class="datatable table row-border">
+                    <thead>
+                    <tr>
+                        <th class="back_th">Id</th>
+                        <th class="back_th">Signaleur</th>
+                        <th class="back_th">Post</th>
+                        <th class="back_th">Contenue du post</th>
+                        <th class="back_th">Commentaire</th>
+                        <th class="back_th">actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for signalement in signalements %}
+                        <tr>
+                            <td class="back_th">
+                                {{ signalement.id }}</td>
+                            <td class="back_th">
+                                {{ signalement.idUserSignalement.username }}</td>
+                            {% if signalement.idPost %}
+                                <td class="back_th">
+                                    {{ signalement.idPost.name }}
+                                </td>
+                                <td class="back_th">
+                                    {{ signalement.idPost.content }}
+                                </td>
+                            {% else %}
+                                <td class="back_th">
+                                </td>
+                                <td class="back_th">
+                                </td>
+                            {% endif %}
+                            {% if signalement.idRemark %}
+                                <td class="back_th">
+                                    {{ signalement.idRemark.contentRemark }}</td>
+                            {% else %}
+                                <td class="back_th">
+                                </td>
+                            {% endif %}
+                            <td class="row back_th">
+                                <div class="col s4 ">
+                                    <a href="{{ path('admin_signalement_accepte',{'id':signalement.id}) }}"><i class="green-text material-icons">done</i></a>
+                                </div>
+                                <div class="col s4 ">
+                                    {{ include('back/signalement/_delete_form.html.twig') }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
