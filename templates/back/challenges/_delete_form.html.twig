@@ -1,5 +1,5 @@
 <form method="post" action="{{ path('admin_challenges_delete', {'id': challenge.id}) }}"
       xmlns="http://www.w3.org/1999/html">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ challenge.id) }}">
-    <button><i class="red-text darken-4 material-icons small">close</i></button>
+    <button style=" outline: none; background: none;"><i class="red-text darken-4 material-icons small">close</i></button>
 </form>
