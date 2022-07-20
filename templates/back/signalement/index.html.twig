@@ -12,6 +12,7 @@
                         <th class="back_th">Id</th>
                         <th class="back_th">Signaleur</th>
                         <th class="back_th">Post</th>
+                        <th class="back_th">Contenue du post</th>
                         <th class="back_th">Commentaire</th>
                         <th class="back_th">actions</th>
                     </tr>
@@ -25,8 +26,14 @@
                                 {{ signalement.idUserSignalement.username }}</td>
                             {% if signalement.idPost %}
                                 <td class="back_th">
-                                    {{ signalement.idPost.name }}</td>
+                                    {{ signalement.idPost.name }}
+                                </td>
+                                <td class="back_th">
+                                    {{ signalement.idPost.content }}
+                                </td>
                             {% else %}
+                                <td class="back_th">
+                                </td>
                                 <td class="back_th">
                                 </td>
                             {% endif %}
