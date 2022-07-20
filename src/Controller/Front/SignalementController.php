@@ -59,14 +59,22 @@ class SignalementController extends AbstractController
     #[Route('/new/remark/{id}', name: 'signalement_new_remark', methods: ['GET', 'POST'])]
     public function newRemakSignalement(Request $request,Remark $remark, SignalementRepository $signalementRepository): JsonResponse
     {
-        $signalement = new Signalement();
-        $entityManager = $this->getDoctrine()->getManager();
-        $signalement->setIdUserSignalement($this->security->getUser());
-        $signalement->setIdRemark($remark);
-        $entityManager->persist($signalement);
-        $entityManager->flush();
 
-        return $this->json(['content'=>'OK']);
+        $exist = $signalementRepository->findBy(['id_remark'=>$remark->getId(),'id_user_signalement'=>$this->security->getUser()]);
+        if($exist){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($exist[0]);
+            $entityManager->flush();
+        }else {
+            $signalement = new Signalement();
+            $entityManager = $this->getDoctrine()->getManager();
+            $signalement->setIdUserSignalement($this->security->getUser());
+            $signalement->setIdRemark($remark);
+            $entityManager->persist($signalement);
+            $entityManager->flush();
+        }
+        $id = $remark->getId();
+        return $this->json(['content'=>'OK', 'id'=>$id]);
 
     }
 
