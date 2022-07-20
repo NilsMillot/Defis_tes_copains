@@ -125,6 +125,7 @@
 {#    {{ include('post/_form.html.twig') }}#}
 
 {% for post in posts %}
+               
 	<div class="entire_post">
 		{% if post == posts|first %}
 			<div class="divider"></div>
@@ -132,7 +133,19 @@
 		<div class="section">
 			<div style="display: flex; justify-content: space-between;">
 				<div>
-					<h2 style="font-size: 1.64rem; margin: 0 0 8px 0; width: max-content; display: inline;" id="{{ post.id }}">{{ post.name }}</h2>
+					{% set signalement_post = 0 %}
+					{% for signalement in post.signalements %}
+						{% if app.user.username in signalement.IdUserSignalement.username %}
+							{% set signalement_post = 1 %}
+						{% endif %}
+					{% endfor %}
+					<h2 style="font-size: 1.64rem; margin: 0 0 8px 0; width: max-content; display: inline;" id="{{ post.id }}">{{ post.name }}
+						{% if signalement_post == 0 %}
+							<a style="vertical-align: bottom" class=" parent-{{ post.id}}  signale signalement" data-url="{{ path('signalement_new_post', {'id':post.id}) }}"><i  class=" id-{{ post.id }} orange-text text-darken-3 material-icons small">report_problem</i></a>
+						{% else %}
+							<a style="vertical-align: bottom" class=" parent-{{ post.id}} signaled signalement" data-url="{{ path('signalement_new_post', {'id':post.id}) }}"><i  class="  id-{{ post.id }} red-text text-darken-3 material-icons small">report_problem</i></a>
+						{% endif %}
+					</h2>
 					<span style="display: block">Like :
 						{% set count = 0 %}
 						{% for like in post.userLikePosts %}
@@ -236,9 +249,20 @@
 											<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart id-{{ remark.id }}"></i>
 										{% endif %}
 									</span>
+								{% set signalement_remark = 0 %}
+								{% for signalement in remark.signalements %}
+									{% if app.user.username in signalement.IdUserSignalement.username %}
+										{% set signalement_remark = 1 %}
+									{% endif %}
+								{% endfor %}
 									{% for user in remark.userId %}
 										{%  if user.username == app.user.username %}
 											<div style="position: absolute; bottom: -18px; right: 0; z-index: 1;" class="buttons_for_owner">
+												{% if signalement_remark == 0 %}
+													<a style="cursor:pointer;display: flex; color: black; align-items: center; margin-right: 2px;" class=" parent-{{ remark.id}}  signale signalement" data-url="{{ path('signalement_new_remark', {'id':remark.id}) }}"><i  class=" id-{{ remark.id }} orange-text text-darken-3 material-icons small">report_problem</i>Signaler</a>
+												{% else %}
+													<a style="cursor:pointer;display: flex; color: black; align-items: center; margin-right: 2px;" class=" parent-{{ remark.id}} signaled signalement" data-url="{{ path('signalement_new_remark', {'id':remark.id}) }}"><i  class="  id-{{ remark.id }} red-text text-darken-3 material-icons small">report_problem</i>Signaler</a>
+												{% endif %}
 												<a class="edit_remark btn_edit_generic" style="display: flex; color: black; align-items: center; margin-right: 2px;" data-id="{{remark.id}}" data-url="{{ path('remark_edit', {'id': remark.id }) }}" href="#modal1">
 													<i class="material-icons">edit</i>Editer</a>
 												{{ include('remark/_delete_form.html.twig') }}
