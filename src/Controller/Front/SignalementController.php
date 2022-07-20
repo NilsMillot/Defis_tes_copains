@@ -35,13 +35,34 @@ class SignalementController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{id}', name: 'signalement_new_post', methods: ['GET', 'POST'])]
-    public function new(Request $request,Post $post, SignalementRepository $signalementRepository): JsonResponse
+    #[Route('/new/post/{id}', name: 'signalement_new_post', methods: ['GET', 'POST'])]
+    public function newPostSignalement(Request $request,Post $post, SignalementRepository $signalementRepository): JsonResponse
+    {
+        $exist = $signalementRepository->findBy(['id_post'=>$post->getId(),'id_user_signalement'=>$this->security->getUser()]);
+        if($exist){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($exist[0]);
+            $entityManager->flush();
+        }else {
+            $signalement = new Signalement();
+            $entityManager = $this->getDoctrine()->getManager();
+            $signalement->setIdUserSignalement($this->security->getUser());
+            $signalement->setIdPost($post);
+            $entityManager->persist($signalement);
+            $entityManager->flush();
+        }
+        $id = $post->getId();
+        return $this->json(['content'=>'OK', 'id'=>$id]);
+
+    }
+
+    #[Route('/new/remark/{id}', name: 'signalement_new_remark', methods: ['GET', 'POST'])]
+    public function newRemakSignalement(Request $request,Remark $remark, SignalementRepository $signalementRepository): JsonResponse
     {
         $signalement = new Signalement();
         $entityManager = $this->getDoctrine()->getManager();
         $signalement->setIdUserSignalement($this->security->getUser());
-        $signalement->setIdPost($post);
+        $signalement->setIdRemark($remark);
         $entityManager->persist($signalement);
         $entityManager->flush();
 
