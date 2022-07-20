@@ -39,7 +39,7 @@
                             {% endif %}
                             <td class="row back_th">
                                 <div class="col s4 ">
-                                    <a href=""><i class="green-text material-icons">done</i></a>
+                                    <a href="{{ path('admin_signalement_accepte',{'id':signalement.id}) }}"><i class="green-text material-icons">done</i></a>
                                 </div>
                                 <div class="col s4 ">
                                     {{ include('back/signalement/_delete_form.html.twig') }}

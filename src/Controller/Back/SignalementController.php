@@ -40,6 +40,15 @@ class SignalementController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}', name: 'admin_signalement_accepte', methods: ['POST','GET'])]
+    public function accepte(Request $request, Signalement $signalement, ): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($signalement);
+        $entityManager->flush();
+        return $this->redirectToRoute('admin_signalement_index', [], Response::HTTP_SEE_OTHER);
+    }
+
 
     #[Route('/{id}', name: 'admin_signalement_delete', methods: ['POST'])]
     public function delete(Request $request, Signalement $signalement, UserLikeRemarkRepository $userLikeRemarkRepository, UserLikePostRepository $userLikePostRepository, SignalementRepository $signalementRepository, RemarkRepository $remarkRepository, PostRepository $postRepository): Response
