@@ -29,18 +29,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="col s12">
-            <div class="inline">
-                <label >Tags</label>
-                {% for tags in form.tags %}
-                    <p>
-                        <label>
-                            {{ form_widget(tags, {'attr': {'class': 'checkbox-challenge'}}) }}
-                            <span>{{ form_label(tags) }}</span>
-                        </label>
-                    </p>
-                {% endfor %}
-            </div>
+        <div class=" col s12">
+        <label for="challenges_tags">Tags</label>
+        <div  class="chips chips-placeholder input-field">
+            {{ form_widget(form.tags) }}
+        </div>
         </div>
     </div>
     <div class="row">
@@ -55,7 +48,7 @@
             </div>
         </div>
     </div>
-    <button class="waves-effect waves-light btn orange accent-3" type="submit">Editer</button>
+    <button class="save waves-effect waves-light btn orange accent-3" type="submit">Editer</button>
     {{ form_end(form) }}
 </div>
 

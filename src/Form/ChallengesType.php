@@ -4,7 +4,8 @@ namespace App\Form;
 
 use App\Entity\Challenges;
 use App\Entity\Category;
-use App\Entity\Tag;
+use App\Entity\Tags;
+use App\Form\TagsType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -35,15 +36,7 @@ class ChallengesType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder'=>'Choisir une catégorie',
             ])
-            ->add('tags', EntityType::class,[
-                'class' => Tag::class,
-                'expanded' => true,
-                'multiple' => true,
-                'attr'   =>  array(
-                    'class'   => 'filled-in',
-                    'id'=>'categorie'
-                )
-            ])
+            ->add('tags',TagsType::class)
             ->add('status', CheckboxType::class, [
                 'label'    => 'Ouvert ? ',
                 'required' => false,
