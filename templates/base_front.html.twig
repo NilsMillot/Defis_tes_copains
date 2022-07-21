@@ -67,7 +67,7 @@
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {%  if(app.user) %}
                 {%  if(app.user.pro) %}
-                    <li><a href="{{ path('payment_new') }}">Payment</a></li>
+                    <li><a href="{{ path('payment_new') }}">Premium</a></li>
                 {% endif %}
             <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
