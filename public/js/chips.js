@@ -29,5 +29,9 @@ $(document).ready(function(){
         $('.tag-input').val(valueFinal)
     });
 
+    $('.chip').on("click", function(){
+        console.log($(this));
+         $(this).remove();
+    })
     
 });
