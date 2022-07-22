@@ -1,0 +1,14 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Edit Tags{% endblock %}
+
+{% block body %}
+<div class="container">
+
+<h1>Edit Tags</h1>
+
+    {{ include('back/tags/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('admin_tags_index') }}">back to list</a>
+</div>
+{% endblock %}
