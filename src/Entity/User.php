@@ -153,6 +153,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      */
     private $initials;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $subscribed;
+
     public function __construct()
     {
         $this->ranks = new ArrayCollection();
@@ -779,6 +784,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     public function setInitials(string $initials): self
     {
         $this->initials = $initials;
+
+        return $this;
+    }
+
+    public function isSubscribed(): ?bool
+    {
+        return $this->subscribed;
+    }
+
+    public function setSubscribed(?bool $subscribed): self
+    {
+        $this->subscribed = $subscribed;
 
         return $this;
     }

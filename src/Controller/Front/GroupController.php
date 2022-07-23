@@ -19,6 +19,8 @@ class GroupController extends AbstractController
         return $this->render('group/index.html.twig', [
             'groups' => $groupRepository->findAll(),
             'username' => $this->getUser()->getUsername(),
+            'userGroup'=> $this->getUser()->getIdGroup(),
+            'pro'=> $this->getUser()->getPro(),
 
         ]);
     }
