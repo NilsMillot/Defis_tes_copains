@@ -25,7 +25,7 @@ class ChallengesRepository extends ServiceEntityRepository
      */
     public function search($name = null, $category = null){
         $query = $this->createQueryBuilder('c');
-        $query->where('c.status=1');
+        $query->where('c.status=true');
         if($name !== null){
             $query->andWhere('LOWER(c.name) LIKE LOWER(:name)');
             $query->setParameter('name', '%'.$name.'%');
