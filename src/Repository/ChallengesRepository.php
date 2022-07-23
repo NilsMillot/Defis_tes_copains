@@ -19,6 +19,25 @@ class ChallengesRepository extends ServiceEntityRepository
         parent::__construct($registry, Challenges::class);
     }
 
+    /**
+     * Recherche des challenges en fonction du titre
+     * @return void
+     */
+    public function search($name = null, $category = null){
+        $query = $this->createQueryBuilder('c');
+        $query->where('c.status=1');
+        if($name !== null){
+            $query->andWhere('LOWER(c.name) LIKE LOWER(:name)');
+            $query->setParameter('name', '%'.$name.'%');
+        }
+        if($category !== null){
+            $query->leftJoin('c.category','ca');
+            $query->andWhere('ca.id = :id');
+            $query->setParameter('id',$category);
+        }
+        return $query->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Challenges[] Returns an array of Challenges objects
     //  */
