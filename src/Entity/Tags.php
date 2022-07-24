@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TagRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\TagsRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass=TagRepository::class)
+ * @ORM\Entity(repositoryClass=TagsRepository::class)
  */
-class Tag
+class Tags
 {
     /**
      * @ORM\Id
@@ -27,16 +27,13 @@ class Tag
     /**
      * @ORM\ManyToMany(targetEntity=Challenges::class, mappedBy="tags")
      */
-    private $challenge;
+    private $challenges;
+
+
 
     public function __construct()
     {
-        $this->challenge = new ArrayCollection();
-    }
-
-    public function __toString()
-    {
-        return $this->name;
+        $this->challenges = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -56,28 +53,39 @@ class Tag
         return $this;
     }
 
-    /**
-     * @return Collection|Challenges
-     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 
+    /**
+     * @return Collection<int, Challenges>
+     */
     public function getChallenges(): Collection
     {
         return $this->challenges;
     }
-    public function addChallenges(Challenges $challenge): self
+
+    public function addChallenge(Challenges $challenge): self
     {
-        if (!$this->challenges->contains($challenge)){
+        if (!$this->challenges->contains($challenge)) {
             $this->challenges[] = $challenge;
             $challenge->addTag($this);
         }
+
         return $this;
     }
 
-    public function removeChallenges(Challenges $challenge): self
+    public function removeChallenge(Challenges $challenge): self
     {
         if ($this->challenges->removeElement($challenge)) {
             $challenge->removeTag($this);
         }
+
         return $this;
     }
+
+
+
+
 }

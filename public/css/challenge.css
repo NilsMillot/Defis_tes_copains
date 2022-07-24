@@ -1,0 +1,28 @@
+/* .entire_remark:not(:first-child), .entire_post:not(:first-child) {
+  margin-top: 10px;
+} */
+
+.buttons_for_owner {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.buttons_for_owner i {
+  font-size: 18px;
+  margin: 0;
+}
+
+.entire_remark:hover .buttons_for_owner, .buttons_for_owner:hover {
+  opacity: 0.8;
+  transition: opacity 1s;
+} 
+
+@media screen and (max-width: 992px) {
+  .buttons_for_owner {
+    opacity: 0.8;
+    transition: opacity 1s;
+  }
+}

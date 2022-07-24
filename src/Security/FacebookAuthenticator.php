@@ -63,6 +63,10 @@ class FacebookAuthenticator extends OAuth2Authenticator
                     $user->setRoles(['ROLE_USER']);
                     $user->setEmail($email);
                     $user->setPassword('password');
+
+                    $userNames = explode(' ', $facebookUser->getName());
+                    $userInitials = sizeof($userNames) === 1 ? $userNames[0][0] : $userNames[0][0] . $userNames[1][0];
+                    $user->setInitials($userInitials);
                 }
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();

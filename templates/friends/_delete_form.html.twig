@@ -1,4 +1,6 @@
-<form method="post" action="{{ path('friends_delete', {'id': friend.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ friend.id) }}">
-    <button class="btn">Delete</button>
+<form method="post" action="{{ path('friends_delete', {'id': friend.id}) }}">
+	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ friend.id) }}">
+	<button style="background: none; cursor: pointer">
+		<i class="material-icons" style="color: red; margin: 5px 0 0 5px">clear</i>
+	</button>
 </form>

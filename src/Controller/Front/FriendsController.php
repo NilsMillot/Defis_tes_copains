@@ -4,7 +4,6 @@ namespace App\Controller\Front;
 
 use App\Entity\Friends;
 use App\Entity\FriendsSearch;
-use App\Form\FriendsType;
 use App\Form\FriendsSearchType;
 use App\Repository\FriendsRepository;
 use App\Repository\UserRepository;
@@ -27,36 +26,40 @@ class FriendsController extends AbstractController
     #[Route('/', name: 'friends_index', methods: ['GET', 'POST'])]
     public function index(Request $request, FriendsRepository $friendsRepository, UserRepository $userRepository): Response
     {
-        $friendsSendedByCurrentUser = $friendsRepository->findBy(['senderUser' => $this->getUser()]);
-        $friendsReceivedByCurrentUser = $friendsRepository->findBy(['receiverUser' => $this->getUser()]);
+        // crud part
+        $friendsSendedByCurrentUserStatusSent = $friendsRepository->findBy(['senderUser' => $this->getUser(), 'status' => 'sent']);
         $friendsReceivedByCurrentUserStatusSent = $friendsRepository->findBy(['receiverUser' => $this->getUser(), 'status' => 'sent']);
-        $friendsOfCurrentUser = array_merge($friendsSendedByCurrentUser, $friendsReceivedByCurrentUser);
-        $uniqueFriendsOfCurrentUser = array_unique($friendsOfCurrentUser);
+        $friendsOfCurrentUserStatusSent = array_merge($friendsSendedByCurrentUserStatusSent, $friendsReceivedByCurrentUserStatusSent);
+        $uniqueFriendsOfCurrentUserStatusSent = array_unique($friendsOfCurrentUserStatusSent);
 
         $arrUserFriendsReceivedStatusSent = [];
         for ($i = 0; $i < sizeof($friendsReceivedByCurrentUserStatusSent); $i++) {
             array_push($arrUserFriendsReceivedStatusSent, $userRepository->findOneBy(['id' => $friendsReceivedByCurrentUserStatusSent[$i]->getSenderUser()->getId()]));
         }
 
-        return $this->render('friends/index.html.twig', [
-            'friendsRequestsOfCurrentUser' => $uniqueFriendsOfCurrentUser,
-            'friendsRequestReceived' => $arrUserFriendsReceivedStatusSent ?? null,
-            'currentUser' => $this->getUser(),
-        ]);
-    }
-
-    #[Route('/new', name: 'friends_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FriendsRepository $friendsRepository, UserRepository $userRepository): Response
-    {
+        // search part
         $friendsAcceptedOrSentSendedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'senderUser' => $this->getUser()]);
         $friendsAcceptedOrSentReceivedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'receiverUser' => $this->getUser()]);
+        $friendsAcceptedSendedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted'], 'senderUser' => $this->getUser()]);
+        $friendsAcceptedReceivedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted'], 'receiverUser' => $this->getUser()]);
         $usersAcceptedOrSentReceivedByCurrentUser = array_map(function ($friend) {
             return $friend->getSenderUser();
         }, $friendsAcceptedOrSentReceivedByCurrentUser);
         $usersAcceptedOrSentSendedByCurrentUser = array_map(function ($friend) {
             return $friend->getReceiverUser();
         }, $friendsAcceptedOrSentSendedByCurrentUser);
+
+        $usersAcceptedReceivedByCurrentUser = array_map(function ($friend) {
+            return [$friend->getId(), $friend->getSenderUser()];
+        }, $friendsAcceptedReceivedByCurrentUser);
+
+        $usersAcceptedSendedByCurrentUser = array_map(function ($friend) {
+            return [$friend->getId(), $friend->getReceiverUser()];
+        }, $friendsAcceptedSendedByCurrentUser);
+
+        // dd($usersAcceptedReceivedByCurrentUser);
         $usersAcceptedOrSent = array_merge($usersAcceptedOrSentReceivedByCurrentUser, $usersAcceptedOrSentSendedByCurrentUser);
+        $usersAccepted = array_merge($usersAcceptedReceivedByCurrentUser, $usersAcceptedSendedByCurrentUser);
 
         $search = new FriendsSearch();
         $formSearch = $this->createForm(FriendsSearchType::class, $search);
@@ -70,13 +73,22 @@ class FriendsController extends AbstractController
                     return $e->getId() !== $this->getUser()->getId();
                 }
             );
+            $usrsAccpted = [];
+            for ($i = 0; $i < sizeof($usersAccepted); $i++) {
+                $usrsAccpted[$i] = $usersAccepted[$i][1];
+            }
+            $intersectSearchAndUsersAccepted = array_intersect($arrUsersExceptCurrent, $usrsAccpted);
         }
 
-        return $this->renderForm('friends/new.html.twig', [
-            'formSearch' => $formSearch,
-            'usersAcceptedOrSent' => $usersAcceptedOrSent,
+        return $this->renderForm('friends/index.html.twig', [
+            'friendsRequestsOfCurrentUserStatusSent' => $uniqueFriendsOfCurrentUserStatusSent,
+            'friendsRequestReceived' => $arrUserFriendsReceivedStatusSent ?? null,
             'currentUser' => $this->getUser(),
+            'formSearch' => $formSearch,
             'arrUsers' => $arrUsersExceptCurrent ?? null,
+            'usersAcceptedOrSent' => $usersAcceptedOrSent,
+            'usersAccepted' => $usersAccepted,
+            'intersectSearchAndUsersAccepted' => $intersectSearchAndUsersAccepted ?? null,
         ]);
     }
 
@@ -90,8 +102,11 @@ class FriendsController extends AbstractController
         $friend->setReceiverUser($userRepository->findOneBy(['id' => $request->get('id')]));
         $entityManager->persist($friend);
         $entityManager->flush();
-
-        return $this->redirectToRoute('friends_new', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash(
+            'notice',
+            'Demande d\'ami envoyée!'
+        );
+        return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 
 
@@ -102,15 +117,17 @@ class FriendsController extends AbstractController
     public function friendsAccept(Friends $friends, FriendsRepository $friendsRepository)
     {
         $entityManager = $this->getDoctrine()->getManager();
-
         $friendRequest = $friendsRepository->findOneBy(['id' => $friends->getId()]);
-
         if ($friendRequest->getReceiverUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
         $friendRequest->setStatus('accepted');
         $entityManager->persist($friendRequest);
         $entityManager->flush();
+        $this->addFlash(
+            'notice',
+            'Demande d\'ami acceptée!'
+        );
         return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -122,8 +139,11 @@ class FriendsController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($friend);
             $entityManager->flush();
+            $this->addFlash(
+                'notice',
+                'Ami refusé!'
+            );
         }
-
         return $this->redirectToRoute('friends_index', [], Response::HTTP_SEE_OTHER);
     }
 }

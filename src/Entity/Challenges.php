@@ -26,7 +26,7 @@ class Challenges implements \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=80)
      */
     private $name;
 
@@ -71,10 +71,6 @@ class Challenges implements \Serializable
      */
     private $category;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="challenge")
-     */
-    private $tags;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -90,6 +86,11 @@ class Challenges implements \Serializable
      * @ORM\OneToMany(targetEntity=UserLikeChallenge::class, mappedBy="challengesLiked")
      */
     private $userLikeChallenges;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Tags::class,cascade={"persist"} ,inversedBy="challenges")
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -128,18 +129,6 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(string $file )
-    {
-        $this->picture = $file;
-
-        return $this;
-
-    }
 
     public function getCreationDate(): ?\DateTimeInterface
     {
@@ -176,8 +165,6 @@ class Challenges implements \Serializable
 
         return $this;
     }
-
-
 
     /**
      * @return Collection|User[]
@@ -278,41 +265,8 @@ class Challenges implements \Serializable
         return $this;
     }
 
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->imageName,
-        ));
-    }
 
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->imageName,
-            ) = unserialize($serialized, array('allowed_classes' => false));
-    }
 
-    /**
-     * @return Collection|Tag[]
-     */
-    public function getTags(): Collection
-    {
-        return $this->tags;
-    }
-    public function addTag(Tag $tag): self
-    {
-        if (!$this->tags->contains($tag)) {
-            $this->tags[] = $tag;
-        }
-        return $this;
-    }
-    public function removeTag(Tag $tag): self
-    {
-        $this->tags->removeElement($tag);
-        return $this;
-    }
 
     public function getStatus(): ?bool
     {
@@ -357,12 +311,54 @@ class Challenges implements \Serializable
 
     public function removeUserLikeChallenge(UserLikeChallenge $userLikeChallenge): self
     {
-            if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
+        if ($this->userLikeChallenges->removeElement($userLikeChallenge)) {
             // set the owning side to null (unless already changed)
             if ($userLikeChallenge->getChallengesLiked() === $this) {
                 $userLikeChallenge->setChallengesLiked(null);
             }
         }
+
+        return $this;
+    }
+
+
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->imageName,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->imageName,
+            ) = unserialize($serialized, array('allowed_classes' => false));
+    }
+
+    /**
+     * @return Collection<int, Tags>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tags $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tags $tag): self
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }
