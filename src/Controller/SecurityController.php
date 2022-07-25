@@ -41,7 +41,7 @@ class SecurityController extends AbstractController
             ->getClient('facebook')
             ->redirect([
                 'public_profile', 'email'
-            ]);
+            ], []);
     }
 
     #[Route('/connect/facebook/check', name: 'connect_facebook_check', methods: ['GET'])]
@@ -58,7 +58,7 @@ class SecurityController extends AbstractController
             ->getClient('google')
             ->redirect([
                 'email'
-            ]);
+            ], []);
     }
 
     #[Route('/connect/google/check', name: 'connect_google_check', methods: ['GET'])]
@@ -87,9 +87,9 @@ class SecurityController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            if($user->getPro() == false) {
+            if ($user->getPro() == false) {
                 return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
-            }else{
+            } else {
                 return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
             }
         }
