@@ -1,0 +1,43 @@
+{% extends 'base_back.html.twig' %}
+
+{% block body %}
+    {# <div style="height: 400px; width: 400px ;text-align: center;"> #}
+    {# <span>Utilisations des catégories</span> #}
+    {# <canvas id="categories" width="400" height="400"></canvas> #}
+    {# </div> #}
+
+    <div class="content bg">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6 l3">
+                    <div class="card card-bg">
+                        <div class="card-content center teal accent-2">
+                            <p>Challenges</p>
+                            <h5>{{ challengeTotaux }}<i style='vertical-align: bottom' class="material-icons">bookmark_border</i></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l3">
+                    <div class="card card-bg">
+                        <div class="card-content center  pink accent-1">
+                            <p>Likes </p>
+                            <h5>{{ countLike }}<i style='vertical-align: bottom' class="material-icons">favorite_border</i></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col l12 m6 s12">
+                    <div class="card card-bg">
+                        <div class="card-content" >
+                            <canvas id="challengeDate" ></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+
