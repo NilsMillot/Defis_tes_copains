@@ -8,7 +8,7 @@ $(document).ready(function(){
                 $('#suivant_register').empty();
                 //$('#suivant_register').innerHTML = '''<button style="margin: 20px" class="btn btn-lg btn-primary" type="submit"> Inscription </button>''';
                 $('#suivant_register').append("<button style=" + "margin: 20px class=" + '"btn btn-lg btn-primary"' + 'type="submit">' + 'Suivant </button>');
-                $('form[name="register"]').append("<div>form stripe</div>");
+                // $('form[name="register"]').append("<div>form stripe</div>");
             } else {
                 console.log("pas pro")
                 $('#suivant_register').empty();
