@@ -38,6 +38,21 @@ class ChallengesRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+
+    /**
+     * return le nombre de challenge par date 
+    * @return void
+    */
+    public function countByDate()
+    {
+        $query = $this->createQueryBuilder('c');
+        //select par la date au format Y-m-d
+        $query->select('DATE(c.creation_date) as dateChallenge, COUNT(c.id) as count');
+        $query->groupBy('dateChallenge');
+        $query->orderBy('dateChallenge', 'ASC');
+        return $query->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Challenges[] Returns an array of Challenges objects
     //  */

@@ -89,7 +89,7 @@
                 <a class="collapsible-header" tabindex="0">Statistique<i class="material-icons chevron">chevron_left</i></a>
                 <div class="collapsible-body teal blue-grey darken-2">
                     <ul>
-                        <li><a  class="waves-effect" href="#!">Stats1</a></li>
+                        <li><a  class="waves-effect" href="{{ path('admin_statistical_index') }}">Stats1</a></li>
                     </ul>
                 </div>
             </li>
@@ -115,7 +115,10 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"
+        integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
 <script>
 {% for label, messages in app.flashes() %}
     {% for message in messages %}
@@ -142,6 +145,6 @@
 <script src="{{ asset('js/select.js') }}"></script>
 <script src="{{ asset('js/remarkSelect.js') }}"></script>
 <script src="{{ asset('js/chips.js') }}"></script>
-
+<script src="{{ asset('js/statistical.js') }}"></script>
 </body>
 </html>

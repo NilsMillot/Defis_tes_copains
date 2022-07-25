@@ -1,35 +1,16 @@
-{% extends 'base_front.html.twig' %}
-
-{% block title %}Statistical index{% endblock %}
+{% extends 'base_back.html.twig' %}
 
 {% block body %}
-    <h1>Statistical index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for statistical in statisticals %}
-            <tr>
-                <td>{{ statistical.id }}</td>
-                <td>{{ statistical.name }}</td>
-                <td>
-                    <a href="{{ path('statistical_show', {'id': statistical.id}) }}">show</a>
-                    <a href="{{ path('statistical_edit', {'id': statistical.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('statistical_new') }}">Create new</a>
+<div class="container">
+    <div style="height: 400px; width: 400px ;text-align: center;">
+        <span>Utilisations des catégories</span>
+        <canvas id="categories" width="400" height="400"></canvas>
+    </div>
+    <div style="height: 400px; width: 400px ;text-align: center;">
+        <span>Création de challenges par Date</span>
+        <canvas id="challengeDate" width="400" height="400"></canvas>
+    </div>
+</div>
 {% endblock %}
+
+

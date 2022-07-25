@@ -1,82 +1,64 @@
 <?php
 
-namespace App\Controller\Front;
+namespace App\Controller\Back;
 
 use App\Entity\Statistical;
 use App\Form\StatisticalType;
 use App\Repository\StatisticalRepository;
+use App\Repository\CategoryRepository;
+use App\Repository\ChallengesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/statistical')]
+
+#[Route('/admin/statistical')]
 class StatisticalController extends AbstractController
 {
-    #[Route('/', name: 'statistical_index', methods: ['GET'])]
-    public function index(StatisticalRepository $statisticalRepository): Response
+    #[Route('/data', name: 'admin_statistical_data', methods: ['GET'])]
+    public function data(CategoryRepository $categoryRepository, ChallengesRepository $challengesRepository): JsonResponse
     {
-        return $this->render('statistical/index.html.twig', [
-            'statisticals' => $statisticalRepository->findAll(),
-        ]);
-    }
 
-    #[Route('/new', name: 'statistical_new', methods: ['GET','POST'])]
-    public function new(Request $request): Response
-    {
-        $statistical = new Statistical();
-        $form = $this->createForm(StatisticalType::class, $statistical);
-        $form->handleRequest($request);
+        // On va chercher les données de la table category
+        $category = $categoryRepository->findAll();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($statistical);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('statistical_index', [], Response::HTTP_SEE_OTHER);
+        // On démonte les données pour les afficher dans le tableau et les donners à chart.js
+        $categoryNom = [];
+        $categoryCount = [];
+        foreach ($category as $cat) {
+            $categoryNom[] = $cat->getName();
+            $categoryCount[] = count($cat->getChallenges());
         }
 
-        return $this->renderForm('statistical/new.html.twig', [
-            'statistical' => $statistical,
-            'form' => $form,
-        ]);
-    }
+        // On va chercher le nombre de challenges par date
+        $challenges = $challengesRepository->countByDate();
+        $challengeDate = [];
+        $challengesCount = [];
 
-    #[Route('/{id}', name: 'statistical_show', methods: ['GET'])]
-    public function show(Statistical $statistical): Response
-    {
-        return $this->render('statistical/show.html.twig', [
-            'statistical' => $statistical,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'statistical_edit', methods: ['GET','POST'])]
-    public function edit(Request $request, Statistical $statistical): Response
-    {
-        $form = $this->createForm(StatisticalType::class, $statistical);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('statistical_index', [], Response::HTTP_SEE_OTHER);
+        foreach ($challenges as $challenge) {
+            $challengeDate[] = $challenge['dateChallenge'];
+            $challengesCount[] = $challenge['count'];
         }
 
-        return $this->renderForm('statistical/edit.html.twig', [
-            'statistical' => $statistical,
-            'form' => $form,
+        return new JsonResponse(
+            [
+                'categoryNom' => $categoryNom,
+                'categoryCount' => $categoryCount,
+                'challengeDate' => $challengeDate,
+                'challengeCount' => $challengesCount
+            ]
+        );
+
+    }
+
+    #[Route('/', name: 'admin_statistical_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        return $this->render('back/statistical/index.html.twig', [
+            'title' => 'statistique',
         ]);
     }
 
-    #[Route('/{id}', name: 'statistical_delete', methods: ['POST'])]
-    public function delete(Request $request, Statistical $statistical): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$statistical->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($statistical);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('statistical_index', [], Response::HTTP_SEE_OTHER);
-    }
 }
