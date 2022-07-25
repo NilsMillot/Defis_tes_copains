@@ -36,6 +36,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    /**
+     * return le nombre de challenge par date
+     * @return void
+     */
+    public function countByDate()
+    {
+        $query = $this->createQueryBuilder('u');
+        //select par la date au format Y-m-d
+        $query->select('DATE(u.createdAt) as dateUser, COUNT(u.id) as count');
+        $query->groupBy('dateUser');
+        $query->orderBy('dateUser', 'ASC');
+        return $query->getQuery()->getResult();
+    }
     // public function findOrCreateFromOauth (GithubResourceOwner $resourceOwner)
     // {
     //     $user = $this->createQueryBuilder('u')

@@ -1,0 +1,39 @@
+{% extends 'base_back.html.twig' %}
+
+{% block body %}
+
+
+    <div class="content bg">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <div class="card card-bg">
+                        <div class="card-content center teal accent-2">
+                            <p>User</p>
+                            <h5>{{ userTotaux }}<i style='vertical-align: bottom' class="material-icons">bookmark_border</i></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col l6 m12 s12">
+                    <div class="card card-bg">
+                        <div class="card-content"  >
+                             <canvas id="userDate"  ></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col l6 m12 s12">
+                    <div class="card card-bg">
+                        <div class="card-content"  >
+                            <canvas id="userPro"  style="margin: auto;" ></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+
