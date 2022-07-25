@@ -1,0 +1,8 @@
+:root {
+    --main-bg-color: #3C096C;
+    --btn-primary-color: #7B2CBF;
+}
+
+#main-nav {
+    background-color: var(--main-bg-color);
+}

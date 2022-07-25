@@ -1,0 +1,25 @@
+{% extends 'base_front.html.twig' %}
+
+{% block body %}
+	<h1 style="text-align: center">Contactez nous</h1>
+	<div style="max-width: 420px; width: 100%; border: 1px solid #ddd; padding: 20px; border-radius: 5px; display: flex; flex-direction: column; margin: auto">
+
+		{{ form_start(form) }}
+		{{ form_row(form.nom, {'attr': {'class': 'form-control'}}) }}
+
+		{{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
+
+		<div style="width: 100%">
+			{{ form_row(form.message, {'attr': {'class': 'form-control'}}) }}
+		</div>
+		<input type="submit" value="Envoyer" class="btn btn-primary" style="display: flex; margin: 20px auto 0">
+		{{ form_end(form) }}
+	</div>
+</div>{% endblock %}{% block stylesheets %}
+<style>
+	textarea {
+		resize: none;
+		border: 1px solid #9e9e9e;
+		height: 120px;
+	}
+</style>{% endblock %}
