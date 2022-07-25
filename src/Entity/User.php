@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Entity\Traits\VichUploadTrait;
+use App\Entity\Traits\TimesTampableTrait;
 // use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -20,6 +21,7 @@ use App\Entity\Traits\VichUploadTrait;
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     use VichUploadTrait;
+    use TimesTampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
