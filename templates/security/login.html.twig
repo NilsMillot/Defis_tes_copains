@@ -1,7 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Se connecter | DTC
-{% endblock %}
+{% block title %}Se connecter | DTC{% endblock %}
 
 {% block body %}
 	<div style="display: flex; flex-direction: row-reverse; justify-content: space-evenly; flex-wrap: wrap-reverse;">
@@ -36,7 +35,7 @@
 				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 			</input>
 
-			<button class="btn btn-lg pull-right btn-primary" style="margin-top: 20px" type="submit">
+			<button class="btn waves-effect waves-light btn-primary" style="margin-top: 20px" type="submit">
 				Connexion
 			</button>
 		</form>
@@ -60,21 +59,27 @@
 	</section>
 
 	<div id="icon-container" style="width: 420px; position: relative">
-	<h2 style="position: absolute; width: inherit; text-align: center; margin: 0; top: 40px">DTC</h2>
-	<p style="position: absolute; width: inherit; text-align: center; top: 80px">La plateforme des défis</h2>
+		<h2 style="position: absolute; width: inherit; text-align: center; margin: 0; top: 40px">DTC</h2>
+		<p style="position: absolute; width: inherit; text-align: center; top: 80px">La plateforme des défis</p>
+
 	</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.4/lottie.min.js"></script>
-<script src="{{ asset('js/lottie.js') }}"/>
+<script src="{{ asset('js/lottie.js') }}"/>{% endblock %}
 
+{% block stylesheet %}
+<style>
+	.validate {
+		color: #fff;
+		background-color: #007bff;
+	}
+	input {
+		/* border-bottom-color: var(--primary-btn-color); */
+		border-bottom: 1px solid var(--primary-btn-color) !important;
+		box-shadow: 0 1px 0 0 var(--primary-btn-color) !important;
+	}
+	label {
+		color: blue !important;
+	}
+</style>
 {% endblock %}
-{# {% block stylesheets %}
-	<style>
-		.container:last-element {
-			width: 90%;
-			/* background: slategray; */
-			display: flex;
-			flex-direction: row-reverse;
-		}
-	</style>
-{% endblock %} #}
