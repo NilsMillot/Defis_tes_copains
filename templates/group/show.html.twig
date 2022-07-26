@@ -4,39 +4,39 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Group</h1>	<a href="{{ path('group_index') }}" class="right"><button class="btn">Back</button></a>
+	<h1>Group <a href="{{ path('group_index') }}" class="right"><button class="btn">Back</button></a></h1>
 
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Id</th>
-				<td>{{ group.id }}</td>
-			</tr>
-			<tr>
-				<th>Name</th>
-				<td>{{ group.name }}</td>
-			</tr>
-			<tr>
-				<th>Number_user</th>
-				<td>{{ group.numberUser }}
-				</td>
-			</tr>
-			<tr>
-				<th>Users</th>
-				<td>
-					{% for usr in group.users %}
-						<span class="chip">{{ usr.username }}</span>
-					{% endfor %}
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="row">
+		<div class="col s4  flow-text">
+			<h3>Member</h3>
+			<ul>
+			{% for usr in group.users %}
+				<li><span class="chip">{{ usr.username }}</span></li>
+			{% endfor %}
+			</ul>
+		</div>
+		<div class="col s7 flow-text">
+			<h3>Challenges</h3>
+			<ul>
+				{% for chal in group_chal %}
+					<a href="{{ path('challenges_show', {'id': chal.id}) }}">
+						<li>
+							<span class="chip">{{ chal.name }}</span>
+						</li>
+					</a>
+				{% else %}
+					Vous n'avez pas encore de challenges pour ce groupe
+				{% endfor %}
+			</ul>
+			<a class="waves-effect waves-light btn green accent-3" href="{{ path('chalGrp_new', {'id': group.id}) }}">Créer challenge</a>
+
+		</div>
+	</div>
 
 	<div style="height: 40px"></div>
 
-	<a href="{{ path('group_edit', {'id': group.id}) }}" class="right"><button class="btn">Edit</button></a>
+	<a href="{{ path('group_edit', {'id': group.id}) }}"><button class="btn">Edit</button></a>
 
-	{{ include('group/_delete_form.html.twig') }}
 
 	<div style="height: 100px"></div>
 {% endblock %}

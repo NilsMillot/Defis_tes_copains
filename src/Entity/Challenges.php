@@ -91,6 +91,11 @@ class Challenges implements \Serializable
      */
     private $userLikeChallenges;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Group::class, inversedBy="challenges")
+     */
+    private $groupId;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -351,6 +356,18 @@ class Challenges implements \Serializable
                 $userLikeChallenge->setChallengesLiked(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGroupId(): ?Group
+    {
+        return $this->groupId;
+    }
+
+    public function setGroupId(?Group $groupId): self
+    {
+        $this->groupId = $groupId;
 
         return $this;
     }
