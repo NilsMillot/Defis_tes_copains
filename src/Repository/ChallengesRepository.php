@@ -53,6 +53,15 @@ class ChallengesRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+
+    public function findRecentChallenge()
+    {
+        $query = $this->createQueryBuilder('c');
+        $query->select('c.name');
+        $query->orderBy('c.creation_date', 'ASC');
+        $query->setMaxResults(1);
+        return $query->getQuery()->getResult();
+    }
     // /**
     //  * @return Challenges[] Returns an array of Challenges objects
     //  */
