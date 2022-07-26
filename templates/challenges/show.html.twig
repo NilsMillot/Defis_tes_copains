@@ -38,7 +38,7 @@
 			</div>
 			<div class="card-stacked">
 				<div class="card-content">
-					<p style="max-height: 110px; overflow: scroll;">{{ challenge.description }}</p>
+					<p style="max-height: 110px; overflow: auto;">{{ challenge.description }}</p>
 					<br>
 					{% if challenge.status == true %}
 						<span style="margin: 0 10px 0 10px;" class="chip teal accent-3">
@@ -71,7 +71,7 @@
 			</div>
 			<div class="card-action" style="padding: 0 0 10px 0">
 				<div class="row" style="display: flex; align-items: center; margin-bottom: 0;">
-					<div class="col s6" style="text-align: center; max-height: 160px; overflow: scroll;">
+					<div class="col s6" style="text-align: center; max-height: 160px; overflow: auto;">
 						<p>Créer le:
 							{{ challenge.creationDate ? challenge.creationDate|date('d-m-Y') : '' }}
 						</p>
