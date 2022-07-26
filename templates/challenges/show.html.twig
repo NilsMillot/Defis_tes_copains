@@ -101,11 +101,13 @@
 										{% set user = 1 %}
 									{% endif %}
 								{% endfor %}
+								{% if username != app.user.username %}
 								{% if user == 1  %}
 									<a style="padding: 0; margin-bottom: 10px;" class="waves-effect waves-light btn orange accent-3 " {{ disabled }} href="{{ path('challenges_delete_register', {'id': challenge.id}) }}">Se désinscrire</a>
 								{% else %}
 									<a style="padding: 0; margin-bottom: 10px;" class="waves-effect waves-light btn red accent-3 " {{ disabled }} href="{{ path('challenges_register', {'id': challenge.id}) }}">S'inscrire</a>
 								{%  endif %}
+								{% endif %}
 							</a>
 						</div>
 					</div>
