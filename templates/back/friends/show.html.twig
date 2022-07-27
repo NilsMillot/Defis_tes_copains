@@ -1,0 +1,33 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}User
+{% endblock %}
+
+{% block body %}
+	<h1>Demande d'amis</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ friend.id }}</td>
+			</tr>
+			<tr>
+				<th>Email de l'emetteur</th>
+				<td>{{ friend.senderUser.email }}</td>
+			</tr>
+			<tr>
+				<th>Email du receveur</th>
+				<td>{{ friend.receiverUser.email }}</td>
+			</tr>
+			<tr>
+				<th>Status de la demande</th>
+				<td>{{ friend.status }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('admin_friends_index') }}">retour aux demandes</a>
+
+
+{% endblock %}

@@ -36,6 +36,56 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    /**
+     * return le nombre de challenge par date
+     * @return void
+     */
+    public function countByDate()
+    {
+        $query = $this->createQueryBuilder('u');
+        //select par la date au format Y-m-d
+        $query->select('DATE(u.createdAt) as dateUser, COUNT(u.id) as count');
+        $query->groupBy('dateUser');
+        $query->orderBy('dateUser', 'ASC');
+        return $query->getQuery()->getResult();
+    }
+
+    public function findRecentUser()
+    {
+        $query = $this->createQueryBuilder('u');
+        $query->select('u.username');
+        $query->orderBy('u.createdAt', 'ASC');
+        $query->setMaxResults(1);
+        return $query->getQuery()->getResult();
+    }
+
+//    public function findByMaxChallenge()
+//    {
+//        $query = $this->createQueryBuilder('u');
+//        $query->select('u.username, COUNT(u.username)');
+//        $query->join('u.challenge', 'cu');
+//        $query->groupBy('u.username');
+//        $query->having('count(u.username)');
+//        $query->select('max(countuser) as usercount');
+//        $query->select('u.username, COUNT(u.username)');
+//        $query->join('u.challenge', 'cus');
+//        $query->groupBy('u.username');
+//
+//
+//
+//        return $query->getQuery()->getResult();
+//
+//    }
+
+//SELECT username, COUNT(username)
+//FROM "user"   join challenges_user on "user".id = challenges_user.user_id GROUP BY username
+//HAVING COUNT (username)=(
+//SELECT MAX(countuser)
+//FROM (
+//SELECT username, COUNT(username) countuser
+//FROM "user" join challenges_user on "user".id = challenges_user.user_id
+//GROUP BY username) as usercount);
+
     // public function findOrCreateFromOauth (GithubResourceOwner $resourceOwner)
     // {
     //     $user = $this->createQueryBuilder('u')

@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Entity\Traits\VichUploadTrait;
+use App\Entity\Traits\TimesTampableTrait;
 // use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -20,6 +21,7 @@ use App\Entity\Traits\VichUploadTrait;
 class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
     use VichUploadTrait;
+    use TimesTampableTrait;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -157,6 +159,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
      * @ORM\Column(type="string", length=2)
      */
     private $initials;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $subscribed;
 
     public function __construct()
     {
@@ -301,17 +308,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         return $this;
     }
 
-    public function getIdPost(): ?Post
-    {
-        return $this->idPost;
-    }
-
-    public function setIdPost(?Post $idPost): self
-    {
-        $this->idPost = $idPost;
-
-        return $this;
-    }
+//    public function getIdPost(): ?Post
+//    {
+//        return $this->idPost;
+//    }
+//
+//    public function setIdPost(?Post $idPost): self
+//    {
+//        $this->idPost = $idPost;
+//
+//        return $this;
+//    }
 
     /**
      * @return Collection|Challenges[]
@@ -815,6 +822,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
     public function setInitials(string $initials): self
     {
         $this->initials = $initials;
+
+        return $this;
+    }
+
+    public function isSubscribed(): ?bool
+    {
+        return $this->subscribed;
+    }
+
+    public function setSubscribed(?bool $subscribed): self
+    {
+        $this->subscribed = $subscribed;
 
         return $this;
     }

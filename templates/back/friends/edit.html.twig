@@ -1,0 +1,14 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Edition de la demande d'amis{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Edition de la demande d'amis</h1>
+
+    {{ include('back/friends/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+    <a href="{{ path('admin_friends_index') }}">retour aux demandes d'amis</a>
+
+</div>
+{% endblock %}

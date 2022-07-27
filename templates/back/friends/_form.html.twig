@@ -1,0 +1,24 @@
+<div class="row">
+	{{ form_start(form) }}
+	<div class="row">
+		<div class=" col s12">
+			<span>{{ form_label(form.senderUser) }}</span>
+			{{ form_widget(form.senderUser) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class=" col s12">
+			<span>{{ form_label(form.receiverUser) }}</span>
+			{{ form_widget(form.receiverUser) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class=" col s12">
+			<span>{{ form_label(form.status) }}</span>
+			{{ form_widget(form.status) }}
+		</div>
+	</div>
+
+	<button class="btn">{{ button_label|default('Nouvelle invitation') }}</button>
+	{{ form_end(form) }}
+</div>

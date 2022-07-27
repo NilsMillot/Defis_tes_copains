@@ -1,0 +1,11 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Edition du profil{% endblock %}
+
+{% block body %}
+
+    {{ include('user/_form.html.twig', {'button_label': 'Editer'}) }}
+    <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('user_index') }}">back to list</a>
+
+{% endblock %}
+

@@ -43,30 +43,30 @@
             <div class="nav-wrapper">
                 <span href="#!" class="brand-logo grey-text text-darken-4 center">{{ title }}</span>
                 <ul id="nav-mobile" class="right">
-                    <li class="black hide-on-med-and-down"><a href="{{ path('front_default') }}">Retour au site </a>
+                    <li class="cyan darken-1 hide-on-med-and-down"><a href="{{ path('challenges_index') }}">Retour au site </a>
                     </li>
                 </ul>
             </div>
         </nav>
     </div>
 
-    <ul id="sidenav-left" class="sidenav sidenav-fixed teal blue-grey darken-2" style="transform:translateX(0px)">
-        <li><a href="" class="logo-container">Admin<i class="material-icons left">spa</i></a></li>
-        <li class="no-padding">
+    <ul id="sidenav-left" class="sidenav sidenav-fixed cyan darken-1" style="transform:translateX(0px)">
+        <li><a href="{{ path('admin_home') }}" class="logo-container">Admin<i class="white-text material-icons left">filter_vintage</i></a></li>
+        <li class="no-padding" >
             <ul class="collapsible collapsible-accordion ">
-                <li class="waves-effects">
-                <a class="collapsible-header" tabindex="0">Users<i class="material-icons chevron">chevron_left</i></a>
-                <div class="collapsible-body teal blue-grey darken-2">
+                <li class="waves-effects" >
+                <a class="collapsible-header" tabindex="0">Users<i class=" white-text material-icons chevron">chevron_left</i></a>
+                <div class="collapsible-body cyan darken-2">
                     <ul>
                         <li><a  class="waves-effect" href="{{ path('admin_user_index') }}">Utilisateur</a></li>
-                        <li><a class="waves-effect" href="#!">Amis</a></li>
-                        <li><a  class="waves-effect"href="#!">Groupes</a></li>
+                        <li><a class="waves-effect" href="{{ path('admin_friends_index') }}">Amis</a></li>
                     </ul>
                 </div>
             </li>
-            <li class="">
-                <a class="collapsible-header" tabindex="0">Challenges<i class="material-icons chevron">chevron_left</i></a>
-                <div class="collapsible-body teal blue-grey darken-2">
+                <th></th>
+            <li class="" >
+                <a class="collapsible-header" tabindex="0">Challenges<i class="white-text material-icons chevron">chevron_left</i></a>
+                <div class="collapsible-body cyan darken-2">
                     <ul>
                         <li><a  class="waves-effect" href="{{ path('admin_challenges_index') }}">Challenges</a></li>
                         <li><a  class="waves-effect" href="{{ path('admin_signalement_index') }}">Signalement</a></li>
@@ -77,27 +77,21 @@
                     </ul>
                 </div>
             </li>
-            <li class="">
-                <a class="collapsible-header" tabindex="0">Paiements<i class="material-icons chevron">chevron_left</i></a>
-                <div class="collapsible-body teal blue-grey darken-2">
+            {# <li class="">
+                <a class="collapsible-header" tabindex="0">Paiements<i class="white-text material-icons chevron">chevron_left</i></a>
+                <div class="collapsible-body cyan darken-2">
                     <ul>
                         <li><a  class="waves-effect" href="#!">Paiements</a></li>
                     </ul>
                 </div>
-            </li>
-            <li class="">
-                <a class="collapsible-header" tabindex="0">Statistique<i class="material-icons chevron">chevron_left</i></a>
-                <div class="collapsible-body teal blue-grey darken-2">
+            </li> #}
+            <li class="" >
+                <a class="collapsible-header" tabindex="0">Statistique<i class="white-text material-icons chevron">chevron_left</i></a>
+                <div class="collapsible-body cyan darken-2">
                     <ul>
-                        <li><a  class="waves-effect" href="#!">Stats1</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li class="">
-                <a class="collapsible-header" tabindex="0">Contact<i class="material-icons chevron">chevron_left</i></a>
-                <div class="collapsible-body teal blue-grey darken-2">
-                    <ul>
-                        <li><a class="waves-effect" href="#!">Réponse</a></li>
+                        <li><a  class="waves-effect" href="{{ path('admin_statistical_user') }}">Utilisateur</a></li>
+                        <li><a  class="waves-effect" href="{{ path('admin_statistical_challenge') }}">Challenges</a></li>
+                        <li><a  class="waves-effect" href="{{ path('admin_statistical_category') }}">Catégories</a></li>
                     </ul>
                 </div>
             </li>
@@ -115,7 +109,10 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"
+        integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
 <script>
 {% for label, messages in app.flashes() %}
     {% for message in messages %}
@@ -142,6 +139,6 @@
 <script src="{{ asset('js/select.js') }}"></script>
 <script src="{{ asset('js/remarkSelect.js') }}"></script>
 <script src="{{ asset('js/chips.js') }}"></script>
-
+<script src="{{ asset('js/statistical.js') }}"></script>
 </body>
 </html>

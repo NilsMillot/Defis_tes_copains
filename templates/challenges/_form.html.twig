@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <button class="save waves-effect waves-light btn orange accent-3" type="submit">Editer</button>
+    <button class=" save btn btn-primary waves-effect waves-light" style="display: flex; margin: auto" type="submit">Sauvegarder</button>
     {{ form_end(form) }}
 </div>
 
@@ -58,4 +58,21 @@
         margin-top: 30px;
         margin-bottom: 30px;
     }
+    form {
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    .active {
+		color: var(--btn-primary-color) !important;
+	}
+    .lever::after {
+        background: #ddd !important;
+    }
+    .focus {
+		border-bottom: 1px solid var(--btn-primary-color) !important;
+	}
+    ul li span {
+		color: var(--btn-primary-color) !important;
+	}
 </style>

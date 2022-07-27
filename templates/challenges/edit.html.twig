@@ -1,11 +1,11 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Edit Challenges{% endblock %}
+{% block title %}Edition de challenge | DTC{% endblock %}
 
 {% block body %}
-    <h1>Edit Challenges</h1>
+    <h1>Modification du challenge</h1>
 
     {{ include('challenges/_form.html.twig', {'button_label': 'Editer'}) }}
-    <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">back to list</a>
+    <a class="waves-effect waves-light btn btn-primary" style="margin: 0 auto 20px; display: flex; width: fit-content;" href="{{ path('challenges_index') }}">retour aux challenges</a>
 
 {% endblock %}

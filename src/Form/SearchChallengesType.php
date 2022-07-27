@@ -18,13 +18,13 @@ class SearchChallengesType extends AbstractType
             ->add('name', SearchType::class,[
                 'label'=> false,
                 'attr'=>[
-                    'placeholder'=>'Entrer un Nom de challenge'
+                    'placeholder'=>'Chercher le nom d\'un challenge'
                 ],
                 'required'=>false
             ])
             ->add('categorie', EntityType::class,[
                 'class'=> Category::class,
-                'label'=>false,
+                'label'=>"categorie",
                 'required'=>false,
                 'attr'=>[
                     'placeholder'=>'Choisir une Catégorie'
@@ -32,7 +32,7 @@ class SearchChallengesType extends AbstractType
             ])
             ->add('Rechercher', SubmitType::class,[
                 'attr'=>[
-                    'class'=>'waves-effect waves-light btn green accent-3'
+                    'class'=>'waves-effect waves-light btn btn-primary'
                 ]
             ])
         ;

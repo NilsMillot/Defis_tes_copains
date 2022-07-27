@@ -1,74 +1,85 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Log in!
-{% endblock %}
+{% block title %}Se connecter | DTC{% endblock %}
 
 {% block body %}
-	<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+	<div style="display: flex; flex-direction: row-reverse; justify-content: space-evenly; flex-wrap: wrap-reverse;">
+		<section>
+			<h1 class="h3 mb-3 font-weight-normal" style="margin: 70px 0 20px 0; text-align: center">Se connecter</h1>
 
-	<form method="post">
-		{% if error %}
-			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-		{% endif %}
+			<form method="post" style="max-width: 420px; width: 100%; border: 1px solid #ddd; padding: 20px; border-radius: 5px; display: flex; flex-direction: column; margin: auto">
+				{% if error %}
+					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{% endif %}
 
-		{% if app.user %}
-			<div class="mb-3">
-				You are logged in as
-				{{ app.user.username }},
-				<a href="{{ path('app_logout') }}">Logout</a>
-			</div>
-		{% endif %}
+				{% if app.user %}
+					<div class="mb-3">
+						Tu es déjà connecté
+						{{ app.user.username }}.
+						<a href="{{ path('app_logout') }}">Se déconnecter</a>
+					</div>
+				{% endif %}
 
-		<label for="inputEmail">Email</label>
-		<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-		<label for="inputPassword">Password</label>
-		<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
-		<input
-		type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				<div class="input-field">
+					<input placeholder="johndoe@gmail.com" id="inputEmail" type="email" class="validate" name="email" value="{{ last_username }}" required autofocus autocomplete="email">
+					<label for="inputEmail">Email</label>
+				</div>
+				<div class="input-field">
+					<input id="inputPassword" type="password" class="validate" name="password" required autofocus autocomplete="current-password">
+					<label for="inputPassword">Mot de passe</label>
+				</div>
+				<a href="/reset-password" style="font-size: 0.8rem">
+					Mot de passe oublié
+				</a>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			</input>
 
-		{#
-										        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-										        See https://symfony.com/doc/current/security/remember_me.html
-										
-										        <div class="checkbox mb-3">
-										            <label>
-										                <input type="checkbox" name="_remember_me"> Remember me
-										            </label>
-										        </div>
-										    #}
+			<button class="btn waves-effect waves-light btn-primary" style="margin-top: 20px" type="submit">
+				Connexion
+			</button>
+		</form>
 
-		<button class="btn btn-lg pull-right btn-primary" type="submit">
-			Sign in
-		</button>
-	</form>
+		<p style="margin: 30px auto; width: fit-content">
+			Pas encore de compte ?
+			<a href="/register">
+				S'inscrire
+			</a>
+		</p>
 
-	<div id="link">
-		Pas encore de compte ?
-		<a href="/register">
-			S'inscrire
-		</a>
+		<div style="margin: 20px auto; width: fit-content; padding-bottom: 90px">
+			<a href="{{ path('connect_facebook_start') }}">
+				Connexion avec Facebook
+			</a>
+			|
+			<a href="{{ path('connect_google_start') }}">
+				Connexion avec Google
+			</a>
+		</div>
+	</section>
 
-		<a href="{{ path('connect_facebook_start') }}">
-			Login with Facebook
-		</a>
-
-		<a href="{{ path('connect_google_start') }}">
-			Login with Google
-		</a>
+	<div id="icon-container" style="width: 420px; position: relative">
+		<h2 style="position: absolute; width: inherit; text-align: center; margin: 0; top: 40px">DTC</h2>
+		<p style="position: absolute; width: inherit; text-align: center; top: 80px">La plateforme des défis</p>
 
 	</div>
-	<style>
-		form {
-			width: 70%;
-			margin: auto;
-		}
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.4/lottie.min.js"></script>
+<script src="{{ asset('js/lottie.js') }}"/>{% endblock %}
 
-		#link {
-			display: block;
-			margin: auto;
-			width: fit-content;
-			padding: 60px;
-		}
-	</style>
+{% block stylesheet %}
+<style>
+	.validate {
+		color: #fff;
+		background-color: #007bff;
+	}
+	input {
+		/* border-bottom-color: var(--primary-btn-color); */
+		border-bottom: 1px solid var(--primary-btn-color) !important;
+		box-shadow: 0 1px 0 0 var(--primary-btn-color) !important;
+	}
+	label {
+		color: blue !important;
+	}
+</style>
 {% endblock %}

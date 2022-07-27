@@ -1,8 +1,6 @@
 $('.liked').on('click',function(){
     let count = $(this).prev().text();
-    console.log($(this).attr('class'))
     if($(this).hasClass('like') ){
-        console.log('like')
         $.ajax({
             url: $(this).data('url'),
             type: "GET",
@@ -14,7 +12,6 @@ $('.liked').on('click',function(){
             }
         });
     }else{
-        console.log('unlike')
         $.ajax({
             url: $(this).data('url'),
             type: "GET",

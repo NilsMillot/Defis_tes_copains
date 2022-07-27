@@ -1,8 +1,71 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
 
-    Admin
+    <div class="content bg">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6 l4">
+                    <div class="card card-bg">
+                        <div class="card-content center teal accent-2">
+                            <p>Utilisateurs</p>
+                            <h4>{{ userTotaux }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l4">
+                    <div class="card card-bg">
+                        <div class="card-content center  pink accent-1">
+                            <p>Dernier Utilisateur créer </p>
+                            <h4> {{ userRecent.username }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l4">
+                    <div class="card card-bg">
+                        <div class="card-content center  lime accent-1">
+                            <p>Groupe </p>
+                            <h4> {{ groupTotaux }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l4">
+                    <div class="card card-bg">
+                        <div class="card-content center light-green accent-2">
+                            <p>Challenges</p>
+                            <h4>{{ challengeTotaux }}
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l4">
+                    <div class="card card-bg">
+                        <div class="card-content center  orange accent-1">
+                            <p>Dernier Challenge créer </p>
+                            <h4> {{ challengeRecent.name }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l4">
+                    <div class="card card-bg">
+                        <div class="card-content center deep-purple accent-1">
+                            <p>Post  </p>
+                            <h4> {{ postTotaux }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l4">
+                    <div class="card card-bg">
+                        <div class="card-content center red accent-1">
+                            <p>Commentaire  </p>
+                            <h4>  {{ remarkTotaux }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

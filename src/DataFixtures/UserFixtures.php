@@ -12,6 +12,13 @@ class UserFixtures extends Fixture
     const USER_TEST_1 = 'USER_TEST_1';
     const USER_TEST_2 = 'USER_TEST_2';
     const USER_TEST_3 = 'USER_TEST_3';
+    const USER_TEST_4 = 'USER_TEST_4';
+    const USER_TEST_5 = 'USER_TEST_5';
+    const USER_TEST_6 = 'USER_TEST_6';
+    const USER_TEST_7 = 'USER_TEST_7';
+    const USER_TEST_8 = 'USER_TEST_8';
+    const USER_TEST_9 = 'USER_TEST_9';
+    const USER_TEST_10 = 'USER_TEST_10';
     const USER_ADMIN = 'USER_ADMIN';
 
     public function __construct(UserPasswordHasherInterface $userPasswordHasher)
@@ -21,12 +28,22 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        for ($i = 1; $i < 4; $i++) {
+        for ($i = 1; $i < 10; $i++) {
+            /*if($i = 3){
+                $user = (new User())
+                    ->setUsername('user test' . $i)
+                    ->setEmail('test' . $i . '@gmail.com')
+                    ->setRoles(['ROLE_USER'])
+                    ->setStatut(true)
+                    ->setPro(true)
+                    ->setInitials('T' . $i);
+            } else{*/
             $user = (new User())
                 ->setUsername('user test' . $i)
                 ->setEmail('test' . $i . '@gmail.com')
                 ->setRoles(['ROLE_USER'])
                 ->setStatut(true)
+                ->setPro($i == 3)
                 ->setInitials('T' . $i);
             $user->setPassword($this->userPasswordHaser->hashPassword($user, 'test'));
 
