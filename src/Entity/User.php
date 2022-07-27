@@ -303,17 +303,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \Serial
         return $this;
     }
 
-    public function getIdPost(): ?Post
-    {
-        return $this->idPost;
-    }
-
-    public function setIdPost(?Post $idPost): self
-    {
-        $this->idPost = $idPost;
-
-        return $this;
-    }
+//    public function getIdPost(): ?Post
+//    {
+//        return $this->idPost;
+//    }
+//
+//    public function setIdPost(?Post $idPost): self
+//    {
+//        $this->idPost = $idPost;
+//
+//        return $this;
+//    }
 
     /**
      * @return Collection|Challenges[]
