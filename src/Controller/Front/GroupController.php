@@ -4,8 +4,14 @@ namespace App\Controller\Front;
 
 use App\Entity\Group;
 use App\Entity\Challenges;
+use App\Entity\FriendsSearch;
+
+use App\Form\FriendsSearchType;
 use App\Form\GroupType;
+
 use App\Repository\GroupRepository;
+use App\Repository\UserRepository;
+use App\Repository\FriendsRepository;
 use App\Repository\ChallengesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,12 +47,60 @@ class GroupController extends AbstractController
     }
 
     #[Route('/new', name: 'group_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, UserRepository $userRepository, FriendsRepository $friendsRepository,): Response
     {
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
         $group->setNumberUser(sizeOf($group->getUsers()));
+
+        $search = new FriendsSearch();
+        $formSearch = $this->createForm(FriendsSearchType::class, $search);
+        $formSearch->handleRequest($request);
+
+        $friendsAcceptedOrSentSendedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'senderUser' => $this->getUser()]);
+        $friendsAcceptedOrSentReceivedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'receiverUser' => $this->getUser()]);
+        $friendsAcceptedSendedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted'], 'senderUser' => $this->getUser()]);
+        $friendsAcceptedReceivedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted'], 'receiverUser' => $this->getUser()]);
+
+        $friendsSendedByCurrentUserStatusSent = $friendsRepository->findBy(['senderUser' => $this->getUser(), 'status' => 'sent']);
+        $friendsReceivedByCurrentUserStatusSent = $friendsRepository->findBy(['receiverUser' => $this->getUser(), 'status' => 'sent']);
+        $friendsOfCurrentUserStatusSent = array_merge($friendsSendedByCurrentUserStatusSent, $friendsReceivedByCurrentUserStatusSent);
+        $uniqueFriendsOfCurrentUserStatusSent = array_unique($friendsOfCurrentUserStatusSent);
+
+        $usersAcceptedOrSentReceivedByCurrentUser = array_map(function ($friend) {
+            return $friend->getSenderUser();
+        }, $friendsAcceptedOrSentReceivedByCurrentUser);
+        $usersAcceptedOrSentSendedByCurrentUser = array_map(function ($friend) {
+            return $friend->getReceiverUser();
+        }, $friendsAcceptedOrSentSendedByCurrentUser);
+
+        $usersAcceptedReceivedByCurrentUser = array_map(function ($friend) {
+            return [$friend->getId(), $friend->getSenderUser()];
+        }, $friendsAcceptedReceivedByCurrentUser);
+
+        $usersAcceptedSendedByCurrentUser = array_map(function ($friend) {
+            return [$friend->getId(), $friend->getReceiverUser()];
+        }, $friendsAcceptedSendedByCurrentUser);
+
+        // dd($usersAcceptedReceivedByCurrentUser);
+        $usersAcceptedOrSent = array_merge($usersAcceptedOrSentReceivedByCurrentUser, $usersAcceptedOrSentSendedByCurrentUser);
+        $usersAccepted = array_merge($usersAcceptedReceivedByCurrentUser, $usersAcceptedSendedByCurrentUser);
+
+        if ($formSearch->isSubmitted() && $formSearch->isValid() && $formSearch->getData()->getName() != null) {
+            $arrUsers = $userRepository->findUsers($formSearch->getData()->getName());
+            $arrUsersExceptCurrent = array_filter(
+                $arrUsers,
+                function ($e) {
+                    return $e->getId() !== $this->getUser()->getId();
+                }
+            );
+            $usrsAccpted = [];
+            for ($i = 0; $i < sizeof($usersAccepted); $i++) {
+                $usrsAccpted[$i] = $usersAccepted[$i][1];
+            }
+            $intersectSearchAndUsersAccepted = array_intersect($arrUsersExceptCurrent, $usrsAccpted);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             if($group->getNumberUser() > 3 && !$this->getUser()->isSubscribed()){
@@ -69,6 +123,14 @@ class GroupController extends AbstractController
         return $this->renderForm('group/new.html.twig', [
             'group' => $group,
             'form' => $form,
+
+            'friendsRequestsOfCurrentUserStatusSent' => $uniqueFriendsOfCurrentUserStatusSent,
+            'usersAccepted' => $usersAccepted,
+            'usersAcceptedOrSent' => $usersAcceptedOrSent,
+            'formSearch' => $formSearch,
+            'arrUsers' => $arrUsersExceptCurrent ?? null,
+            'intersectSearchAndUsersAccepted' => $intersectSearchAndUsersAccepted ?? null,
+
         ]);
     }
 

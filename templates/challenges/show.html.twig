@@ -17,9 +17,6 @@
 	<link href="{{ asset('css/challenge.css') }}" rel="stylesheet"/>
 	<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 15px;">
 		<h1 id='{{ challenge.id }}' style="margin: 0">{{ challenge.name }}</h1>
-		{% for user in users %}
-			{{ user }}
-		{% endfor %}
 		<a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('challenges_index') }}">Retour a la liste</a>
 	</div>
 	<div>

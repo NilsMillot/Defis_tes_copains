@@ -16,7 +16,7 @@
 				</button>
 				{{ form_end(formSearch) }}
 			</section>
-			<div id="array_all_users_search" style="min-width: 420px max-width: 720px; max-height: 60vh; overflow: scroll; margin-top: 20px; border-radius: 20px" class="collection">
+			<div id="array_all_users_search" style="min-width: 420px; max-width: 720px; max-height: 60vh; overflow: scroll; margin-top: 20px; border-radius: 20px" class="collection">
 				{% if arrUsers|length > 0 %}
 					{% set currentUser = app.user %}
 					{% for friend in arrUsers %}
