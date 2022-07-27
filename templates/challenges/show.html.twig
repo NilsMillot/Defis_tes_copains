@@ -23,7 +23,11 @@
 	<div>
 		<div class="card horizontal row" style="max-height: 450px; margin-bottom: 50px">
 			<div style="display: flex; background: #ddd; padding: 0; min-width: 120px; position: relative" class="col s4">
+			{% if vich_uploader_asset(challenge, 'imageFile') %}
 				<img src={{ vich_uploader_asset(challenge, 'imageFile') }} style="width: 100%; object-fit: cover; "/>
+			{% else %}
+				<img src="{{ asset('images/logo/DTC.png') }}" style="width: 100%; object-fit: cover; "/>
+			{% endif %}
 				{% if challenge.winner %}
 					<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px; position: absolute; left: 50%; top: 50%; margin: -30px 0 0 -40px;">
 						<img src="{{ asset('images/logo/crown-winner.svg') }}" alt="crown winner" style="position: absolute; top: -58px; width: 70px; color: red;"/>

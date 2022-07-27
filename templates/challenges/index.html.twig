@@ -1,6 +1,5 @@
 {% extends 'base_front.html.twig' %}
-{% block title %}Tous les challenges | DTC
-{% endblock %}
+{% block title %}Tous les challenges | DTC{% endblock %}
 {% set username = "" %}
 {% block body %}
 	<div style="display: flex; margin-top: 20px; margin-bottom: 15px; justify-content: space-between; align-items: center;">
@@ -14,8 +13,12 @@
 			<div class="one_challenge_card_global col s6">
 				<div class="card">
 					<div class="card-image" style="background: #ddd">
-						<img height="300px" style="object-fit: cover;"
-							 src="{{ vich_uploader_asset(challenge, 'imageFile') }}">
+					{% if vich_uploader_asset(challenge, 'imageFile') %}
+						<img src={{ vich_uploader_asset(challenge, 'imageFile') }} height="300px" style="object-fit: cover;"/>
+					{% else %}
+						<img src="{{ asset('images/logo/DTC.png') }}" height="300px" style="object-fit: cover;"/>
+					{% endif %}
+						
 						<span class="card-title"
 							  style="display: inline-flex; flex-wrap: wrap; align-items: center;">{{ challenge.name }}
 							{% if challenge.status == true %}
@@ -40,8 +43,8 @@
 							<span style="font-size: 0.7rem; font-weight: 500;">infos</span>
 						</a>
 					</div>
-					<div class="card-content">
-						<p>{{ challenge.description }}</p>
+					<div class="card-content" style="height: 120px; overflow: hidden;">
+						<p>{{ challenge.description|length > 120 ? challenge.description|slice(0, 120) ~ '...' : challenge.description  }}</p>
 					</div>
 				</div>
 			</div>

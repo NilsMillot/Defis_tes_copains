@@ -59,8 +59,7 @@
                 <div class="collapsible-body cyan darken-2">
                     <ul>
                         <li><a  class="waves-effect" href="{{ path('admin_user_index') }}">Utilisateur</a></li>
-                        <li><a class="waves-effect" href="#!">Amis</a></li>
-                        <li><a  class="waves-effect"href="#!">Groupes</a></li>
+                        <li><a class="waves-effect" href="{{ path('admin_friends_index') }}">Amis</a></li>
                     </ul>
                 </div>
             </li>
@@ -78,14 +77,14 @@
                     </ul>
                 </div>
             </li>
-            <li class="">
+            {# <li class="">
                 <a class="collapsible-header" tabindex="0">Paiements<i class="white-text material-icons chevron">chevron_left</i></a>
                 <div class="collapsible-body cyan darken-2">
                     <ul>
                         <li><a  class="waves-effect" href="#!">Paiements</a></li>
                     </ul>
                 </div>
-            </li>
+            </li> #}
             <li class="" >
                 <a class="collapsible-header" tabindex="0">Statistique<i class="white-text material-icons chevron">chevron_left</i></a>
                 <div class="collapsible-body cyan darken-2">
@@ -93,14 +92,6 @@
                         <li><a  class="waves-effect" href="{{ path('admin_statistical_user') }}">Utilisateur</a></li>
                         <li><a  class="waves-effect" href="{{ path('admin_statistical_challenge') }}">Challenges</a></li>
                         <li><a  class="waves-effect" href="{{ path('admin_statistical_category') }}">Catégories</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li class="" >
-                <a class="collapsible-header" tabindex="0">Contact<i class="white-text material-icons chevron">chevron_left</i></a>
-                <div class="collapsible-body cyan darken-2">
-                    <ul>
-                        <li><a class="waves-effect" href="#!">Réponse</a></li>
                     </ul>
                 </div>
             </li>
