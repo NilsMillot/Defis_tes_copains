@@ -63,6 +63,12 @@ class GroupController extends AbstractController
                 $entityManager->flush();
 
                 $nameOfGroup = $group->getName();
+                if (in_array($this->getUser()->getUsername(), (array)$group->getUsers()))
+                    $this->addFlash(
+                        'notice',
+                        'Non non nooon !! Ne créez pas de groupe sans vous inclure'
+                    );
+                else
                 $this->addFlash(
                     'notice',
                     'Groupe "' . $nameOfGroup .  '" créé !'
@@ -75,6 +81,7 @@ class GroupController extends AbstractController
         return $this->renderForm('group/new.html.twig', [
             'group' => $group,
             'form' => $form,
+            'actualUser' => $this->getUser()->getUsername(),
         ]);
     }
 
