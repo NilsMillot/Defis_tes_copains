@@ -54,52 +54,8 @@ class GroupController extends AbstractController
         $form->handleRequest($request);
         $group->setNumberUser(sizeOf($group->getUsers()));
 
-        $search = new FriendsSearch();
-        $formSearch = $this->createForm(FriendsSearchType::class, $search);
-        $formSearch->handleRequest($request);
-
-        $friendsAcceptedOrSentSendedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'senderUser' => $this->getUser()]);
-        $friendsAcceptedOrSentReceivedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted', 'sent'], 'receiverUser' => $this->getUser()]);
-        $friendsAcceptedSendedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted'], 'senderUser' => $this->getUser()]);
-        $friendsAcceptedReceivedByCurrentUser = $friendsRepository->findBy(['status' => ['accepted'], 'receiverUser' => $this->getUser()]);
-
-        $friendsSendedByCurrentUserStatusSent = $friendsRepository->findBy(['senderUser' => $this->getUser(), 'status' => 'sent']);
-        $friendsReceivedByCurrentUserStatusSent = $friendsRepository->findBy(['receiverUser' => $this->getUser(), 'status' => 'sent']);
-        $friendsOfCurrentUserStatusSent = array_merge($friendsSendedByCurrentUserStatusSent, $friendsReceivedByCurrentUserStatusSent);
-        $uniqueFriendsOfCurrentUserStatusSent = array_unique($friendsOfCurrentUserStatusSent);
-
-        $usersAcceptedOrSentReceivedByCurrentUser = array_map(function ($friend) {
-            return $friend->getSenderUser();
-        }, $friendsAcceptedOrSentReceivedByCurrentUser);
-        $usersAcceptedOrSentSendedByCurrentUser = array_map(function ($friend) {
-            return $friend->getReceiverUser();
-        }, $friendsAcceptedOrSentSendedByCurrentUser);
-        $usersAcceptedReceivedByCurrentUser = array_map(function ($friend) {
-            return [$friend->getId(), $friend->getSenderUser()];
-        }, $friendsAcceptedReceivedByCurrentUser);
-        $usersAcceptedSendedByCurrentUser = array_map(function ($friend) {
-            return [$friend->getId(), $friend->getReceiverUser()];
-        }, $friendsAcceptedSendedByCurrentUser);
-        $usersAcceptedOrSent = array_merge($usersAcceptedOrSentReceivedByCurrentUser, $usersAcceptedOrSentSendedByCurrentUser);
-        $usersAccepted = array_merge($usersAcceptedReceivedByCurrentUser, $usersAcceptedSendedByCurrentUser);
-
-        if ($formSearch->isSubmitted() && $formSearch->isValid() && $formSearch->getData()->getName() != null) {
-            $arrUsers = $userRepository->findUsers($formSearch->getData()->getName());
-            $arrUsersExceptCurrent = array_filter(
-                $arrUsers,
-                function ($e) {
-                    return $e->getId() !== $this->getUser()->getId();
-                }
-            );
-            $usrsAccpted = [];
-            for ($i = 0; $i < sizeof($usersAccepted); $i++) {
-                $usrsAccpted[$i] = $usersAccepted[$i][1];
-            }
-            $intersectSearchAndUsersAccepted = array_intersect($arrUsersExceptCurrent, $usrsAccpted);
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            if($group->getNumberUser() > 3 && !$this->getUser()->isSubscribed()){
+            if($group->getNumberUser() > 7 && !$this->getUser()->isSubscribed()){
                 return $this->redirectToRoute('group_error', [], Response::HTTP_SEE_OTHER);
             } else {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -109,7 +65,7 @@ class GroupController extends AbstractController
                 $nameOfGroup = $group->getName();
                 $this->addFlash(
                     'notice',
-                    'Groupe "' . $nameOfGroup .  '" crée!'
+                    'Groupe "' . $nameOfGroup .  '" créé !'
                 );
                 return $this->redirectToRoute('group_index', [], Response::HTTP_SEE_OTHER);
             }
@@ -119,14 +75,6 @@ class GroupController extends AbstractController
         return $this->renderForm('group/new.html.twig', [
             'group' => $group,
             'form' => $form,
-
-            'friendsRequestsOfCurrentUserStatusSent' => $uniqueFriendsOfCurrentUserStatusSent,
-            'usersAccepted' => $usersAccepted,
-            'usersAcceptedOrSent' => $usersAcceptedOrSent,
-            'formSearch' => $formSearch,
-            'arrUsers' => $arrUsersExceptCurrent ?? null,
-            'intersectSearchAndUsersAccepted' => $intersectSearchAndUsersAccepted ?? null,
-
         ]);
     }
 

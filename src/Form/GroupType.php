@@ -23,15 +23,7 @@ class GroupType extends AbstractType
                 'attr'   =>  array(
                     'class'   => 'filled-in',
                     'id' => 'categorie'
-                ),
-                'query_builder' => function (UserRepository $er) {
-                    return $er->createQueryBuilder('u')
-                        ->select('*')
-                        ->join("u.sender_user_id f", "OR", "u.receiver_user_id f" )
-                        ->where("f.status = accepted")
-                        ->getQuery()
-                        ->getResult();
-                }
+                )
             ]);
     }
 
