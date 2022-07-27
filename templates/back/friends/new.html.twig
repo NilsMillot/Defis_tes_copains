@@ -1,0 +1,13 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Nouvelle invitation{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Créer une invitation</h1>
+
+    {{ include('back/friends/_form.html.twig') }}
+
+    <a href="{{ path('admin_friends_index') }}">retour aux invitations</a>
+</div>
+{% endblock %}

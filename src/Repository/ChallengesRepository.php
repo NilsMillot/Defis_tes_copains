@@ -19,6 +19,49 @@ class ChallengesRepository extends ServiceEntityRepository
         parent::__construct($registry, Challenges::class);
     }
 
+    /**
+     * Recherche des challenges en fonction du titre
+     * @return void
+     */
+    public function search($name = null, $category = null){
+        $query = $this->createQueryBuilder('c');
+        $query->where('c.status=true');
+        if($name !== null){
+            $query->andWhere('LOWER(c.name) LIKE LOWER(:name)');
+            $query->setParameter('name', '%'.$name.'%');
+        }
+        if($category !== null){
+            $query->leftJoin('c.category','ca');
+            $query->andWhere('ca.id = :id');
+            $query->setParameter('id',$category);
+        }
+        return $query->getQuery()->getResult();
+    }
+
+
+    /**
+     * return le nombre de challenge par date 
+    * @return void
+    */
+    public function countByDate()
+    {
+        $query = $this->createQueryBuilder('c');
+        //select par la date au format Y-m-d
+        $query->select('DATE(c.creation_date) as dateChallenge, COUNT(c.id) as count');
+        $query->groupBy('dateChallenge');
+        $query->orderBy('dateChallenge', 'ASC');
+        return $query->getQuery()->getResult();
+    }
+
+
+    public function findRecentChallenge()
+    {
+        $query = $this->createQueryBuilder('c');
+        $query->select('c.name');
+        $query->orderBy('c.creation_date', 'ASC');
+        $query->setMaxResults(1);
+        return $query->getQuery()->getResult();
+    }
     // /**
     //  * @return Challenges[] Returns an array of Challenges objects
     //  */

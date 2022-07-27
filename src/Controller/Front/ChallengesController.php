@@ -10,10 +10,12 @@ use App\Entity\Remark;
 use App\Entity\User;
 use App\Entity\UserLikeChallenge;
 use App\Form\ChallengesType;
+use App\Form\SearchChallengesType;
 use App\Form\PostType;
 use App\Form\RemarkType;
 use App\Repository\ChallengesRepository;
 use App\Repository\GroupRepository;
+use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserLikePostRepository;
@@ -50,12 +52,24 @@ class ChallengesController extends AbstractController
         $this->security = $security;
     }
 
-    #[Route('/', name: 'challenges_index', methods: ['GET'])]
-    public function index(ChallengesRepository $challengesRepository): Response
+    #[Route('/', name: 'challenges_index', methods: ['GET','POST'])]
+    public function index(Request $request, ChallengesRepository $challengesRepository): Response
     {
 
+        $challenges =  $challengesRepository->findAll();
+        $form = $this->createForm(SearchChallengesType::class);
+        $search = $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $challenges= $challengesRepository->search(
+                $search->get('name')->getData(),
+                $search->get('categorie')->getData(),
+            );
+        }
+
         return $this->render('challenges/index.html.twig', [
-            'challenges' => $challengesRepository->findAll(),
+            'challenges' =>$challenges,
+            'form'=>$form->createView()
         ]);
     }
 

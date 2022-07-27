@@ -1,47 +1,49 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %} Register {% endblock %}
+{% block title %}Inscription | DTC
+{% endblock %}
 
 {% block body %}
-    <h1 class="h3 mb-3 font-weight-normal">S'enregistrer</h1>
+	<h1 class="h3 mb-3 font-weight-normal" style="text-align: center;">Inscription</h1>
 
-    {{ form_start(form) }}
-    {# {{ form_widget(form.email) }}
-    {{ form_widget(form.username) }}
-    {{ form_widget(form.password) }}
-    {{ form_widget(form.pro) }}#}
-    {{ form_rest(form) }}
-    <div style="margin: 20px" id="suivant_register">
-    <button  class="btn btn-lg btn-primary" type="submit">
-        Inscription
-    </button></div>
+	{{ form_start(form) }}
+	{{ form_rest(form) }}
+	<div style="margin-top: 20px" id="suivant_register">
+		<button class="btn btn-lg btn-primary" style="width: 100%" type="submit">
+			s'enregistrer
+		</button>
+	</div>
+	{{ form_end(form) }}
+	<div id="link">
+		Déjà inscrit ?
+		<a href="/login">
+			Se connecter
+		</a>
+	</div>
 
-    <div id="link">
-        Déjà inscrit ?
-        <a href="/login">
-            Se connecter
-        </a>
+	<style>
+		form {
+			max-width: 420px;
+			width: 100%;
+			border: 1px solid #ddd;
+			padding: 20px;
+			border-radius: 5px;
+			display: flex;
+			flex-direction: column;
+			margin: auto
+		}
 
-    </div>
-    {{ form_end(form) }}
+		input#register_pro {
+			opacity: 1;
+			margin: 6px 0 0 5px;
+			pointer-events: auto;
+		}
 
-    <style>
-        form{
-            width: 70%;
-            margin: auto;
-        }
-
-        input#register_pro{
-            opacity:1;
-            margin: 5px;
-            pointer-events: auto;
-        }
-
-        #link{
-            display: block;
-            margin: auto;
-            width: fit-content;
-            padding: 60px;
-        }
-    </style>
+		#link {
+			display: block;
+			margin: auto;
+			width: fit-content;
+			padding: 60px;
+		}
+	</style>
 {% endblock %}

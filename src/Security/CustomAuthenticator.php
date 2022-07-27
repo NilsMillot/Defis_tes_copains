@@ -50,7 +50,7 @@ class CustomAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate('default'));
+        return new RedirectResponse($this->urlGenerator->generate('challenges_index'));
         // throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
 
