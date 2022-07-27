@@ -22,11 +22,21 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         for ($i = 1; $i < 4; $i++) {
+            /*if($i = 3){
+                $user = (new User())
+                    ->setUsername('user test' . $i)
+                    ->setEmail('test' . $i . '@gmail.com')
+                    ->setRoles(['ROLE_USER'])
+                    ->setStatut(true)
+                    ->setPro(true)
+                    ->setInitials('T' . $i);
+            } else{*/
             $user = (new User())
                 ->setUsername('user test' . $i)
                 ->setEmail('test' . $i . '@gmail.com')
                 ->setRoles(['ROLE_USER'])
                 ->setStatut(true)
+                ->setPro($i == 3)
                 ->setInitials('T' . $i);
             $user->setPassword($this->userPasswordHaser->hashPassword($user, 'test'));
 

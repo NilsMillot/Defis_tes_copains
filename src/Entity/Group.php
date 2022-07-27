@@ -35,9 +35,15 @@ class Group
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Challenges::class, mappedBy="groupId")
+     */
+    private $challenges;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->challenges = new ArrayCollection();
     }
 
     public function __toString()
@@ -96,6 +102,36 @@ class Group
     {
         if ($this->users->removeElement($user)) {
             $user->removeIdGroup($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Challenges>
+     */
+    public function getChallenges(): Collection
+    {
+        return $this->challenges;
+    }
+
+    public function addChallenge(Challenges $challenge): self
+    {
+        if (!$this->challenges->contains($challenge)) {
+            $this->challenges[] = $challenge;
+            $challenge->setGroupId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChallenge(Challenges $challenge): self
+    {
+        if ($this->challenges->removeElement($challenge)) {
+            // set the owning side to null (unless already changed)
+            if ($challenge->getGroupId() === $this) {
+                $challenge->setGroupId(null);
+            }
         }
 
         return $this;

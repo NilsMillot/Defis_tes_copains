@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Entity\Challenges;
+use App\Entity\Group;
 use App\Entity\ChallengesUserRegister;
 use App\Entity\Post;
 use App\Entity\Remark;
@@ -13,6 +14,7 @@ use App\Form\SearchChallengesType;
 use App\Form\PostType;
 use App\Form\RemarkType;
 use App\Repository\ChallengesRepository;
+use App\Repository\GroupRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
@@ -112,6 +114,68 @@ class ChallengesController extends AbstractController
         ]);
     }
 
+    #[Route('/new/{id}', name: 'chalGrp_new', defaults: ["id"==null], methods: ['GET','POST'])]
+    public function new_grpChal($id, Request $request, QrCodeService $qrCodeService, ChallengesRepository $challengesRepository, GroupRepository $groupRepository): Response
+    {
+
+        $qrCode = null;
+        $challenge = new Challenges();
+
+
+        $group = $groupRepository->find($id);
+        $challenge->setGroupId($group);
+        $group_users = $group->getUsers();
+
+        $form = $this->createForm(ChallengesType::class, $challenge);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $challenge->setCreationDate(new \DateTime());
+            $challenge->addUser($this->security->getUser());
+            foreach($form["tags"]->getData() as $tag) {
+                $challenge->addTag($tag);
+            }
+            $lastChallenge = $challengesRepository->findOneBy([], ['id' => 'desc']);
+            if ($lastChallenge === null) {
+                $futurId = 1;
+            } else {
+                $lastId = $lastChallenge->getId();
+                $futurId = $lastId + 1;
+            }
+
+            $qrCode = $qrCodeService->qrcode($futurId);
+
+            $challenge->setQrCode($qrCode);
+
+            foreach($group_users as $user){
+                $challengeRegister = new ChallengesUserRegister();
+                $entityManager = $this->getDoctrine()->getManager();
+
+                $challengeRegister->setUserRegister($user);
+                $challengeRegister->setChallengeRegister($challenge);
+
+                $entityManager->persist($challengeRegister);
+                //$entityManager->flush();
+                //$challenge->addChallengesUserRegister($user);
+                //$challenge->addUser($user);
+            }
+
+            $entityManager->persist($challenge);
+            $entityManager->flush();
+
+
+            return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('challenges/new.html.twig', [
+            'group_users' => $group_users,
+            'challenge' => $challenge,
+            'form' => $form,
+        ]);
+    }
+
+
     #[Route('/register/{id}', name: 'challenges_register', methods: ['GET','POST'])]
     public function register(Challenges $challenge){
         $challengeRegister = new ChallengesUserRegister();
@@ -194,6 +258,7 @@ class ChallengesController extends AbstractController
         }
         return $this->render('challenges/show.html.twig', [
             'challenge' => $challenge,
+            'users'=> $challenge->getUsers(),
             'posts'=>$allPosts,
             'formPost' => $formPost->createView(),
             'formRemark' => $formRemark->createView(),
@@ -262,9 +327,6 @@ class ChallengesController extends AbstractController
             'challenge' => $challenge,
         ]);
     }
-
-
-
 
     #[Route('/{id}/delete', name: 'challenges_delete', methods: ['POST','GET'])]
     public function delete(Request $request, Challenges $challenge,UserLikeChallengeRepository $userLikeChallengeRepository, PostRepository $postRepository, ChallengesUserRegisterRepository $challengesUserRegisterRepository): Response

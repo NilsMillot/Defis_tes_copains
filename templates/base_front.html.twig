@@ -78,7 +78,7 @@
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {%  if(app.user) %}
                 {%  if(app.user.pro) %}
-                    <li><a href="{{ path('payment_new') }}">Payment</a></li>
+                    <li><a href="{{ path('payment_new') }}">Premium</a></li>
                 {% endif %}
             <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
             <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
@@ -129,6 +129,7 @@
 <script  src="{{ asset('js/collapse.js') }}"></script>
 <script  src="{{ asset('js/modal.js') }}"></script>
 <script  src="{{ asset('js/like.js') }}"></script>
+<script  src="{{ asset('js/userToGroup.js') }}"></script>
 <script  src="{{ asset('js/edit_modal.js') }}"></script>
 <script src="{{ asset('js/select.js') }}"></script>
 {# <script  src="{{ asset('js/register.js') }}"></script> #}

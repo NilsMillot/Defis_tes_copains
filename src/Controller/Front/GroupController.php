@@ -3,12 +3,21 @@
 namespace App\Controller\Front;
 
 use App\Entity\Group;
+use App\Entity\Challenges;
+use App\Entity\FriendsSearch;
+
+use App\Form\FriendsSearchType;
 use App\Form\GroupType;
+
 use App\Repository\GroupRepository;
+use App\Repository\UserRepository;
+use App\Repository\FriendsRepository;
+use App\Repository\ChallengesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 #[Route('/group')]
 class GroupController extends AbstractController
@@ -19,12 +28,26 @@ class GroupController extends AbstractController
         return $this->render('group/index.html.twig', [
             'groups' => $groupRepository->findAll(),
             'username' => $this->getUser()->getUsername(),
+            'userGroup'=> $this->getUser()->getIdGroup(),
+            'pro'=> $this->getUser()->getPro(),
+
+        ]);
+    }
+
+    #[Route('/error', name: 'group_error', methods: ['GET'])]
+    public function error(GroupRepository $groupRepository): Response
+    {
+        return $this->render('group/error.html.twig', [
+            'groups' => $groupRepository->findAll(),
+            'username' => $this->getUser()->getUsername(),
+            'userGroup'=> $this->getUser()->getIdGroup(),
+            'pro'=> $this->getUser()->getPro(),
 
         ]);
     }
 
     #[Route('/new', name: 'group_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, UserRepository $userRepository, FriendsRepository $friendsRepository,): Response
     {
         $group = new Group();
         $form = $this->createForm(GroupType::class, $group);
@@ -32,16 +55,21 @@ class GroupController extends AbstractController
         $group->setNumberUser(sizeOf($group->getUsers()));
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($group);
-            $entityManager->flush();
+            if($group->getNumberUser() > 7 && !$this->getUser()->isSubscribed()){
+                return $this->redirectToRoute('group_error', [], Response::HTTP_SEE_OTHER);
+            } else {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($group);
+                $entityManager->flush();
 
-            $nameOfGroup = $group->getName();
-            $this->addFlash(
-                'notice',
-                'Groupe "' . $nameOfGroup .  '" crée!'
-            );
-            return $this->redirectToRoute('group_index', [], Response::HTTP_SEE_OTHER);
+                $nameOfGroup = $group->getName();
+                $this->addFlash(
+                    'notice',
+                    'Groupe "' . $nameOfGroup .  '" créé !'
+                );
+                return $this->redirectToRoute('group_index', [], Response::HTTP_SEE_OTHER);
+            }
+
         }
 
         return $this->renderForm('group/new.html.twig', [
@@ -51,11 +79,12 @@ class GroupController extends AbstractController
     }
 
     #[Route('/{id}', name: 'group_show', methods: ['GET'])]
-    public function show(Group $group): Response
+    public function show(Group $group, ChallengesRepository $challengeRepository): Response
     {
-        // dd($group->getUsers());
+        $group_chal = $challengeRepository->findBy(['groupId'=>$group->getId()]);
         return $this->render('group/show.html.twig', [
             'group' => $group,
+            'group_chal' => $group_chal
         ]);
     }
 
