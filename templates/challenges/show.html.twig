@@ -29,7 +29,7 @@
 				<img src="{{ asset('images/logo/DTC.png') }}" style="width: 100%; object-fit: cover; "/>
 			{% endif %}
 				{% if challenge.winner %}
-					<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px; position: absolute; left: 50%; top: 50%; margin: -30px 0 0 -40px;">
+					<a href="/user/{{challenge.winner.id}}" style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px; position: absolute; left: 50%; top: 50%; margin: -30px 0 0 -40px;">
 						<img src="{{ asset('images/logo/crown-winner.svg') }}" alt="crown winner" style="position: absolute; top: -58px; width: 70px; color: red;"/>
 						{% if challenge.winner.imageName == '' %}
 							<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; width: 90px; height: 90px; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem;">{{challenge.winner.initials}}</span>
@@ -37,7 +37,7 @@
 							<img style="width: 90px; height: 90px;" src="/images/{{challenge.winner.imageName}}" alt="image du profil {{ challenge.winner.username }}" class="circle">
 						{% endif %}
 						<span style="font-weight: 600; color: white;">{{ challenge.winner.username }}</span>
-					</div>
+					</a>
 				{% endif %}
 			</div>
 			<div class="card-stacked">
@@ -118,7 +118,7 @@
 				</div>
 				{% if app.user.username == username %}
 					<div style="display: flex; justify-content: space-evenly; max-width: 416px; margin-left: auto; flex-wrap: wrap;">
-						<a style="display: inline-flex; align-items: center; padding: 0 7px; height: 28px;" class="waves-effect waves-light btn blue accent-3" href="{{ path('challenges_info', {'id': challenge.id}) }}">Information</a>
+						<a style="display: inline-flex; align-items: center; padding: 0 7px; height: 28px;" class="waves-effect waves-light btn blue accent-3" href="{{ path('challenges_info', {'id': challenge.id}) }}">Informations</a>
 						<a style="display: inline-flex; align-items: center; padding: 0 7px; height: 28px;" class="waves-effect waves-light btn orange accent-3" href="{{ path('challenges_edit', {'id': challenge.id}) }}">Editer</a>
 						{{ include('challenges/_delete_form.html.twig') }}
 					</div>
@@ -147,9 +147,9 @@
 					{% endfor %}
 					<h2 style="font-size: 1.64rem; margin: 0 0 8px 0; width: max-content; display: inline;" id="{{ post.id }}">{{ post.name }}
 						{% if signalement_post == 0 %}
-							<a style="vertical-align: bottom" class=" parent-{{ post.id}}  signale signalement" data-url="{{ path('signalement_new_post', {'id':post.id}) }}"><i  class=" id-{{ post.id }} orange-text text-darken-3 material-icons small">report_problem</i></a>
+							<a style="vertical-align: bottom; display: inline-flex;" class=" parent-{{ post.id}}  signale signalement" data-url="{{ path('signalement_new_post', {'id':post.id}) }}"><i  class=" id-{{ post.id }} orange-text text-darken-3 material-icons small">report_problem</i></a>
 						{% else %}
-							<a style="vertical-align: bottom" class=" parent-{{ post.id}} signaled signalement" data-url="{{ path('signalement_new_post', {'id':post.id}) }}"><i  class="  id-{{ post.id }} red-text text-darken-3 material-icons small">report_problem</i></a>
+							<a style="vertical-align: bottom; display: inline-flex;" class=" parent-{{ post.id}} signaled signalement" data-url="{{ path('signalement_new_post', {'id':post.id}) }}"><i  class="  id-{{ post.id }} red-text text-darken-3 material-icons small">report_problem</i></a>
 						{% endif %}
 					</h2>
 					<span style="display: block">Like :
@@ -183,23 +183,22 @@
 				{% endfor %}
 			</div>
 
+			{% if(post.imageName) %}
+				<img height="200px" style="object-fit: cover" src={{ vich_uploader_asset(post, 'imageFile') }}>
+			{% endif %}
 			<p>{{ post.content }}
 			</p>
 			{% for user in post.userId %}
 				{%  if user.username == app.user.username %}
 					<div style="display: flex; margin-top: 5px">
-						<a class="waves-effect waves-light btn btn_edit_generic edit_post" style="margin-right: 5px; height: 28px; display: inline-flex; align-items: center; padding: 0 7px;" data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}">
+						<a class="waves-effect waves-light btn btn-primary btn_edit_generic edit_post" style="margin-right: 5px; height: 28px; display: inline-flex; align-items: center; padding: 0 7px;" data-id="{{post.id}}" data-url="{{ path('post_edit', {'id': post.id }) }}">
 							<i class="material-icons edit">edit</i>Editer</a>
 						{{ include('post/_delete_form.html.twig') }}
 					</div>
 				{% endif %}
 			{% endfor %}
 		</div>
-		{% if(post.imageName) %}
-			<div>
-				<img height="200px" src={{ vich_uploader_asset(post, 'imageFile') }}>
-			</div>
-		{% endif %}
+	
 		<ul class="collapsible popout">
 			<li>
 				{% set count = 0 %}
@@ -292,7 +291,7 @@
 
 						</div>
 					{% endfor %}
-					<a class="btn waves-effect waves-light modal-trigger modal_href" style="{% if post.remark|length > 0 %} margin-top: 15px {% endif %}" data-id="{{post.id}}" href="#modal1">Ecrire un commentaire</a>
+					<a class="btn btn-primary waves-effect waves-light modal-trigger modal_href" style="{% if post.remark|length > 0 %} margin-top: 15px {% endif %}" data-id="{{post.id}}" href="#modal1">Ecrire un commentaire</a>
 				</div>
 			</li>
 		</ul>
