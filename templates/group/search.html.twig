@@ -12,7 +12,7 @@
                 {% if arrUsers|length > 0 %}
                     {% set currentUser = app.user %}
                     {% for friend in arrUsers %}
-                        <div style="position: relative; border-bottom: 1px solid #e0e0e0;">
+                        <div style="display: block; margin: auto; text-align: center" class="search_result">
                             {{ friend }}
                             {#{{ form_widget(friend, {'attr': {'class': 'checkbox-user'}}) }}
 

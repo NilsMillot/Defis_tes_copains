@@ -74,16 +74,12 @@ class GroupController extends AbstractController
         $usersAcceptedOrSentSendedByCurrentUser = array_map(function ($friend) {
             return $friend->getReceiverUser();
         }, $friendsAcceptedOrSentSendedByCurrentUser);
-
         $usersAcceptedReceivedByCurrentUser = array_map(function ($friend) {
             return [$friend->getId(), $friend->getSenderUser()];
         }, $friendsAcceptedReceivedByCurrentUser);
-
         $usersAcceptedSendedByCurrentUser = array_map(function ($friend) {
             return [$friend->getId(), $friend->getReceiverUser()];
         }, $friendsAcceptedSendedByCurrentUser);
-
-        // dd($usersAcceptedReceivedByCurrentUser);
         $usersAcceptedOrSent = array_merge($usersAcceptedOrSentReceivedByCurrentUser, $usersAcceptedOrSentSendedByCurrentUser);
         $usersAccepted = array_merge($usersAcceptedReceivedByCurrentUser, $usersAcceptedSendedByCurrentUser);
 

@@ -14,12 +14,16 @@
 				<label>Tags</label>
 
 				{% for user in form.users %}
+					{{ dump(user) }}
+
+					{% if user in usersAcceptedOrSent %}
 					<p>
 						<label>
 							{{ form_widget(user, {'attr': {'class': 'checkbox-user'}}) }}
 							<span>{{ form_label(user) }}</span>
 						</label>
 					</p>
+					{% endif %}
 				{% endfor %}
 			</div>
 		</div>
