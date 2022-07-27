@@ -1,7 +1,8 @@
 {% extends 'base_front.html.twig' %}
 {% set currentUser = "" %}
-{% block title %}Vos amis réunis au même endroit | DTC
-{% endblock %}
+{% block title %}Vos amis réunis au même endroit | DTC{% endblock %}
+{% block meta_description %}Retrouves ici tous tes amis, envoie des demandes d'amis, recherche des utilisateurs et consulte leurs profils{% endblock %}
+{% block meta_tags %}Amis, demande amis, recherche utilisateurs{% endblock %}
 
 {% block body %}
 	<link href="{{ asset('css/friends.css') }}" rel="stylesheet"/>
