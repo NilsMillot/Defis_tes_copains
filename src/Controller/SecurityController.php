@@ -88,7 +88,7 @@ class SecurityController extends AbstractController
             $entityManager->flush();
 
             if ($user->getPro() == false) {
-                return $this->redirectToRoute('front_default', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('challenges_index', [], Response::HTTP_SEE_OTHER);
             } else {
                 return $this->redirectToRoute('payment_index', [], Response::HTTP_SEE_OTHER);
             }
