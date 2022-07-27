@@ -4,12 +4,14 @@
 {% block body %}
 	<link href="{{ asset('css/profile_card.css') }}" rel="stylesheet"/>
 
-	<span>Ce formulaire doit être soit placé dans une modale au moment du click, soit carrément suprimé pour faire la sauvegarde de l'avatar en ajax</span>
-	{{ form_start(formAvatar) }}
-	<button style="background: none; cursor: pointer; padding-top: 5px">
-		<i class="material-icons">upload</i>
-	</button>
-	{{ form_end(formAvatar) }}
+{#	<span>Ce formulaire doit être soit placé dans une modale au moment du click, soit carrément suprimé pour faire la sauvegarde de l'avatar en ajax</span>#}
+{#	{{ form_start(formAvatar) }}#}
+{#	<button style="background: none; cursor: pointer; padding-top: 5px">#}
+{#		<i class="material-icons">upload</i>#}
+{#	</button>#}
+{#	{{ form_end(formAvatar) }}#}
+
+	<a href='{{ path('user_edit',{'id': user.id }) }}'>Editer Moi ! </a>
 	<div id="profil_card_container">
 		<h1 id="profil_card_name">Votre profil
 			{{ user.username }}</h1>
@@ -62,7 +64,11 @@
 			{% endif %}
 		</span>
 	</p>
-
+	<div id="modalEditUser" class="modal">
+		<div class="modal-content">
+			{{include('user/_form.html.twig')}}
+		</div>
+	</div>
 	<script>
 		let imageUpload = document.querySelector("#imageUpload");
 let imagePreview = document.querySelector("#imagePreview");

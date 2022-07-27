@@ -13,12 +13,16 @@
 			<div class="inline">
 				<label>Tags</label>
 				{% for user in form.users %}
-					<p>
-						<label>
-							{{ form_widget(user, {'attr': {'class': 'checkbox-user'}}) }}
-							<span>{{ form_label(user) }}</span>
-						</label>
-					</p>
+					{% if user == actualUser %}
+						<p></p>
+					{% else %}
+						<p>
+							<label>
+								{{ form_widget(user, {'attr': {'class': 'checkbox-user'}}) }}
+								<span>{{ form_label(user) }}</span>
+							</label>
+						</p>
+					{% endif %}
 				{% endfor %}
 			</div>
 		</div>

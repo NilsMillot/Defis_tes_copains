@@ -5,33 +5,21 @@
 {% block body %}
     <h1>Group index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Number_user</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for group in groups %}
-            <tr>
-                <td>{{ group.id }}</td>
-                <td>{{ group.name }}</td>
-                <td>{{ group.numberUser }}</td>
-                <td>
-                    <a href="{{ path('group_show', {'id': group.id}) }}">show</a>
-                    <a href="{{ path('group_edit', {'id': group.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% for group in userGroup %}
+        <div class="one_challenge_card_global col s6">
+            <div class="card">
+                <div class="card-content">
+                    <p>
+                        Groupe {{ group.name }}
+                        <a href="./{{ group }}" class="right">Show</a>
+                    </p>
+                </div>
+            </div>
+        </div>
 
-    <a href="{{ path('group_new') }}">Create new</a>
+    {% else %}
+        <h1>Vous n'avez pas encore de groupe</h1>
+    {% endfor %}
+
+    <a class="waves-effect waves-light btn green accent-3" href="{{ path('group_new') }}">Create new</a>
 {% endblock %}

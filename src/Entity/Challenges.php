@@ -88,6 +88,11 @@ class Challenges implements \Serializable
     private $userLikeChallenges;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Group::class, inversedBy="challenges")
+     */
+    private $groupId;
+
+    /**
      * @ORM\ManyToMany(targetEntity=Tags::class,cascade={"persist"} ,inversedBy="challenges")
      */
     private $tags;
@@ -359,6 +364,18 @@ class Challenges implements \Serializable
     public function removeTag(Tags $tag): self
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getGroupId(): ?Group
+    {
+        return $this->groupId;
+    }
+
+    public function setGroupId(?Group $groupId): self
+    {
+        $this->groupId = $groupId;
 
         return $this;
     }

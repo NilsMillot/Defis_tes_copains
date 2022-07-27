@@ -1,0 +1,17 @@
+{% extends 'base_front.html.twig' %}
+{% block title %}Tous les challenges | DTC
+{% endblock %}
+{% set username = "" %}
+{% block body %}
+    <div class="row">
+
+        <h1>Trop de monde !</h1>
+        <div style="padding-bottom: 40px">
+           <h6>
+               Vous avez essayé de créer un groupe avec trop d'utilisateur ! <br><br>
+               Seul les utilisateurs premium peuvent créer un groupe avec plus de 7 utilisateurs.
+           </h6>
+        </div>
+        <a class="waves-effect waves-light btn green accent-3" href="{{ path('group_new') }}">Créer un groupe</a>
+    </div>
+{% endblock %}
