@@ -20,7 +20,7 @@
 				<label for="imageUpload"></label>
 			</form>
 			<div id="profil_card_avatar-preview">
-				<div id="imagePreview" style="background-image: url('/images/{{currentAvatar}}'); background: {{ (currentAvatar == '') ? 'slategray' : '' }}; display: flex; justify-content: center; align-items: center;">
+				<div id="imagePreview" style="background-image: url('/images/{{currentAvatar}}'); background: {{ (currentAvatar == '') ? 'var(--btn-primary-color)' : '' }}; display: flex; justify-content: center; align-items: center;">
 					{% if currentAvatar == '' %}
 						<span style="font-size: 4.8rem; color: #ddd; height: max-content " id="imagePreview">{{ userInitials }}</span>
 					{% endif %}

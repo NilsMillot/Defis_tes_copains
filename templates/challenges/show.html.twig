@@ -32,7 +32,7 @@
 					<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px; position: absolute; left: 50%; top: 50%; margin: -30px 0 0 -40px;">
 						<img src="{{ asset('images/logo/crown-winner.svg') }}" alt="crown winner" style="position: absolute; top: -58px; width: 70px; color: red;"/>
 						{% if challenge.winner.imageName == '' %}
-							<span style="background: slategray; color: #ddd; border-radius: 100%; width: 90px; height: 90px; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem;">{{challenge.winner.initials}}</span>
+							<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; width: 90px; height: 90px; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem;">{{challenge.winner.initials}}</span>
 						{% else %}
 							<img style="width: 90px; height: 90px;" src="/images/{{challenge.winner.imageName}}" alt="image du profil {{ challenge.winner.username }}" class="circle">
 						{% endif %}
@@ -174,7 +174,7 @@
 				{% for user in post.userId %}
 					<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px;">
 						{% if user.imageName == '' %}
-							<span style="background: slategray; color: #ddd; border-radius: 100%; width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem;">{{user.initials}}</span>
+							<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem;">{{user.initials}}</span>
 						{% else %}
 							<img style="width: 60px; height: 60px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
 						{% endif %}
@@ -217,7 +217,7 @@
 								<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center;">
 									{% if user.imageName == '' %}
 										<div style="position: relative">
-											<span style="background: slategray; color: #ddd; border-radius: 100%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center">{{user.initials}}</span>
+											<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center">{{user.initials}}</span>
 											{% for post_owner in post.userId %}
 												{% if user.id == post_owner.id %}
 													<img src="{{ asset('images/logo/crown.svg') }}" alt="crown" style="position: absolute; top: -20px; left: -2px; width: 28px; transform: rotate(343deg);"/>

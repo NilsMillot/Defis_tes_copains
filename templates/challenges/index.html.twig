@@ -7,7 +7,19 @@
 		<a class="btn btn-primary waves-effect waves-light" href="{{ path('challenges_new') }}">Créer challenge</a>
 	</div>
 
-	{{ form(form) }}
+	 <ul class="collapsible">
+		<li>
+		<div class="collapsible-header"><i class="material-icons">search</i>Rechercher</div>
+		<div class="collapsible-body">		
+			{{ form_start(form, {'attr': {'id': 'challenges_search_section'}}) }}
+				{{ form_row(form.name) }}
+				{{ form_row(form.categorie) }}
+				{{ form_widget(form.Rechercher) }}
+			{{ form_end(form) }}
+		</div>
+		</li>
+	</ul>
+	
 	<div class="row">
 		{% for challenge in challenges %}
 			<div class="one_challenge_card_global col s6">
@@ -68,4 +80,25 @@
             });
         });
     </script>
+{% endblock %}
+{% block stylesheets %}
+<style>
+	#challenges_search_section {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 20px;
+		border-radius: 10px;
+		border: 1px solid #ddd;
+		max-width: 720px;
+		margin: 0 auto 20px;
+	}
+	#challenges_search_section button {
+		width: fit-content;
+		margin: auto;
+	}
+	.select-wrapper span {
+		color: var(--btn-primary-color) !important;
+	}
+</style>
 {% endblock %}

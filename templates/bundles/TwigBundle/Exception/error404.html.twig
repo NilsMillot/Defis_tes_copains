@@ -1,4 +1,7 @@
-<div id="icon-container" style="width= 100%; height= 100%"></div>
+{% extends 'base_front.html.twig' %}
+
+{% block body %}
+<div id="icon-container" style="width: 100%; max-width: 720px; margin: auto"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.4/lottie.min.js" defer></script>
 <script src="{{ asset('js/404_lottie.js') }}" defer/>
@@ -6,3 +9,4 @@
 <script>
 	console.log('404 not found :)')
 </script>
+{% endblock %}

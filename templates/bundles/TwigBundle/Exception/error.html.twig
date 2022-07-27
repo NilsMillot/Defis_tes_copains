@@ -1,10 +1,14 @@
-<div id="icon-container" style="max-width: 380px; max-height: 380px; width: 100%; margin: auto; position: relative">
-	<h1 style="text-align: center; margin-top: 50px; position: absolute; width: 100%">Nous rencontrons un problème, contactez l'admin du site</h1>
-</div>
+{% extends 'base_front.html.twig' %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.4/lottie.min.js" defer></script>
-<script src="{{ asset('js/generic_error_lottie.js') }}" defer/>
+{% block body %}
 
-<script>
-	console.log('Internal error :(')
-</script>
+	<h1 style="text-align: center; margin-top: 50px; width: 100%">Nous rencontrons un problème, contactez l'admin du site</h1>
+	<div id="icon-container" style="max-width: 380px; max-height: 380px; width: 100%; margin: auto; position: relative"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.4/lottie.min.js" defer></script>
+	<script src="{{ asset('js/generic_error_lottie.js') }}" defer/>
+
+	<script>
+		console.log('Internal error :(')
+	</script>
+{% endblock %}
