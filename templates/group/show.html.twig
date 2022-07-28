@@ -4,11 +4,11 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Group <a href="{{ path('group_index') }}" class="right"><button class="btn">Back</button></a></h1>
+	<h1>Group <a href="{{ path('group_index') }}" class="right"><button class="btn">Retour</button></a></h1>
 
 	<div class="row">
 		<div class="col s4  flow-text">
-			<h3>Member</h3>
+			<h3>Membres</h3>
 			<ul>
 			{% for usr in group.users %}
 				<li><span class="chip">{{ usr.username }}</span></li>
