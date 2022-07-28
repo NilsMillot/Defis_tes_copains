@@ -1,0 +1,14 @@
+{% extends 'base_front.html.twig' %}
+
+{% block body %}
+
+	<h1 style="text-align: center; margin-top: 50px; width: 100%">Vous n'êtes pas autorisé à faire ça</h1>
+	<div id="icon-container" style="max-width: 380px; max-height: 380px; width: 100%; margin: auto; position: relative"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.4/lottie.min.js" defer></script>
+	<script src="{{ asset('js/generic_error_lottie.js') }}" defer/>
+
+	<script>
+		console.log('Hop hop hop c\'est non')
+	</script>
+{% endblock %}

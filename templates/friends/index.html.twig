@@ -30,7 +30,7 @@
 								{% if friend.imageName == '' %}
 									<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.initials}}</span>
 								{% else %}
-									<img src="/images/{{friend.imageName}}" alt="image du profil {{ friend.username }}" class="circle">
+									<img src="/images/{{friend.imageName}}" style="object-fit: cover" alt="image du profil {{ friend.username }}" class="circle">
 								{% endif %}
 
 								<span>{{ friend.username }}</span>
@@ -53,7 +53,7 @@
 								{% if friend[1].imageName == '' %}
 									<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend[1].initials}}</span>
 								{% else %}
-									<img src="/images/{{friend[1].imageName}}" alt="image du profil {{ friend[1].username }}" class="circle">
+									<img src="/images/{{friend[1].imageName}}" alt="image du profil {{ friend[1].username }}" style="object-fit: cover" class="circle">
 								{% endif %}
 								<span>{{ friend[1].username }}</span>
 							</a>
@@ -80,7 +80,7 @@
 							{% if friend.senderUser.imageName == '' %}
 								<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.senderUser.initials}}</span>
 							{% else %}
-								<img src="/images/{{friend.senderUser.imageName}}" alt="image du profil {{ friend.senderUser.username }}" class=" circle">
+								<img src="/images/{{friend.senderUser.imageName}}" alt="image du profil {{ friend.senderUser.username }}" style="object-fit: cover" class=" circle">
 							{% endif %}
 							<span>
 								<a style="color: black;" href="/user/{{ friend.senderUser.id }}">{{ friend.senderUser.username }}</a>
@@ -89,7 +89,7 @@
 							{% if friend.receiverUser.imageName == '' %}
 								<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.receiverUser.initials}}</span>
 							{% else %}
-								<img src="/images/{{friend.receiverUser.imageName}}" alt="image du profil {{ friend.receiverUser.username }}" class=" circle">
+								<img src="/images/{{friend.receiverUser.imageName}}" alt="image du profil {{ friend.receiverUser.username }}" style="object-fit: cover" class=" circle">
 							{% endif %}
 							<span>
 								<a style="color: black;" href="/user/{{ friend.receiverUser.id }}">{{ friend.receiverUser.username }}</a>
