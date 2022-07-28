@@ -165,9 +165,9 @@
 							{% endif %}
 						{% endfor %}
 						{% if liked_post == 0  %}
-							<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like liked red-text text-darken-3 far fa-heart like-id-{{ post.id }}"></i>
+							<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" like-post liked red-text text-darken-3 far fa-heart like-post-id-{{ post.id }}"></i>
 						{% else %}
-							<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart like-id-{{ post.id }}"></i>
+							<i data-url="{{ path('like_post', {'id': post.id }) }}" class=" unlike-post liked red-text text-darken-3 fas fa-heart like-post-id-{{ post.id }}"></i>
 						{% endif %}
 					</span>
 				</div>

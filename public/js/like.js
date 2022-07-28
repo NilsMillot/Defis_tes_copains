@@ -24,3 +24,30 @@ $('.liked').on('click',function(){
         });
     }
 })
+
+$('.liked').on('click',function(){
+    let count = $(this).prev().text();
+    if($(this).hasClass('like-post') ){
+        $.ajax({
+            url: $(this).data('url'),
+            type: "GET",
+            success: function (data) {
+                if (data) {
+                    $('.like-post-id-'+data).removeClass('far fa-heart like-post').addClass('unlike-post fas fa-heart')
+                    $('.id-'+data+'-count').text(Number(count)+1)
+                }
+            }
+        });
+    }else if($(this).hasClass('unlike-post') ){
+        $.ajax({
+            url: $(this).data('url'),
+            type: "GET",
+            success: function (data) {
+                if (data) {
+                    $('.like-post-id-'+data).removeClass('fas fa-heart unlike-post').addClass('like-post far fa-heart')
+                    $('.id-'+data+'-count').text(Number(count)-1)
+                }
+            }
+        });
+    }
+})
