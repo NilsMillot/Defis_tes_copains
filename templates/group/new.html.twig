@@ -3,9 +3,9 @@
 {% block title %}New Group{% endblock %}
 
 {% block body %}
-    <h1>Create new Group</h1>
+    <h1>Créer un nouveau groupe</h1>
 
     {{ include('group/_form.html.twig') }}
 
-    <a href="{{ path('group_index') }}">back to list</a>
+    <a href="{{ path('group_index') }}" style="padding: 30px">Liste des groupes</a>
 {% endblock %}
