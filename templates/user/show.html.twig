@@ -44,21 +44,20 @@
 		</span>
 	</p>
 	<div style="display: flex; justify-content: space-evenly; flex-wrap: wrap; margin: 20px 0;">
-	
 		{% set maxChallenge = userChallenges|length %}
 		{% if ( maxChallenge > 0 ) %}
-			{% for i in 0..2 %}
+			{% for challenge in userChallenges %}
 				<div style="max-width: 420px">
 					<div class="card">
 						<div class="card-image" style="background: #ddd">
-							{% if vich_uploader_asset(user.challenge[i], 'imageFile') %}
-								<img src={{ vich_uploader_asset(user.challenge[i], 'imageFile') }} height="300px" style="object-fit: cover; max-width: 320px"/>
+							{% if vich_uploader_asset(challenge, 'imageFile') %}
+								<img src={{ vich_uploader_asset(challenge, 'imageFile') }} height="300px" style="object-fit: cover; max-width: 320px"/>
 							{% else %}
 								<img src="{{ asset('images/logo/DTC.png') }}" height="300px" style="object-fit: cover; max-width: 320px"/>
 							{% endif %}
 
-							<span class="card-title" style="display: inline-flex; flex-wrap: wrap; align-items: center;">{{ user.challenge[i].name }}
-								{% if user.challenge[i].status == true %}
+							<span class="card-title" style="display: inline-flex; flex-wrap: wrap; align-items: center;">{{ challenge.name }}
+								{% if challenge.status == true %}
 									<span class="chip teal accent-3" style="margin-left: 5px; margin-bottom: 0;">
 										Ouvert
 									</span>
@@ -69,19 +68,19 @@
 								{% endif %}
 
 								{% set count = 0 %}
-								{% for like in user.challenge[i].challengesUserRegisters %}
+								{% for like in challenge.challengesUserRegisters %}
 									{% set count = count + 1 %}
 								{% endfor %}
 								<span class="chip" style="margin-bottom: 0; white-space: nowrap;">{{ count }}
 									<i style="vertical-align: sub" class="material-icons tiny">face</i>
 								</span>
 							</span>
-							<a href="{{ path('challenges_show', {'id': user.challenge[i].id}) }}" class="btn-floating halfway-fab waves-effect waves-light red" style="display: inline-flex; justify-content: center;">
+							<a href="{{ path('challenges_show', {'id': challenge.id}) }}" class="btn-floating halfway-fab waves-effect waves-light red" style="display: inline-flex; justify-content: center;">
 								<span style="font-size: 0.7rem; font-weight: 500;">infos</span>
 							</a>
 						</div>
 						<div class="card-content" style="height: 120px; overflow: hidden; max-width: 320px">
-							<p>{{ user.challenge[i].description|length > 120 ? user.challenge[i].description|slice(0, 120) ~ '...' : user.challenge[i].description  }}</p>
+							<p>{{ challenge.description|length > 120 ? challenge.description|slice(0, 120) ~ '...' : challenge.description  }}</p>
 						</div>
 					</div>
 				</div>
