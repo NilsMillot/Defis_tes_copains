@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/btn.css') }}">
     <link rel="stylesheet" href="{{ asset('css/card.css') }}">
     <link rel="stylesheet" href="{{ asset('css/colors.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/global_front.css') }}">
 
     {# Run `composer require symfony/webpack-encore-bundle`and uncomment the following Encore helpers to start using Symfony UX #}
     {% block stylesheets %}
@@ -23,72 +24,45 @@
         {#// simple example of using react when you need to do dynamic rendering#}
          {{ vite_asset('main.jsx', ['react']) }}
     {% endblock %}
-    <style>
-        html {
-            box-sizing: border-box;
-        }
-
-        h1 {
-            font-size: 3.2rem;
-        }
-        
-        h2 {
-            font-size: 2.8rem;
-        }
-
-        h3 {
-            font-size: 2.4rem;
-        }
-
-        h4 {
-            font-size: 2rem;
-        }
-
-        *, *:before, *:after {
-            box-sizing: inherit;
-            border: 0;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1 0 auto;
-        }
-
-        input:focus {
-            border-bottom-color: var(--btn-primary-color) !important;
-        }
-
-        textarea:focus {
-            border-bottom-color: var(--btn-primary-color) !important;
-        }
-
-    </style>
 </head>
 <body>
 
 <nav id="main-nav">
     <div class="nav-wrapper container">
         <a href="/challenges" ><img src="{{ asset('images/logo/DTC.png') }}" alt="logo-dtc" class="brand-logo" width="auto" height="100%"/></a>
+        <ul class="right" id="menu-small-devices">
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Menu<i class="material-icons right">arrow_drop_down</i></a></li>
+        </ul>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {%  if(app.user) %}
                 {%  if(app.user.pro) %}
                     <li><a href="{{ path('payment_new') }}">Premium</a></li>
                 {% endif %}
-            <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
-            <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
-            <li><a href="{{ path('front_group_index') }}">Group</a></li>
-            <li><a id='compte' class="{{ app.user.id}}" href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
-            <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
+                <li><a  href="{{ path('front_friends_index') }}">Amis</a></li>
+                <li><a  href="{{ path('front_challenges_index') }}">Challenges</a></li>
+                <li><a href="{{ path('front_group_index') }}">Group</a></li>
+                <li><a id='compte' class="{{ app.user.id}}" href="{{ path('front_user_index') }}">Mon compte[{{app.user.username}}]</a></li>
+                <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
 
-            {% if is_granted('ROLE_ADMIN') %}
-               <li> <a href="{{ path('admin_home') }}">Admin</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li> <a href="{{ path('admin_home') }}">Admin</a></li>
+                {% endif %}
             {% endif %}
+        </ul>
+        <ul id="dropdown1" class="dropdown-content open">
+            {%  if(app.user) %}
+                {%  if(app.user.pro) %}
+                    <li><a href="{{ path('payment_new') }}" style="color: var(--btn-primary-color)">Payment</a></li>
+                {% endif %}
+                <li><a href="{{ path('front_friends_index') }}" style="color: var(--btn-primary-color)">Amis</a></li>
+                <li><a href="{{ path('front_challenges_index') }}" style="color: var(--btn-primary-color)">Challenges</a></li>
+                <li><a href="{{ path('front_group_index') }}" style="color: var(--btn-primary-color)">Group</a></li>
+                <li><a id='compte' class="{{ app.user.id}}" style="color: var(--btn-primary-color)" href="{{ path('front_user_index') }}">Mon compte</a></li>
+                <li><a href="{{ path('app_logout') }} " style="color: var(--btn-primary-color)">Deconnexion</a></li>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li> <a href="{{ path('admin_home') }}" style="color: var(--btn-primary-color)">Admin</a></li>
+                {% endif %}
             {% endif %}
         </ul>
     </div>
@@ -128,6 +102,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script  src="{{ asset('js/collapse.js') }}"></script>
 <script  src="{{ asset('js/modal.js') }}"></script>
+<script  src="{{ asset('js/dropdown.js') }}"></script>
 <script  src="{{ asset('js/like.js') }}"></script>
 <script  src="{{ asset('js/userToGroup.js') }}"></script>
 <script  src="{{ asset('js/edit_modal.js') }}"></script>
@@ -135,7 +110,6 @@
 {# <script  src="{{ asset('js/register.js') }}"></script> #}
 <script src="{{ asset('js/signalement.js') }}"></script>
 <script src="{{ asset('js/chips.js') }}"></script>
-
 
 
 <script>

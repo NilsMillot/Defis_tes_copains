@@ -1,32 +1,55 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}User
+{% block title %}Profil de {{user.username}} | DTC
 {% endblock %}
 
 {% block body %}
-	<h1>User</h1>
+	{# {{dump(user)}} #}
+	<div style="display: flex; align-items: center; justify-content: space-around; justify-items: center">
+		<h1 id="profil_card_name">Profil de
+			{{ user.username }}</h1>
+		<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px;">
+			{% if user.imageName == '' %}
+				<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; width: 180px; height: 180px; display: inline-flex; align-items: center; justify-content: center; font-size: 4.8rem;">{{user.initials}}</span>
+			{% else %}
+				<img style="width: 180px; height: 180px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+			{% endif %}
+		</div>
+	</div>
 
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Id</th>
-				<td>{{ user.id }}</td>
-			</tr>
-			<tr>
-				<th>Email</th>
-				<td>{{ user.email }}</td>
-			</tr>
-			<tr>
-				<th>Roles</th>
-				<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-			</tr>
-			<tr>
-				<th>Password</th>
-				<td>{{ user.password }}</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<a href="{{ path('user_index') }}">back to list</a>
-
+	{# <p>
+		<span class="row">
+			{% if ( numberOfFriends > 1 ) %}
+				{{ numberOfFriends }}
+				ami(e)s
+			{% elseif ( numberOfFriends == 1 )%}
+				{{ numberOfFriends }}
+				ami(e)
+			{% else %}
+				Vous n'avez pas encore d'amis
+			{% endif %}
+		</span>
+		<span class="row">
+			{% if ( numberOfChallengesCreated > 1 ) %}
+				{{ numberOfChallengesCreated }}
+				challenges créés
+			{% elseif ( numberOfChallengesCreated == 1 )%}
+				{{ numberOfChallengesCreated }}
+				challenge crée
+			{% else %}
+				Vous n'avez pas encore publié de challenge
+			{% endif %}
+		</span>
+		<span class="row">
+			{% if ( numberOfGroup > 1 ) %}
+				vous faites partie de
+				{{ numberOfGroup }}
+				groupes
+			{% elseif ( numberOfGroup == 1 )%}
+				vous faites partie d'un groupe
+			{% else %}
+				Vous ne faites partie d'aucun groupe
+			{% endif %}
+		</span>
+	</p> #}
 {% endblock %}
