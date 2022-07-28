@@ -176,7 +176,7 @@
 						{% if user.imageName == '' %}
 							<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem;">{{user.initials}}</span>
 						{% else %}
-							<img style="width: 60px; height: 60px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+							<img style="width: 60px; height: 60px; object-fit: cover;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
 						{% endif %}
 						<span style="font-weight: 500;">{{ user.username }}</span>
 					</div>
@@ -225,7 +225,7 @@
 										</div>
 									{% else %}
 										<div style="position: relative">
-											<img style="width: 40px; height: 40px;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
+											<img style="width: 40px; height: 40px; object-fit: cover;" src="/images/{{user.imageName}}" alt="image du profil {{ user.username }}" class="circle">
 											{% for post_owner in post.userId %}
 												{% if user.id == post_owner.id %}
 													<img src="{{ asset('images/logo/crown.svg') }}" alt="crown" style="position: absolute; top: -20px; left: -2px; width: 28px; transform: rotate(343deg);"/>

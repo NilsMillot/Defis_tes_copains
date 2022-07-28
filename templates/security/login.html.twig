@@ -7,7 +7,7 @@
 		<section>
 			<h1 class="h3 mb-3 font-weight-normal" style="margin: 70px 0 20px 0; text-align: center">Se connecter</h1>
 
-			<form method="post" style="max-width: 420px; width: 100%; border: 1px solid #ddd; padding: 20px; border-radius: 5px; display: flex; flex-direction: column; margin: auto">
+			<form method="post" style="width: 420px; border: 1px solid #ddd; padding: 20px; border-radius: 5px; display: flex; flex-direction: column; margin: auto">
 				{% if error %}
 					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 				{% endif %}
@@ -47,15 +47,6 @@
 			</a>
 		</p>
 
-		<div style="margin: 20px auto; width: fit-content; padding-bottom: 90px">
-			<a href="{{ path('connect_facebook_start') }}">
-				Connexion avec Facebook
-			</a>
-			|
-			<a href="{{ path('connect_google_start') }}">
-				Connexion avec Google
-			</a>
-		</div>
 	</section>
 
 	<div id="icon-container" style="width: 420px; position: relative">

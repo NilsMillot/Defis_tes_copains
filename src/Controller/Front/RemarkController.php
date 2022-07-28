@@ -57,13 +57,13 @@ class RemarkController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'remark_show', methods: ['GET'])]
-    public function show(Remark $remark): Response
-    {
-        return $this->render('remark/show.html.twig', [
-            'remark' => $remark,
-        ]);
-    }
+    // #[Route('/{id}', name: 'remark_show', methods: ['GET'])]
+    // public function show(Remark $remark): Response
+    // {
+    //     return $this->render('remark/show.html.twig', [
+    //         'remark' => $remark,
+    //     ]);
+    // }
 
     #[Route('/edit/{id}', name: 'remark_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Remark $remark): Response

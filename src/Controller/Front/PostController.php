@@ -32,13 +32,13 @@ class PostController extends AbstractController
         $this->security = $security;
     }
 
-    #[Route('/', name: 'post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository): Response
-    {
-        return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
-        ]);
-    }
+    // #[Route('/', name: 'post_index', methods: ['GET'])]
+    // public function index(PostRepository $postRepository): Response
+    // {
+    //     return $this->render('post/index.html.twig', [
+    //         'posts' => $postRepository->findAll(),
+    //     ]);
+    // }
 
     #[Route('/new', name: 'post_new', methods: ['GET','POST'])]
     public function new(Request $request): Response
@@ -61,13 +61,13 @@ class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'post_show', methods: ['GET'])]
-    public function show(Post $post): Response
-    {
-        return $this->render('post/show.html.twig', [
-            'post' => $post,
-        ]);
-    }
+    // #[Route('/{id}', name: 'post_show', methods: ['GET'])]
+    // public function show(Post $post): Response
+    // {
+    //     return $this->render('post/show.html.twig', [
+    //         'post' => $post,
+    //     ]);
+    // }
 
     #[Route('/edit/{id}', name: 'post_edit', methods: ['GET','POST'])]
     public function edit(Request $request, Post $post, PostRepository $postRepository): JsonResponse
