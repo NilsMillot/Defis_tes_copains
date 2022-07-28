@@ -11,7 +11,9 @@
 {#	</button>#}
 {#	{{ form_end(formAvatar) }}#}
 
-	<a href='{{ path('user_edit',{'id': user.id }) }}'>Editer Moi ! </a>
+	<div style="padding: 30px">
+		<a href='{{ path('user_edit',{'id': user.id }) }}' class="btn green accent-3">Editer Moi ! </a>
+	</div>
 	<div id="profil_card_container">
 		<h1 id="profil_card_name">Votre profil
 			{{ user.username }}</h1>
