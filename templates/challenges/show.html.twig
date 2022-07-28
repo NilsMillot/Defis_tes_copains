@@ -249,9 +249,9 @@
 											{% endif %}
 										{% endfor %}
 										{% if liked_remark == 0  %}
-											<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like liked red-text text-darken-3 far fa-heart like-id-{{ remark.id }}"></i>
+											<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" like-remark liked red-text text-darken-3 far fa-heart like-remark-id-{{ remark.id }}"></i>
 										{% else %}
-											<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike liked red-text text-darken-3 fas fa-heart like-id-{{ remark.id }}"></i>
+											<i data-url="{{ path('like_remark', {'id': remark.id }) }}" class=" unlike-remark liked red-text text-darken-3 fas fa-heart like-remark-id-{{ remark.id }}"></i>
 										{% endif %}
 									</span>
 								{% set signalement_remark = 0 %}
