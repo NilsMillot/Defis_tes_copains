@@ -27,6 +27,9 @@ class PostType extends AbstractType
                 'download_uri' => false,
                 'image_uri' => true,
                 'asset_helper' => true,
+                'attr'=>      [
+                    'accept'=>'.png,.jpg,.jpeg'
+                ]
             ])
         ;
     }
