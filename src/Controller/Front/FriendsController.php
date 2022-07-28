@@ -135,6 +135,10 @@ class FriendsController extends AbstractController
     #[Route('/{id}', name: 'friends_delete', methods: ['POST'])]
     public function delete(Request $request, Friends $friend): Response
     {
+        if ($friend->getReceiverUser() !== $this->security->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+        
         if ($this->isCsrfTokenValid('delete' . $friend->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($friend);
