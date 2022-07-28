@@ -6,6 +6,7 @@
     <h1>Créer un nouveau groupe</h1>
 
     {{ include('group/_form.html.twig') }}
-
-    <a href="{{ path('group_index') }}" style="padding: 30px">Liste des groupes</a>
+    <div style="margin-top: 30px">
+        <a href="{{ path('group_index') }}" >Liste des groupes</a>
+    </div>
 {% endblock %}
