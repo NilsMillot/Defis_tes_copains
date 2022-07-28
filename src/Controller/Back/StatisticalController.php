@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class StatisticalController extends AbstractController
 {
     #[Route('/data/challenge', name: 'admin_statistical_data_challenge', methods: ['GET'])]
-    public function dataChallenge( yChallengesRepository $challengesRepository): JsonResponse
+    public function dataChallenge( ChallengesRepository $challengesRepository): JsonResponse
     {
 
         // On va chercher le nombre de challenges par date
