@@ -11,9 +11,6 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'front_default')]
     public function index(): Response
     {
-        return $this->render('front/default/index.html.twig', [
-            'controller_name' => 'DefaultController',
-            'username' => $this->getUser()->getUsername(),
-        ]);
+        return $this->redirect('/challenges');
     }
 }
