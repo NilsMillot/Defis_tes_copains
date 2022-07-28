@@ -1,14 +1,13 @@
 <div class="row">
-    {{ form_start(formEdit) }}
+    {{ form_start(form) }}
     <div class="row">
-        {{ form_label(formEdit.username,'Nom du post') }}
-        {{ form_widget(formEdit.username) }}
-        {{ form_label(formEdit.email,'Nom du post') }}
-        {{ form_widget(formEdit.email) }}
-        {{ form_widget(formEdit.imageFile) }}
+        {{ form_label(form.username,'Nom d\'utilisateur') }}
+        {{ form_widget(form.username) }}
+        {{ form_widget(form.imageFile) }}
+        <label for="imageFile">Image du profil</label>
     </div>
     <button class="btn btn-primary waves-effect waves-light">{{ button_label|default('Enregistrer') }}</button>
-    {{ form_end(formEdit) }}
+    {{ form_end(form) }}
 </div>
 
 <style>

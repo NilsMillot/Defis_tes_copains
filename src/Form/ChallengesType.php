@@ -30,6 +30,10 @@ class ChallengesType extends AbstractType
                 'download_uri' => false,
                 'image_uri' => true,
                 'asset_helper' => true,
+                'attr'=>      [
+                    'accept'=>'.png,.jpg,.jpeg'
+                ]
+
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
