@@ -66,9 +66,9 @@
 							{% endif %}
 						{% endfor %}
 						{% if liked_challenge == 0  %}
-							<i data-url="{{ path('like_challenge', {'id': challenge.id }) }}" class=" like liked red-text text-darken-3 far fa-heart id-{{ challenge.id }}"></i>
+							<i data-url="{{ path('like_challenge', {'id': challenge.id }) }}" class=" like-challenge liked red-text text-darken-3 far fa-heart like-challenge-id-{{ challenge.id }}"></i>
 							{% else%}
-							<i data-url="{{ path('like_challenge', {'id': challenge.id }) }}" class=" unlike liked b red-text text-darken-3 fas fa-heart id-{{ challenge.id }}"></i>
+							<i data-url="{{ path('like_challenge', {'id': challenge.id }) }}" class=" unlike-challenge liked b red-text text-darken-3 fas fa-heart like-challenge-id-{{ challenge.id }}"></i>
 						{% endif %}
 					</span>
 				</p>
