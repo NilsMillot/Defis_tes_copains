@@ -1,10 +1,9 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Profil de {{user.username}} | DTC
-{% endblock %}
+{% block title %}Profil de {{user.username}} | DTC{% endblock %}
 
 {% block body %}
-	<div style="display: flex; align-items: center; justify-content: space-around; justify-items: center">
+	<div style="display: flex; align-items: center; justify-content: space-around; justify-items: center; margin-top: 30px">
 		<h1 id="profil_card_name">Profil de
 			{{ user.username }}</h1>
 		<div style="display: flex; flex-direction: column; min-width: 80px; align-items: center; text-align: center; margin-right: 10px;">
@@ -16,39 +15,76 @@
 		</div>
 	</div>
 
-	{# <p>
+	<p>
 		<span class="row">
-			{% if ( numberOfFriends > 1 ) %}
-				{{ numberOfFriends }}
-				ami(e)s
-			{% elseif ( numberOfFriends == 1 )%}
-				{{ numberOfFriends }}
-				ami(e)
-			{% else %}
-				Vous n'avez pas encore d'amis
-			{% endif %}
-		</span>
-		<span class="row">
-			{% if ( numberOfChallengesCreated > 1 ) %}
-				{{ numberOfChallengesCreated }}
+			{% if ( user.challenge|length > 1 ) %}
+				{{ user.challenge|length }}
 				challenges créés
-			{% elseif ( numberOfChallengesCreated == 1 )%}
-				{{ numberOfChallengesCreated }}
+			{% elseif ( user.challenge|length == 1 )%}
+				{{ user.challenge|length }}
 				challenge crée
 			{% else %}
-				Vous n'avez pas encore publié de challenge
+				Aucun challenge publié
 			{% endif %}
 		</span>
+
 		<span class="row">
-			{% if ( numberOfGroup > 1 ) %}
-				vous faites partie de
-				{{ numberOfGroup }}
+			{% if ( user.idGroup|length > 1 ) %}
+				{{user.username}}
+				fait partie de
+				{{ user.idGroup|length }}
 				groupes
-			{% elseif ( numberOfGroup == 1 )%}
-				vous faites partie d'un groupe
+			{% elseif ( user.idGroup|length == 1 )%}
+				{{user.username}}
+				fait partie d'un groupe
 			{% else %}
-				Vous ne faites partie d'aucun groupe
+				{{user.username}}
+				ne fait parti d'aucun groupe
 			{% endif %}
 		</span>
-	</p> #}
+	</p>
+	<div style="display: flex; justify-content: space-evenly; flex-wrap: wrap; margin: 20px 0;">
+		{% set maxChallenge = user.challenge|length %}
+		{% if ( maxChallenge > 0 ) %}
+			{% for i in 0..2 %}
+				<div style="max-width: 420px">
+					<div class="card">
+						<div class="card-image" style="background: #ddd">
+							{% if vich_uploader_asset(user.challenge[i], 'imageFile') %}
+								<img src={{ vich_uploader_asset(user.challenge[i], 'imageFile') }} height="300px" style="object-fit: cover; max-width: 320px"/>
+							{% else %}
+								<img src="{{ asset('images/logo/DTC.png') }}" height="300px" style="object-fit: cover; max-width: 320px"/>
+							{% endif %}
+
+							<span class="card-title" style="display: inline-flex; flex-wrap: wrap; align-items: center;">{{ user.challenge[i].name }}
+								{% if user.challenge[i].status == true %}
+									<span class="chip teal accent-3" style="margin-left: 5px; margin-bottom: 0;">
+										Ouvert
+									</span>
+								{% else %}
+									<span class="chip red darken-1" style="margin-left: 5px; margin-bottom: 0;">
+										Fermé
+									</span>
+								{% endif %}
+
+								{% set count = 0 %}
+								{% for like in user.challenge[i].challengesUserRegisters %}
+									{% set count = count + 1 %}
+								{% endfor %}
+								<span class="chip" style="margin-bottom: 0; white-space: nowrap;">{{ count }}
+									<i style="vertical-align: sub" class="material-icons tiny">face</i>
+								</span>
+							</span>
+							<a href="{{ path('challenges_show', {'id': user.challenge[i].id}) }}" class="btn-floating halfway-fab waves-effect waves-light red" style="display: inline-flex; justify-content: center;">
+								<span style="font-size: 0.7rem; font-weight: 500;">infos</span>
+							</a>
+						</div>
+						<div class="card-content" style="height: 120px; overflow: hidden; max-width: 320px">
+							<p>{{ user.challenge[i].description|length > 120 ? user.challenge[i].description|slice(0, 120) ~ '...' : user.challenge[i].description  }}</p>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
 {% endblock %}

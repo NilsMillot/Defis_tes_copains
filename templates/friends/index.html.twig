@@ -25,7 +25,8 @@
 							{% if friend not in usersAcceptedOrSent  %}
 								<a href="{{ path('friends_sendRequest', {'id': friend.id}) }}" class="collection-item-send-request" style="position: absolute; z-index: 1; top: 30px; right: 10px; color: black">Envoyer une demande d'ami</a>
 							{% endif %}
-							<a href="/user/{{ friend.id }}" class="collection-item avatar" style="display: flex; align-items: center;">
+							<a href="{{ path('user_show', {'id': friend.id}) }}" class="collection-item avatar" style="display: flex; align-items: center;">
+							{# <a href="/user/{{ friend.id }}" class="collection-item avatar" style="display: flex; align-items: center;"> #}
 								{% if friend.imageName == '' %}
 									<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend.initials}}</span>
 								{% else %}
@@ -48,7 +49,7 @@
 							{% if friend[1] in usersAcceptedOrSent  %}
 								{{ include('friends/_delete_form_2.html.twig') }}
 							{% endif %}
-							<a href="/user/{{ friend[1].id }}" class="collection-item avatar" style="display: flex; align-items: center;">
+							<a href="{{ path('user_show', {'id': friend[1].id }) }}" class="collection-item avatar" style="display: flex; align-items: center;">
 								{% if friend[1].imageName == '' %}
 									<span style="background: var(--btn-primary-color); color: #ddd; border-radius: 100%; position: absolute; left: 20px; padding: 10px; min-width: 40px; text-align: center;">{{friend[1].initials}}</span>
 								{% else %}

@@ -5,7 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\User;
 use App\Repository\FriendsRepository;
 use App\Repository\UserRepository;
-use App\Form\UserEditType;
+use App\Form\UserEditTypeFront;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,18 +38,18 @@ class UserController extends AbstractController
 
         $currentAvatar = $this->getUser()->getImageName();
 
-        // change avatar
-        $formEdit = $this->createForm(UserEditType::class, $this->getUser());
-        $formEdit->handleRequest($request);
+        // // change avatar
+        // $formEdit = $this->createForm(UserEditType::class, $this->getUser());
+        // $formEdit->handleRequest($request);
 
-        if ($formEdit->isSubmitted() && $formEdit->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+        // if ($formEdit->isSubmitted() && $formEdit->isValid()) {
+        //     $entityManager = $this->getDoctrine()->getManager();
 
-            $entityManager->persist($formEdit->getData());
-            $entityManager->flush();
+        //     $entityManager->persist($formEdit->getData());
+        //     $entityManager->flush();
 
-            return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
-        }
+        //     return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+        // }
 
         return $this->render('user/index.html.twig', [
             'user' => $this->getUser(),
@@ -57,16 +57,18 @@ class UserController extends AbstractController
             'numberOfFriends' => sizeof($uniqueFriendsOfCurrentUser),
             'numberOfChallengesCreated' => sizeof($this->getUser()->getChallenge()),
             'numberOfGroup' => sizeof($this->getUser()->getIdGroup()),
-            'formEdit' => $formEdit->createView(),
+            // 'formEdit' => $formEdit->createView(),
             'currentAvatar' => $currentAvatar,
         ]);
     }
 
-    #[Route('/{id}', name: 'user_edit', methods: ['GET','POST'])]
+    #[Route('/edit/{id}', name: 'user_edit', methods: ['GET','POST'])]
     public function edit(Request $request,User $user): Response
     {
-
-        $form = $this->createForm(UserEditType::class, $user);
+        if ($request->attributes->get('id') != $this->security->getUser()->getId()) {
+            throw $this->createAccessDeniedException();
+        }
+        $form = $this->createForm(UserEditTypeFront::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,7 +78,7 @@ class UserController extends AbstractController
         }
         return $this->renderForm('user/edit.html.twig', [
             'user' => $user,
-            'formEdit'=>$form
+            'form' => $form
         ]);
     }
 

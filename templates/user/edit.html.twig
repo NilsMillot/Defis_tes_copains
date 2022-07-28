@@ -4,8 +4,18 @@
 
 {% block body %}
 
-    {{ include('user/_form.html.twig', {'button_label': 'Editer'}) }}
-    <a class="waves-effect waves-light btn blue-grey darken-2" href="{{ path('user_index') }}">back to list</a>
+	{{ include('user/_form.html.twig', {'button_label': 'Editer'}) }}
 
 {% endblock %}
 
+{% block stylesheets %}
+	<style>
+		form {
+            max-width: 480px;
+            margin: 30px auto;
+			padding: 20px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+		}
+	</style>
+{% endblock %}

@@ -4,23 +4,14 @@
 {% block body %}
 	<link href="{{ asset('css/profile_card.css') }}" rel="stylesheet"/>
 
-{#	<span>Ce formulaire doit être soit placé dans une modale au moment du click, soit carrément suprimé pour faire la sauvegarde de l'avatar en ajax</span>#}
-{#	{{ form_start(formAvatar) }}#}
-{#	<button style="background: none; cursor: pointer; padding-top: 5px">#}
-{#		<i class="material-icons">upload</i>#}
-{#	</button>#}
-{#	{{ form_end(formAvatar) }}#}
-
-	<div style="padding: 30px">
-		<a href='{{ path('user_edit',{'id': user.id }) }}' class="btn green accent-3">Editer Moi ! </a>
-	</div>
 	<div id="profil_card_container">
-		<h1 id="profil_card_name">Votre profil
-			{{ user.username }}</h1>
+		<h1 id="profil_card_name" style="position: relative">Votre profil
+			{{ user.username }}
+			<a href='{{ path('user_edit',{'id': user.id }) }}' style="color: black; position: absolute; top: -25px; right: -20px"><i class="material-icons edit">edit</i></a>
+		</h1>
 		<div id="profil_card_avatar-upload">
 			<form id="profil_card_avatar-edit" enctype="multipart/form-data">
 				<input type='file' data-url="{{path('user_post_pp')}}" id="imageUpload" accept=".png, .jpg, .jpeg"/>
-				<label for="imageUpload"></label>
 			</form>
 			<div id="profil_card_avatar-preview">
 				<div id="imagePreview" style="background-image: url('/images/{{currentAvatar}}'); background: {{ (currentAvatar == '') ? 'var(--btn-primary-color)' : '' }}; display: flex; justify-content: center; align-items: center;">
@@ -66,38 +57,5 @@
 			{% endif %}
 		</span>
 	</p>
-	<div id="modalEditUser" class="modal">
-		<div class="modal-content">
-			{{include('user/_form.html.twig')}}
-		</div>
-	</div>
-	<script>
-		let imageUpload = document.querySelector("#imageUpload");
-let imagePreview = document.querySelector("#imagePreview");
-function readURL(input) {
-if (input.files && input.files[0]) {
-var reader = new FileReader();
-reader.onload = function (e) {
-imagePreview.style.backgroundImage = 'url(' + e.target.result + ')';
-}
-reader.readAsDataURL(input.files[0]);
-// const formData = new FormData();
-// formData.append('file', input.files[0]);
-// fetch('http://localhost/user/post_pp', {
-// method : 'post',
-// body: formData,
-// });
-// .then((res) => res.json())
-// .then((data) => console.log(data))
-// .catch((error) => console.log(error))
-}
-}
-
-imageUpload.addEventListener("change", function () {
-readURL(this);
-});
-	</script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-	<script src="{{ asset('js/setPp.js') }}"></script>
 
 {% endblock %}

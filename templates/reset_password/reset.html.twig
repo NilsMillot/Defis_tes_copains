@@ -4,11 +4,27 @@
 
 {% block body %}
 <div style="margin: 20vh 0">
-	<h1>Saisis ton nouveau mot de passe :)</h1>
+	<h1 style="text-align: center">Saisis ton nouveau mot de passe :)</h1>
 
 	{{ form_start(resetForm) }}
 	{{ form_row(resetForm.plainPassword) }}
 	<button class="btn btn-primary" style="margin-top: 20px">Changer de mot de passe</button>
 	{{ form_end(resetForm) }}
 	</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+	form {
+		padding: 20px;
+		border: 1px solid #ddd;
+		max-width: 470px;
+		margin: 0 auto;
+	}
+	button {
+		display: flex;
+		margin: auto;
+		width: 100%;
+	}
+</style>
 {% endblock %}

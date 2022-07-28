@@ -7,7 +7,7 @@
 		{% for flash_error in app.flashes('reset_password_error') %}
 			<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
 		{% endfor %}
-		<h1>Change ton mot de passe!</h1>
+		<h1 style="text-align: center">Change ton mot de passe!</h1>
 
 		{{ form_start(requestForm) }}
 		{{ form_row(requestForm.email) }}
@@ -20,4 +20,20 @@
 		<button class="btn btn-primary" style="margin-top: 20px">Envoyer le mail de confirmation</button>
 		{{ form_end(requestForm) }}
 	</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+	form {
+		padding: 20px;
+		border: 1px solid #ddd;
+		max-width: 470px;
+		margin: 0 auto;
+	}
+	button {
+		display: flex;
+		margin: auto;
+		width: 100%;
+	}
+</style>
 {% endblock %}
